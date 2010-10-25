@@ -1,0 +1,119 @@
+\hypertarget{classStreamPlayer}{
+\section{StreamPlayer Class Reference}
+\label{classStreamPlayer}\index{StreamPlayer@{StreamPlayer}}
+}
+
+
+Manages stream decoding and sends it to the computing part of the application.  
+
+
+
+
+{\ttfamily \#include $<$streamplayer.h$>$}
+
+\subsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classStreamPlayer_ad0f0287c785318d8b84aa1823155a7eb}{
+void \hyperlink{classStreamPlayer_ad0f0287c785318d8b84aa1823155a7eb}{play} ()}
+\label{classStreamPlayer_ad0f0287c785318d8b84aa1823155a7eb}
+
+\begin{DoxyCompactList}\small\item\em Starts playing the stream. \item\end{DoxyCompactList}\item 
+\hypertarget{classStreamPlayer_a9e15509d91a8ecabe36d3732afdfcb40}{
+void \hyperlink{classStreamPlayer_a9e15509d91a8ecabe36d3732afdfcb40}{stop} ()}
+\label{classStreamPlayer_a9e15509d91a8ecabe36d3732afdfcb40}
+
+\begin{DoxyCompactList}\small\item\em Stop the currenty playing stream. \item\end{DoxyCompactList}\item 
+\hypertarget{classStreamPlayer_adf10c53d47e631a1ddf46cda61b8ccc2}{
+void \hyperlink{classStreamPlayer_adf10c53d47e631a1ddf46cda61b8ccc2}{setUrl} (QString url)}
+\label{classStreamPlayer_adf10c53d47e631a1ddf46cda61b8ccc2}
+
+\begin{DoxyCompactList}\small\item\em Changes the URL of the stream. \item\end{DoxyCompactList}\item 
+\hypertarget{classStreamPlayer_a3019d95c683e2023ec5dfd84017481de}{
+void \hyperlink{classStreamPlayer_a3019d95c683e2023ec5dfd84017481de}{setVol} (int val)}
+\label{classStreamPlayer_a3019d95c683e2023ec5dfd84017481de}
+
+\begin{DoxyCompactList}\small\item\em Changes the volume of the stream. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classStreamPlayer_aba5a4bd0bb0c489e631c1d9aff07db51}{
+\hyperlink{classStreamPlayer_aba5a4bd0bb0c489e631c1d9aff07db51}{StreamPlayer} ()}
+\label{classStreamPlayer_aba5a4bd0bb0c489e631c1d9aff07db51}
+
+\begin{DoxyCompactList}\small\item\em Default constructor. Starts VLC instance. \item\end{DoxyCompactList}\item 
+\hypertarget{classStreamPlayer_a3e93a68113a1a69b912ae92aa18c783e}{
+\hyperlink{classStreamPlayer_a3e93a68113a1a69b912ae92aa18c783e}{$\sim$StreamPlayer} ()}
+\label{classStreamPlayer_a3e93a68113a1a69b912ae92aa18c783e}
+
+\begin{DoxyCompactList}\small\item\em Default destructor. Frees memory and closes VLC. \item\end{DoxyCompactList}\item 
+\hypertarget{classStreamPlayer_a12022327862e7ca45580d0a01aa80822}{
+QString \hyperlink{classStreamPlayer_a12022327862e7ca45580d0a01aa80822}{url} ()}
+\label{classStreamPlayer_a12022327862e7ca45580d0a01aa80822}
+
+\begin{DoxyCompactList}\small\item\em Returns URL of the currently playing stream. \item\end{DoxyCompactList}\item 
+\hypertarget{classStreamPlayer_ae55ce61bf86075e9d1373149a29a2238}{
+void \hyperlink{classStreamPlayer_ae55ce61bf86075e9d1373149a29a2238}{setGraphiqueOnde} (\hyperlink{classGraphique}{Graphique} $\ast$graphique)}
+\label{classStreamPlayer_ae55ce61bf86075e9d1373149a29a2238}
+
+\begin{DoxyCompactList}\small\item\em Sets the wawe diagram. \item\end{DoxyCompactList}\item 
+\hypertarget{classStreamPlayer_a7c2c75b36f5fc0131532cc2ef02e9920}{
+void \hyperlink{classStreamPlayer_a7c2c75b36f5fc0131532cc2ef02e9920}{setGraphiqueSpectre} (\hyperlink{classGraphique}{Graphique} $\ast$graphique)}
+\label{classStreamPlayer_a7c2c75b36f5fc0131532cc2ef02e9920}
+
+\begin{DoxyCompactList}\small\item\em Set the spectrum diagram. \item\end{DoxyCompactList}\item 
+\hypertarget{classStreamPlayer_acae8624a9ed52641807001eeeb276131}{
+\hyperlink{classGraphique}{Graphique} $\ast$ \hyperlink{classStreamPlayer_acae8624a9ed52641807001eeeb276131}{graphiqueOnde} ()}
+\label{classStreamPlayer_acae8624a9ed52641807001eeeb276131}
+
+\begin{DoxyCompactList}\small\item\em Returns the wawe diagram. \item\end{DoxyCompactList}\item 
+\hypertarget{classStreamPlayer_a3452e0ce427432a46c3bc159c7c3bdfd}{
+\hyperlink{classGraphique}{Graphique} $\ast$ \hyperlink{classStreamPlayer_a3452e0ce427432a46c3bc159c7c3bdfd}{graphiqueSpectre} ()}
+\label{classStreamPlayer_a3452e0ce427432a46c3bc159c7c3bdfd}
+
+\begin{DoxyCompactList}\small\item\em Returns the spectrum diagram. \item\end{DoxyCompactList}\item 
+\hypertarget{classStreamPlayer_adf7d2c0f035da6f66e1752df7be19f0b}{
+void \hyperlink{classStreamPlayer_adf7d2c0f035da6f66e1752df7be19f0b}{addOffset} (uint16\_\-t $\ast$source, uint16\_\-t $\ast$dest, int size, int offset)}
+\label{classStreamPlayer_adf7d2c0f035da6f66e1752df7be19f0b}
+
+\begin{DoxyCompactList}\small\item\em Adds an offset to each value of the array. \item\end{DoxyCompactList}\item 
+\hypertarget{classStreamPlayer_af8184e320bf99c57e647549da8c4a250}{
+void \hyperlink{classStreamPlayer_af8184e320bf99c57e647549da8c4a250}{dumpStreamToFile} (uint16\_\-t $\ast$source, int size)}
+\label{classStreamPlayer_af8184e320bf99c57e647549da8c4a250}
+
+\begin{DoxyCompactList}\small\item\em Dumps values to a file (useful in a debugging process) \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classStreamPlayer_a6950378c20017d855c1509fab94fb83b}{
+static uint16\_\-t $\ast$ \hyperlink{classStreamPlayer_a6950378c20017d855c1509fab94fb83b}{convert8to16} (const uint8\_\-t $\ast$source, int size)}
+\label{classStreamPlayer_a6950378c20017d855c1509fab94fb83b}
+
+\begin{DoxyCompactList}\small\item\em Converts an array of uint8\_\-t to another array of uint16\_\-t (assuming the values are coded on two bytes) \item\end{DoxyCompactList}\item 
+\hypertarget{classStreamPlayer_aab13a8e6a6ba72c1582f7b4961c5e32f}{
+static uint16\_\-t $\ast$ \hyperlink{classStreamPlayer_aab13a8e6a6ba72c1582f7b4961c5e32f}{average} (uint16\_\-t $\ast$source, int size, int passes, int scale=1)}
+\label{classStreamPlayer_aab13a8e6a6ba72c1582f7b4961c5e32f}
+
+\begin{DoxyCompactList}\small\item\em Computes the average value of the stream, on a given frequency. \item\end{DoxyCompactList}\item 
+\hypertarget{classStreamPlayer_a322295d86c497e9c2fb8ad93a8299644}{
+static void \hyperlink{classStreamPlayer_a322295d86c497e9c2fb8ad93a8299644}{reduce} (uint16\_\-t $\ast$source, uint16\_\-t $\ast$dest, int size, int passes, int scale=1)}
+\label{classStreamPlayer_a322295d86c497e9c2fb8ad93a8299644}
+
+\begin{DoxyCompactList}\small\item\em Reduces the stream, keeping only the extreme values. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classStreamPlayer_a11f1b6749c5fb8b1028d548a4e02eb2c}{
+QMutex \hyperlink{classStreamPlayer_a11f1b6749c5fb8b1028d548a4e02eb2c}{mLock}}
+\label{classStreamPlayer_a11f1b6749c5fb8b1028d548a4e02eb2c}
+
+\begin{DoxyCompactList}\small\item\em Audio Mutex (to prevent from crashes with VLC) \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Manages stream decoding and sends it to the computing part of the application. 
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+streamplayer.h\item 
+streamplayer.cpp\end{DoxyCompactItemize}

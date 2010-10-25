@@ -1,0 +1,15 @@
+<profile name="France Inter">
+    <stream url="http://broadcast.infomaniak.net/tsfjazz-high.mp3" />
+    <logo url="http://quaijazz.free.fr/TSF_LOG25_RVB.jpg" />
+    <meta url="http://www.tsfjazz.com/getSongInformations.php">
+        <mode>Full</mode>
+        <regexp attribute="name">data(doc("http://metadatas.tv-radio.com/metadatas/franceinterRSS.xml")/channel/item[1]/titreemission)</regexp>
+        <regexp attribute="desc">data(doc("http://metadatas.tv-radio.com/metadatas/franceinterRSS.xml")/channel/item[1]/descriptionemission)</regexp>
+        <auto attribute="date" />
+        <auto attribute="start" />
+        <auto attribute="end" />
+    </meta>
+</profile>
+<!-- Requete pour TSF Jazz : http://www.tsfjazz.com/getSongInformations.php -->
+
+

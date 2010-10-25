@@ -1,0 +1,54 @@
+\hypertarget{classAudioChunk}{
+\section{AudioChunk Class Reference}
+\label{classAudioChunk}\index{AudioChunk@{AudioChunk}}
+}
+
+
+Stores PCM data of a sound sequence and computes some transformations on it.  
+
+
+
+
+{\ttfamily \#include $<$audiochunk.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classAudioChunk_ae1ab7fe968df97e0d69dedc5bcfb42d8}{
+void {\bfseries setData} (uint8\_\-t $\ast$data, unsigned int size, uint8\_\-t bytesPerSample, uint8\_\-t channels, unsigned int rate, int64\_\-t pts)}
+\label{classAudioChunk_ae1ab7fe968df97e0d69dedc5bcfb42d8}
+
+\item 
+\hypertarget{classAudioChunk_adf6e18214705cee819086637d9ecd9ce}{
+int {\bfseries getValueByIndex} (unsigned int index)}
+\label{classAudioChunk_adf6e18214705cee819086637d9ecd9ce}
+
+\item 
+\hypertarget{classAudioChunk_a6b9182b7c44ee9b1f3922f42bcdb66c0}{
+int {\bfseries getValueByTime} (int64\_\-t time)}
+\label{classAudioChunk_a6b9182b7c44ee9b1f3922f42bcdb66c0}
+
+\item 
+\hypertarget{classAudioChunk_a29273f809c520ce781157c95fa5ee119}{
+\hyperlink{classAudioChunk}{AudioChunk} $\ast$ {\bfseries average} (unsigned int passes)}
+\label{classAudioChunk_a29273f809c520ce781157c95fa5ee119}
+
+\item 
+\hypertarget{classAudioChunk_a84c44c1eb60e8dc09c45026cbb7c8739}{
+\hyperlink{classAudioChunk}{AudioChunk} $\ast$ {\bfseries reduceToBounds} (unsigned int passes)}
+\label{classAudioChunk_a84c44c1eb60e8dc09c45026cbb7c8739}
+
+\item 
+\hypertarget{classAudioChunk_a25fdf22f685b5ad78c4560b7a69c0e1f}{
+unsigned int $\ast$ {\bfseries computeSpectrum} (int size)}
+\label{classAudioChunk_a25fdf22f685b5ad78c4560b7a69c0e1f}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Stores PCM data of a sound sequence and computes some transformations on it. 
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+audiochunk.h\end{DoxyCompactItemize}

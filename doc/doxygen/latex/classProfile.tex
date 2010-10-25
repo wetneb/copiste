@@ -1,0 +1,105 @@
+\hypertarget{classProfile}{
+\section{Profile Class Reference}
+\label{classProfile}\index{Profile@{Profile}}
+}
+
+
+Stores informations about both the audio source and the metadata source of a radio stream.  
+
+
+
+
+{\ttfamily \#include $<$profile.h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{classProfile_a5fd99d2c6609c9239cd94d9208f6051b}{Mode} \{ {\bfseries FULL}, 
+{\bfseries GUESS}
+ \}
+\begin{DoxyCompactList}\small\item\em Represents two modes of information extracting (not used anymore) \item\end{DoxyCompactList}\item 
+\hypertarget{classProfile_abbf40b13f78bb163c01926006c2d1933}{
+typedef enum \hyperlink{classProfile_a5fd99d2c6609c9239cd94d9208f6051b}{Mode} {\bfseries Mode}}
+\label{classProfile_abbf40b13f78bb163c01926006c2d1933}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classProfile_abe18b870b228d83981a586e94eda9204}{
+\hyperlink{classProfile_abe18b870b228d83981a586e94eda9204}{Profile} (QString source=\char`\"{}\char`\"{})}
+\label{classProfile_abe18b870b228d83981a586e94eda9204}
+
+\begin{DoxyCompactList}\small\item\em Default constructor. Loads a file if a source is given. \item\end{DoxyCompactList}\item 
+\hypertarget{classProfile_aaba4d8a92e84b7a69b80c2fa54b6dd94}{
+QString \hyperlink{classProfile_aaba4d8a92e84b7a69b80c2fa54b6dd94}{parse} (QString source)}
+\label{classProfile_aaba4d8a92e84b7a69b80c2fa54b6dd94}
+
+\begin{DoxyCompactList}\small\item\em Parses a profile file (XML) \item\end{DoxyCompactList}\item 
+\hypertarget{classProfile_ab3146556cdf67e0f94a2cefa79c9266c}{
+bool \hyperlink{classProfile_ab3146556cdf67e0f94a2cefa79c9266c}{isRE} (QString attribute)}
+\label{classProfile_ab3146556cdf67e0f94a2cefa79c9266c}
+
+\begin{DoxyCompactList}\small\item\em Checks whether the given attribute will be computed from a regular expression or an XML query. \item\end{DoxyCompactList}\item 
+\hypertarget{classProfile_a07edc13955ce110e3e99e1395bbbbd18}{
+QXmlQuery \hyperlink{classProfile_a07edc13955ce110e3e99e1395bbbbd18}{getXQ} (QString attribute)}
+\label{classProfile_a07edc13955ce110e3e99e1395bbbbd18}
+
+\begin{DoxyCompactList}\small\item\em Returns the XML query for a given attribute. \item\end{DoxyCompactList}\item 
+\hypertarget{classProfile_a10cfa848ad75d2b01d463cb4ff49090d}{
+QRegExp \hyperlink{classProfile_a10cfa848ad75d2b01d463cb4ff49090d}{getRE} (QString attribute)}
+\label{classProfile_a10cfa848ad75d2b01d463cb4ff49090d}
+
+\begin{DoxyCompactList}\small\item\em Returns the regular expression for a given attribute. \item\end{DoxyCompactList}\item 
+\hypertarget{classProfile_a1f7965e9e5481d64b833a4d1effb06fd}{
+QString \hyperlink{classProfile_a1f7965e9e5481d64b833a4d1effb06fd}{getString} (QString attribute)}
+\label{classProfile_a1f7965e9e5481d64b833a4d1effb06fd}
+
+\begin{DoxyCompactList}\small\item\em Returns the value (as a string) of a given attribute. \item\end{DoxyCompactList}\item 
+\hypertarget{classProfile_a2e0a95101046e8e5224e17baa1776400}{
+QDate \hyperlink{classProfile_a2e0a95101046e8e5224e17baa1776400}{getDate} (QString attribute)}
+\label{classProfile_a2e0a95101046e8e5224e17baa1776400}
+
+\begin{DoxyCompactList}\small\item\em Returns the value (as a date) of a given attribute. \item\end{DoxyCompactList}\item 
+\hypertarget{classProfile_a2a72dd6fcb43906c912fa5416479db1c}{
+QTime \hyperlink{classProfile_a2a72dd6fcb43906c912fa5416479db1c}{getTime} (QString attribute)}
+\label{classProfile_a2a72dd6fcb43906c912fa5416479db1c}
+
+\begin{DoxyCompactList}\small\item\em Returns the value (as a time) of a given attribute. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classProfile_ae9cc747f1b1a296a71535cc21c1f2e23}{
+QString \hyperlink{classProfile_ae9cc747f1b1a296a71535cc21c1f2e23}{mName}}
+\label{classProfile_ae9cc747f1b1a296a71535cc21c1f2e23}
+
+\begin{DoxyCompactList}\small\item\em Sets the name of the stream. \item\end{DoxyCompactList}\item 
+\hypertarget{classProfile_a480028e8369430791b8cc654d00442b2}{
+QString \hyperlink{classProfile_a480028e8369430791b8cc654d00442b2}{mStreamUrl}}
+\label{classProfile_a480028e8369430791b8cc654d00442b2}
+
+\begin{DoxyCompactList}\small\item\em Sets the URL of the stream. \item\end{DoxyCompactList}\item 
+\hypertarget{classProfile_a91bf8827db31d458cce1d3c3879e3042}{
+QString \hyperlink{classProfile_a91bf8827db31d458cce1d3c3879e3042}{mLogoUrl}}
+\label{classProfile_a91bf8827db31d458cce1d3c3879e3042}
+
+\begin{DoxyCompactList}\small\item\em Sets the URL of the logo of the stream. \item\end{DoxyCompactList}\item 
+\hypertarget{classProfile_a933dd175061d08e461c9cd409b957ede}{
+QString \hyperlink{classProfile_a933dd175061d08e461c9cd409b957ede}{mMetaUrl}}
+\label{classProfile_a933dd175061d08e461c9cd409b957ede}
+
+\begin{DoxyCompactList}\small\item\em Sets the URL of the document containing metadata informations. \item\end{DoxyCompactList}\item 
+\hypertarget{classProfile_abb0cd46ca588d24282e443d1481fcc49}{
+\hyperlink{classProfile_a5fd99d2c6609c9239cd94d9208f6051b}{Mode} \hyperlink{classProfile_abb0cd46ca588d24282e443d1481fcc49}{mMode}}
+\label{classProfile_abb0cd46ca588d24282e443d1481fcc49}
+
+\begin{DoxyCompactList}\small\item\em Sets the mode of information extracting (not used anymore) \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Stores informations about both the audio source and the metadata source of a radio stream. 
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+profile.h\item 
+profile.cpp\end{DoxyCompactItemize}
