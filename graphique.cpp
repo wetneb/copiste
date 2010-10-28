@@ -34,14 +34,14 @@ void Graphique::paintEvent(QPaintEvent *)
         for(int i = 0; i <= size().width() / GRAPHIQUE_PAS; i++)
         {
             if((i*1000.0)/mFrequence > mScroll  && i - mScroll*mFrequence/1000.0 < mData.size())
-                newPoint.setY((mData.at(mData.size() - i + mScroll*mFrequence/100000.0)*0.001+ 0.3)*size().height());
+                newPoint.setY((mData.at(mData.size() - i + mScroll*mFrequence/100000.0)*0.001+ 0)*size().height());
             else
                 newPoint.setY(size().height()/2);
 
             newPoint.setX(lastPoint.x() - GRAPHIQUE_PAS);
 
-            //mPainter.drawLine(lastPoint, newPoint);
-            mPainter.fillRect(newPoint.x(), 0.3*size().height(), 1, newPoint.y(), Qt::green);
+            mPainter.drawLine(lastPoint, newPoint);
+            //mPainter.fillRect(newPoint.x(), size().height()/2 - newPoint.y()/2, 2, newPoint.y(), Qt::green);
             lastPoint = newPoint;
         }
     }

@@ -9,7 +9,8 @@ char *audioData;
 
 StreamPlayer::StreamPlayer() : mPlaying(false),
                                mGraphique(0),
-                               mSpectre(0)
+                               mSpectre(0),
+                               mDebugWritten(false)
 {
     // Initialisation de VLC
     char smem_options[256];
@@ -91,17 +92,22 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
     // cout << "handleStream" << endl;
     //if(nb_samples)
     //   cout << "NbSamples : " << nb_samples << ", Channels : " << channels << " Size : " << size << ", bits per sample : " << bits_per_sample << ", pts : " << pts << endl;
+    std::stringstream buf;
+    buf << "NbSamples : " << nb_samples << ", Channels : " << channels << " Size : " << size << ", bits per sample : " << bits_per_sample << ", pts : " << pts << endl;
+    ((StreamPlayer*)p_audio_data)->writeLine(buf.str());
 
     uint16_t* temp = StreamPlayer::convert8to16(p_pcm_buffer, size);
 
-    uint16_t* pcm_buffer = new uint16_t[size/64];
-    StreamPlayer::reduce(temp, pcm_buffer, size, 7, 100);
-    //((StreamPlayer*)p_audio_data)->dumpStreamToFile(temp, size/128);
+    uint16_t* pcm_buffer = new uint16_t[size/128];
+    //StreamPlayer::reduce(temp, pcm_buffer, size, 7, 10);
+    //StreamPlayer::addOffset(pcm_buffer, pcm_buffer, size/128, 10000);
+    // StreamPlayer::average(temp, size, 7, 2);
+    // ((StreamPlayer*)p_audio_data)->dumpStreamToFile16(temp, size/2);
 
 
-    ///*
+    // /*
     if(((StreamPlayer*)p_audio_data)->graphiqueOnde())
-        ((StreamPlayer*)p_audio_data)->graphiqueOnde()->appendData((uint16_t*)pcm_buffer, size/64);
+        ((StreamPlayer*)p_audio_data)->graphiqueOnde()->appendData((uint16_t*)temp, size);
     //*/
 
 /*
@@ -117,6 +123,7 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
         ((StreamPlayer*)p_audio_data)->graphiqueSpectre()->setData((uint16_t*)reducedSpectrum, 128);
 
     delete spectrum; */
+
     delete temp;
     delete pcm_buffer;
 
@@ -127,12 +134,16 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
 uint16_t* StreamPlayer::convert8to16(const uint8_t* source, int size)
 {
     uint16_t* dest = new uint16_t[size/2];
-    uint16_t buf;
+    uint16_t buf, reference = (uint16_t)(-1);
+    reference /= 2;
     for(int i = 0; i != size/2; i++)
     {
-        buf = source[i*2];
+        buf = source[i*2+1];
         buf = buf << 8;
-        buf = buf | source[i*2+1];
+        buf = buf | source[i*2];
+        if(buf > reference)
+            buf -= reference;
+        else buf += reference;
         dest[i] = buf;
     }
     return dest;
@@ -148,7 +159,7 @@ void StreamPlayer::addOffset(uint16_t* source, uint16_t* dest, int size, int off
 
 uint16_t* StreamPlayer::average(uint16_t* source, int size, int passes, int scale)
 {
-    int factor = pow(2,passes) / scale;
+    int factor = pow(2,passes) * scale;
     uint16_t* dest = new uint16_t[(int)(size/factor)];
 
     for(int i = 0; i != size/factor; i++)
@@ -176,12 +187,12 @@ void StreamPlayer::reduce(uint16_t* source, uint16_t* dest, int size, int passes
             if(source[i*chunkSize + j] < min)
                 min = source[i*chunkSize + j];
         }
-        dest[2*i] = min/scale;
-        dest[2*i + 1] = max/scale;
+        dest[i] = max/scale;
+        //dest[2*i + 1] = max/scale;
     }
 }
 
-void StreamPlayer::dumpStreamToFile(uint16_t* source, int size)
+void StreamPlayer::dumpStreamToFile16(uint16_t* source, int size)
 {
     if(!mDumpFile.isOpen())
     {
@@ -193,6 +204,39 @@ void StreamPlayer::dumpStreamToFile(uint16_t* source, int size)
     for(int i = 0; i != size; ++i)
         buf << source[i] << "\n";
     mDumpFile.write(buf.str().c_str());
+}
+
+void StreamPlayer::dumpStreamToFile8(uint8_t* source, int size)
+{
+    if(!mDumpFile.isOpen())
+    {
+        mDumpFile.setFileName("dumpedStream.txt");
+        mDumpFile.open(QIODevice::WriteOnly);
+    }
+
+    uint16_t reference = (uint16_t)(-1);
+    reference /= 2;
+    std::stringstream buf;
+    for(int i = 0; i != size/2; ++i)
+    {
+        buf << (int)source[2*i] << " " << (int)((((int)source[2*i+1]) << 8) | source[2*i]) << "\n";
+        buf << (int)source[2*i+1] << " " << (int)((((int)source[2*i+1]) << 8) | source[2*i]) << "\n";
+    }
+    mDumpFile.write(buf.str().c_str());
+}
+
+void StreamPlayer::writeLine(string line)
+{
+    if(!mDebugWritten)
+    {
+        if(!mDumpFile.isOpen())
+        {
+            mDumpFile.setFileName("dumpedStream.txt");
+            mDumpFile.open(QIODevice::WriteOnly);
+        }
+        mDumpFile.write(line.c_str());
+        mDebugWritten = true;
+    }
 }
 
 /*

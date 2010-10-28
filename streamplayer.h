@@ -15,6 +15,9 @@
 #include "graphique.h"
 #include "analysis.h"
 
+// Temporaire, à supprimer
+#include <string>
+
 // Callbacks audio
 void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channels, unsigned int rate, unsigned int nb_samples, unsigned int bits_per_sample, unsigned int size, int64_t pts);
 void prepareRender(void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int size);
@@ -54,9 +57,13 @@ class StreamPlayer : public QObject
         //! Reduces the stream, keeping only the extreme values
         static void reduce(uint16_t* source, uint16_t* dest, int size, int passes, int scale=1);
         //! Adds an offset to each value of the array
-        void addOffset(uint16_t* source, uint16_t* dest, int size, int offset);
-        //! Dumps values to a file (useful in a debugging process)
-        void dumpStreamToFile(uint16_t* source, int size);
+        static void addOffset(uint16_t* source, uint16_t* dest, int size, int offset);
+        //! Dumps values to a file (useful in a debugging process) (16 bit version)
+        void dumpStreamToFile16(uint16_t* source, int size);
+        //! Dumps values to a file (8 bit version)
+        void dumpStreamToFile8(uint8_t* source, int size);
+        //! Write a line to the dump file
+        void writeLine(std::string line);
 
     public slots:
         //! Starts playing the stream
@@ -90,6 +97,7 @@ class StreamPlayer : public QObject
 
         // Debug
         QFile mDumpFile;
+        bool mDebugWritten;
 };
 
 #endif
