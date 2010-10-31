@@ -32,6 +32,7 @@ StreamPlayer::StreamPlayer() : mPlaying(false),
     setVol(80);
 
     cout << "Audio chain : " << smem_options << endl;
+    cout << "COS 2PI: " << cos(90) << endl;
 
     // Connections pour la lecture
     connect(&mTimer, SIGNAL(timeout()), this, SLOT(update()));
@@ -92,28 +93,30 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
     // cout << "handleStream" << endl;
     //if(nb_samples)
     //   cout << "NbSamples : " << nb_samples << ", Channels : " << channels << " Size : " << size << ", bits per sample : " << bits_per_sample << ", pts : " << pts << endl;
+
+
     std::stringstream buf;
-    buf << "NbSamples : " << nb_samples << ", Channels : " << channels << " Size : " << size << ", bits per sample : " << bits_per_sample << ", pts : " << pts << endl;
+    buf << "NbSamples : " << nb_samples << ", Channels : " << channels << " Size : " << size << ", bits per sample : " << bits_per_sample << ", pts : " << pts << ", rate " << rate << endl;
     ((StreamPlayer*)p_audio_data)->writeLine(buf.str());
 
     uint16_t* temp = StreamPlayer::convert8to16(p_pcm_buffer, size);
 
-    uint16_t* pcm_buffer = new uint16_t[size/128];
-    //StreamPlayer::reduce(temp, pcm_buffer, size, 7, 10);
+    uint16_t* pcm_buffer = new uint16_t[size/64];
+     StreamPlayer::reduce(temp, pcm_buffer, size, 7, 90);
     //StreamPlayer::addOffset(pcm_buffer, pcm_buffer, size/128, 10000);
-    // StreamPlayer::average(temp, size, 7, 2);
+     // StreamPlayer::average(temp, size, 7, 2);
     // ((StreamPlayer*)p_audio_data)->dumpStreamToFile16(temp, size/2);
 
 
     // /*
     if(((StreamPlayer*)p_audio_data)->graphiqueOnde())
-        ((StreamPlayer*)p_audio_data)->graphiqueOnde()->appendData((uint16_t*)temp, size);
+        ((StreamPlayer*)p_audio_data)->graphiqueOnde()->appendData((uint16_t*)pcm_buffer, size/64);
     //*/
 
-/*
-    cout << "Time added." << endl;
-
     uint16_t* spectrum = naiveDFT(temp, 9);
+    ((StreamPlayer*)p_audio_data)->dumpStreamToFile16(spectrum, pow(2, 9));
+    ((StreamPlayer*)p_audio_data)->dumpStreamToFile16(temp, pow(2,9));
+    /*
     uint16_t* reducedSpectrum = new uint16_t[128];
     StreamPlayer::reduce(spectrum, reducedSpectrum, 512, 2, true);
 //    uint16_t* reducedSpectrum = StreamPlayer::average(spectrum, size
@@ -124,11 +127,10 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
 
     delete spectrum; */
 
-    delete temp;
-    delete pcm_buffer;
+    //delete temp;
+    //delete pcm_buffer;
 
     ((StreamPlayer*)p_audio_data)->mLock.unlock();
-    // cout << "Ended." << endl;
 }
 
 uint16_t* StreamPlayer::convert8to16(const uint8_t* source, int size)
@@ -187,8 +189,8 @@ void StreamPlayer::reduce(uint16_t* source, uint16_t* dest, int size, int passes
             if(source[i*chunkSize + j] < min)
                 min = source[i*chunkSize + j];
         }
-        dest[i] = max/scale;
-        //dest[2*i + 1] = max/scale;
+        dest[2*i] = max/scale;
+        dest[2*i + 1] = max/scale;
     }
 }
 
