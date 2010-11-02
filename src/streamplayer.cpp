@@ -103,6 +103,7 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
 
     uint16_t* pcm_buffer = new uint16_t[size/64];
      StreamPlayer::reduce(temp, pcm_buffer, size, 7, 90);
+     cout << ZCR(temp,size/2) << endl;
     //StreamPlayer::addOffset(pcm_buffer, pcm_buffer, size/128, 10000);
      // StreamPlayer::average(temp, size, 7, 2);
     // ((StreamPlayer*)p_audio_data)->dumpStreamToFile16(temp, size/2);

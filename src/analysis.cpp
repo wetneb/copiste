@@ -28,3 +28,19 @@ uint16_t* naiveDFT(uint16_t* source, int power)
     return dest;
 }
 
+float ZCR(uint16_t* source, unsigned int size)
+{
+    uint16_t limit = pow(2,15);
+    unsigned int zeros = 0;
+    bool positive = source[0] > limit;
+    for(unsigned int i = 1; i != size; ++i)
+    {
+        if((source[i] > limit) == !positive)
+        {
+            ++zeros;
+            positive = !positive;
+        }
+    }
+    return ((float)zeros)/size;
+}
+
