@@ -2,8 +2,8 @@
 #include <QFont>
 #include <QPushButton>
 
-#include "program.h"
-#include "mainwindow.h"
+#include "algo/nnetwork.h"
+#include "gui/mainwindow.h"
 
 /**
  * \mainpage
@@ -13,11 +13,19 @@
 
 int main(int argc, char* argv[])
 {
-    QApplication app(argc, argv);
+    //QApplication app(argc, argv);
 
-    MainWindow win;
+    //MainWindow win;
+    NNetwork network;
+    network.load("networks/sample.xml");
+    vector<int> input;
+    input.push_back(100);
+    input.push_back(0);
 
-    return app.exec();
+    cout << network.compute(input) << endl;
+    network.display();
+
+    return 0;//app.exec();
 }
 
 /**

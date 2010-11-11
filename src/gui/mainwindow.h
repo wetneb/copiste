@@ -9,10 +9,10 @@
 #include <QSystemTrayIcon>
 #include <QSlider>
 
-#include "program.h"
-#include "streamplayer.h"
-#include "profile.h"
-#include "graphique.h"
+#include "meta/program.h"
+#include "core/streamplayer.h"
+#include "meta/profile.h"
+#include "gui/graphique.h"
 
 /**
  * \class MainWindow

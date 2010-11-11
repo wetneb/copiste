@@ -1,5 +1,5 @@
-#include "program.h"
-#include "plage.h"
+#include "meta/program.h"
+#include "meta/plage.h"
 
 #include <QXmlQuery>
 
@@ -95,5 +95,5 @@ Plage Program::currentSequence(QDate date, QTime time)
 
 int Program::nextUpdate()
 {
-    return QTime::currentTime().secsTo(currentSequence().mFin);
+    return max(QTime::currentTime().secsTo(currentSequence().mFin), MINIMAL_TIME_BETWEEN_UPDATES);
 }

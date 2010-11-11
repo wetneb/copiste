@@ -1,4 +1,4 @@
-#include "streamplayer.h"
+#include "core/streamplayer.h"
 
 #include <iostream>
 using namespace std;
@@ -8,6 +8,7 @@ QMutex mAudioMutex;
 char *audioData;
 
 StreamPlayer::StreamPlayer() : mPlaying(false),
+                               mMedia(0),
                                mGraphique(0),
                                mSpectre(0),
                                mDebugWritten(false)
@@ -32,7 +33,6 @@ StreamPlayer::StreamPlayer() : mPlaying(false),
     setVol(80);
 
     cout << "Audio chain : " << smem_options << endl;
-    cout << "COS 2PI: " << cos(90) << endl;
 
     // Connections pour la lecture
     connect(&mTimer, SIGNAL(timeout()), this, SLOT(update()));
@@ -59,18 +59,23 @@ void StreamPlayer::update()
 
 void StreamPlayer::play()
 {
-    mMedia = libvlc_media_new_path (mVlcInstance, mUrl.toAscii());
-
+    if(!mMedia)
+    {
+        cout << "Big Begin ######" << endl;
+        mMedia = libvlc_media_new_path (mVlcInstance, mUrl.toAscii());
+    }
     libvlc_media_player_set_media (mMp, mMedia);
-
-    libvlc_media_player_play (mMp);
-
+    cout << "Out of the block ####" <<endl;
+    if(!mPlaying)
+        libvlc_media_player_play (mMp);
+    cout << "Startted to play #######" << endl;
     mPlaying = true;
 }
 
 void StreamPlayer::stop()
 {
     libvlc_media_player_stop(mMp);
+    mPlaying = false;
 
     // À supprimer !
     mDumpFile.close();
@@ -102,8 +107,8 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
     uint16_t* temp = StreamPlayer::convert8to16(p_pcm_buffer, size);
 
     uint16_t* pcm_buffer = new uint16_t[size/64];
-     StreamPlayer::reduce(temp, pcm_buffer, size, 7, 90);
-     cout << ZCR(temp,size/2) << endl;
+     StreamPlayer::reduce(temp, pcm_buffer, size, 9, 90);
+     //cout << ZCR(temp,size/2) << endl;
     //StreamPlayer::addOffset(pcm_buffer, pcm_buffer, size/128, 10000);
      // StreamPlayer::average(temp, size, 7, 2);
     // ((StreamPlayer*)p_audio_data)->dumpStreamToFile16(temp, size/2);
@@ -111,7 +116,7 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
 
     // /*
     if(((StreamPlayer*)p_audio_data)->graphiqueOnde())
-        ((StreamPlayer*)p_audio_data)->graphiqueOnde()->appendData((uint16_t*)pcm_buffer, size/64);
+        ((StreamPlayer*)p_audio_data)->graphiqueOnde()->appendData((uint16_t*)pcm_buffer, size/512);
     //*/
 
     uint16_t* spectrum = naiveDFT(temp, 9);

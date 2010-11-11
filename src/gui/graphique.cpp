@@ -1,4 +1,4 @@
-#include "graphique.h"
+#include "gui/graphique.h"
 
 
 Graphique::Graphique(QWidget *parent) : QWidget(parent),
@@ -40,8 +40,8 @@ void Graphique::paintEvent(QPaintEvent *)
 
             newPoint.setX(lastPoint.x() - GRAPHIQUE_PAS);
 
-            mPainter.drawLine(lastPoint, newPoint);
-            //mPainter.fillRect(newPoint.x(), size().height()/2 - newPoint.y()/2, 2, newPoint.y(), Qt::green);
+            //mPainter.drawLine(lastPoint, newPoint);
+            mPainter.fillRect(newPoint.x(), size().height()/2 - newPoint.y()/2, 2, newPoint.y(), Qt::green);
             lastPoint = newPoint;
         }
     }

@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "gui/mainwindow.h"
 
 #include <iostream>
 #include <QVBoxLayout>
@@ -70,7 +70,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent),
 
     // Temporaire
     // mSp.setUrl("http://mp3.live.tv-radio.com/franceinter/all/franceinterhautdebit.mp3");
-    mSp.setUrl("/home/berthe/Musique/Dire Straits/Sultans.mp3");
+    //mSp.setUrl("/home/berthe/Musique/Dire Straits/Sultans.mp3");
     mSp.setUrl("/home/berthe/Programmation/NowPlaying/test/sinus880.wav");
     //mSp.setUrl("http://broadcast.infomaniak.net/tsfjazz-high.mp3");
     mSp.setGraphiqueOnde(&mOnde);

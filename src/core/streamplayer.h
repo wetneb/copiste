@@ -12,8 +12,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
-#include "graphique.h"
-#include "analysis.h"
+#include "gui/graphique.h"
+#include "algo/analysis.h"
 
 // Temporaire, à supprimer
 #include <string>

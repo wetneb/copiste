@@ -1,4 +1,4 @@
-#include "profile.h"
+#include "meta/profile.h"
 
 #include <QDomDocument>
 #include <QFile>
