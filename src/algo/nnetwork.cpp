@@ -39,9 +39,9 @@ bool NNetwork::load(string fileName)
                 QDomNode subNode = node.firstChild();
                 while(!subNode.isNull())
                 {
-                    InputPerceptron *perceptron = new InputPerceptron(subNode.toElement().attribute("name", QString("elem"+mPerceptrons.size())).toStdString());
-                    mInputs.push_back(perceptron);
-                    mPerceptrons[QString(perceptron->name().c_str())] = perceptron;
+                    InputNeuron *neuron = new InputNeuron(subNode.toElement().attribute("name", QString("elem"+mNeurons.size())).toStdString());
+                    mInputs.push_back(neuron);
+                    mNeurons[QString(neuron->name().c_str())] = neuron;
                     subNode = subNode.nextSibling();
                 }
             }
@@ -50,17 +50,17 @@ bool NNetwork::load(string fileName)
                 QDomNode subNode = node.firstChild();
                 while(!subNode.isNull() && subNode.toElement().tagName() == "node")
                 {
-                    Perceptron *perceptron = new Perceptron;
-                    perceptron->load(subNode, this);
-                    mPerceptrons[QString(perceptron->name().c_str())] = perceptron;
+                    Neuron *neuron = new Neuron;
+                    neuron->load(subNode, this);
+                    mNeurons[QString(neuron->name().c_str())] = neuron;
                     subNode = subNode.nextSibling();
                 }
             }
             else if(elem.tagName() == "output")
             {
-                Perceptron *perceptron = new Perceptron;
-                perceptron->load(node, this);
-                mLastPerceptron = perceptron;
+                Neuron *neuron = new Neuron;
+                neuron->load(node, this);
+                mLastNeuron = neuron;
             }
             node = node.nextSibling();
         }
@@ -73,17 +73,17 @@ bool NNetwork::load(string fileName)
     return true;
 }
 
-AbstractPerceptron* NNetwork::getPerceptronByName(string name) const
+AbstractNeuron* NNetwork::getNeuronByName(string name) const
 {
-    return mPerceptrons[QString(name.c_str())];
+    return mNeurons[QString(name.c_str())];
 }
 
-AbstractPerceptron* NNetwork::getPerceptronByName(QString name) const
+AbstractNeuron* NNetwork::getNeuronByName(QString name) const
 {
-    return mPerceptrons[name];
+    return mNeurons[name];
 }
 
-unsigned int NNetwork::addInput(InputPerceptron* input)
+unsigned int NNetwork::addInput(InputNeuron* input)
 {
     mInputs.push_back(input);
     return mInputs.size()-1;
@@ -97,24 +97,24 @@ void NNetwork::removeInput(unsigned int id)
 
 float NNetwork::compute(vector<int> input)
 {
-    if(!mLastPerceptron)
+    if(!mLastNeuron)
         return 0;
-    return mLastPerceptron->value();
+    return mLastNeuron->value();
 }
 
-float NNetwork::train(vector<int> input, float goal, float variation)
+float NNetwork::train(vector<int> input, float goal, float rate)
 {
-    if(!mLastPerceptron)
+    if(!mLastNeuron)
         return 0;
-    float result = mLastPerceptron->value();
+    float result = mLastNeuron->value();
 
-    // TBC
+    mLastNeuron->train(goal, rate);
 
     return result;
 }
 
 void NNetwork::display()
 {
-    for(QHash<QString, AbstractPerceptron*>::iterator iter = mPerceptrons.begin(); iter != mPerceptrons.end(); ++iter)
+    for(QHash<QString, AbstractNeuron*>::iterator iter = mNeurons.begin(); iter != mNeurons.end(); ++iter)
         cout << (*iter)->str() << endl;
 }
