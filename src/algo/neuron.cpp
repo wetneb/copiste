@@ -1,9 +1,14 @@
 #include "algo/neuron.h"
 #include <cmath>
 
-float sigmoid(float x)
+neural_value sigmoid(neural_value x)
 {
-    return (1.0 / (1 + exp(-x)));
+    return (1 / (1.0 + exp(-x)));
+}
+
+neural_value d_sigmoid(neural_value x)
+{
+    return exp(-x)/((1.0 + exp(-x))*(1.0 + exp(-x)));
 }
 
 Neuron::Neuron(string name) : mName(name),
@@ -13,6 +18,12 @@ Neuron::Neuron(string name) : mName(name),
     // Add the offset parent
     mParents.push_back(0);
     mWeights.push_back(1);
+}
+
+Neuron::~Neuron()
+{
+    for(unsigned int i = 1; i != mParents.size(); ++i)
+        mParents[i]->forgetChild(this);
 }
 
 void Neuron::load(QDomNode node, const NNetwork* network)
@@ -30,8 +41,8 @@ void Neuron::load(QDomNode node, const NNetwork* network)
         {
             if(node.toElement().tagName() == "link" && node.toElement().hasAttribute("parent"))
             {
-                mParents.push_back(network->getNeuronByName(node.toElement().attribute("parent")));
-                mWeights.push_back(node.toElement().attribute("weight", "1").toInt());
+                addParent(network->getNeuronByName(node.toElement().attribute("parent")),
+                            node.toElement().attribute("weight", "1").toFloat());
             }
             node = node.nextSibling();
         }
@@ -39,67 +50,100 @@ void Neuron::load(QDomNode node, const NNetwork* network)
     else cout << "Warning : wrong neuron definition : " << node.toElement().tagName().toStdString() << endl;
 }
 
-// This method will be only called for the output neuron
-void Neuron::train(float goal, float rate)
+// This method will be called only for the output neuron
+void Neuron::train(neural_value goal, neural_value rate)
 {
     // Get the current value (cached)
+    cout << "G_ERR " << goal - value() << endl;
     mError = goal - value();
     mErrorCached = true;
+
+    // Compute weights
+    computeWeights(rate);
 
     // Propagate the error
     for(unsigned int i = 1; i != mParents.size(); ++i)
         mParents[i]->error();
 }
 
-float Neuron::error()
+neural_value Neuron::error(AbstractNeuron *parent)
 {
     if(mErrorCached)
-        return mError;
+        return (parent ? mError*parentWeight(parent) : mError);
 
     mError = 0;
-    // For each child
-    // TODO
+    for(unsigned int i = 0; i != mChildren.size(); ++i)
+        mError += mChildren[i]->error(this);
 
     mErrorCached = true;
-    return mError;
+    return (parent ? mError*parentWeight(parent) : mError);
 }
 
-void Neuron::addParent(AbstractNeuron* parent, float weight)
+void Neuron::computeWeights(neural_value rate)
 {
-    mParents.push_back(parent);
-    mWeights.push_back(weight);
-}
+    // The value and the error are required
+    if(!mErrorCached or !mValueCached)
+        return;
 
-void Neuron::removeParent(AbstractNeuron* parent)
-{
-    unsigned int i = 0;
-    while(i < mParents.size() && mParents[i] != parent)
-        ++i;
-    if(i < mParents.size())
+
+    mWeights[0] += d_sigmoid(mValue)* rate * mError;
+
+    // For each weight
+    for(unsigned int i = 1; i != mWeights.size(); ++i)
     {
-        mParents.erase(mParents.begin()+i);
-        mWeights.erase(mWeights.begin()+i);
+        mWeights[i] += d_sigmoid(mValue) * mParents[i]->value() * rate * mError;
+        cout << "   " << i << " : offset " << d_sigmoid(mValue) * mParents[i]->value() * rate * mError << " (" << mParents[i]->name() << " says " << mParents[i]->value() << ")" << endl;
+
+        mParents[i]->computeWeights(rate);
     }
 }
 
-void Neuron::setParentWeight(AbstractNeuron* parent, float weight)
+void Neuron::addParent(AbstractNeuron* parent, neural_value weight)
 {
-    unsigned int i = 0;
-    while(i < mParents.size() && mParents[i] != parent)
-        ++i;
-    if(i < mParents.size())
-        mWeights[i] = weight;
+    mParents.push_back(parent);
+    mWeights.push_back(weight);
+    parent->addChild(this);
 }
 
-float Neuron::value()
+void Neuron::setParentWeight(AbstractNeuron* parent, neural_value weight)
+{
+    vector<AbstractNeuron*>::iterator i = find(mParents.begin(), mParents.end(), parent);
+    if(i != mParents.end())
+        mWeights[distance(mParents.begin(), i)] = weight;
+}
+
+neural_value Neuron::parentWeight(AbstractNeuron* parent)
+{
+    vector<AbstractNeuron*>::iterator i = find(mParents.begin(), mParents.end(), parent);
+    if(i != mParents.end())
+        return mWeights[distance(mParents.begin(), i)];
+    return 0;
+}
+
+void Neuron::addChild(AbstractNeuron *child)
+{
+    mChildren.push_back(child);
+}
+
+void Neuron::forgetChild(AbstractNeuron *child)
+{
+    vector<AbstractNeuron*>::iterator i = find(mParents.begin(), mParents.end(), child);
+    if(i != mParents.end())
+        mChildren.erase(i);
+}
+
+neural_value Neuron::value()
 {
     if(mValueCached)
         return mValue;
 
-    float sum = mWeights[0]; // Directly add the offset value
+    neural_value sum = mWeights[0]; // Directly add the offset value
+
     for(unsigned int i = 1; i < mParents.size(); ++i)
         sum += mParents[i]->value() * mWeights[i];
+
     mValue = sigmoid(sum);
+    mValueCached = true;
     return mValue;
 }
 
@@ -107,14 +151,18 @@ void Neuron::clean()
 {
     mValueCached = false;
     mErrorCached = false;
+
+    for(unsigned int i = 1; i != mParents.size(); ++i)
+        mParents[i]->clean();
 }
 
 string Neuron::str() const
 {
     stringstream out;
-    out << "<" << mName << " : " << (mValueCached ? mValue : 0) << " from :\n";
-    for(unsigned int i = 0; i < mParents.size(); ++i)
-        out << "+" << mParents[i]->str() << " with weight " << mWeights[i] << "\n";
+    out << "<" << mName << " : " << (mValueCached ? mValue : 0) << " from :";
+    for(unsigned int i = 1; i < mParents.size(); ++i)
+        out << "\n+" << mParents[i]->str() << " with weight " << mWeights[i];
+    out << ">";
     return out.str();
 }
 

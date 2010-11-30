@@ -37,7 +37,10 @@ class NNetwork
         float compute(vector<int> input);
 
         //! Computes the output from an input vector and train to match a given goal
-        float train(vector<int> input, float goal, float rate = 1);
+        float train(vector<int> input, neural_value goal, float rate = 1);
+
+        //! Cleans (empties the cache) of the network
+        void clean();
 
         //! Displays the network
         void display();

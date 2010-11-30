@@ -13,16 +13,19 @@ class InputNeuron : public AbstractNeuron
     public:
         InputNeuron(string name="Input") : mName(name), mValue(1) { ; }
 
-        float value() { return mValue; }
+        neural_value value() { return mValue; }
 
         //! Sets the value of the neuron
-        void setValue(float value) { mValue = value; }
+        void setValue(neural_value value) { mValue = value; }
 
         // An input neuron is orphan (this method should never be called)
-        float error(AbstractNeuron* parent) { return 0; }
+        neural_value error(AbstractNeuron* parent) { return 0; }
+
+        // A input neuron doesn't have any weights
+        void computeWeights(neural_value rate) { ; }
 
         // Training an input neuron has no effect
-        void train(float goal, float variation = 1) { ; }
+        void train(neural_value goal, float variation = 1) { ; }
 
         string str() const { return string("<") + mName + " : >"; }
 
@@ -31,12 +34,13 @@ class InputNeuron : public AbstractNeuron
         // An input neuron has no cache
         void clean() { ; }
 
-        // An input neuron says always the truth (since it says what he has been said to say)
-        float error() { return 0; }
+        // An input neuron doesn't care for its children
+        void addChild(AbstractNeuron* child) { ; }
+        void forgetChild(AbstractNeuron* child) { ; }
 
     private:
         string mName;
-        float mValue;
+        neural_value mValue;
 };
 
 #endif

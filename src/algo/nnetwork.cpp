@@ -95,26 +95,41 @@ void NNetwork::removeInput(unsigned int id)
         mInputs.erase(mInputs.begin()+id);
 }
 
-float NNetwork::compute(vector<int> input)
+neural_value NNetwork::compute(vector<int> input)
 {
     if(!mLastNeuron)
         return 0;
+
+    // Set up inputs
+    for(unsigned int i = 0; i != mInputs.size(); ++i)
+        mInputs[i]->setValue(input[i]);
+
     return mLastNeuron->value();
 }
 
-float NNetwork::train(vector<int> input, float goal, float rate)
+neural_value NNetwork::train(vector<int> input, neural_value goal, float rate)
 {
     if(!mLastNeuron)
         return 0;
-    float result = mLastNeuron->value();
+
+    neural_value result = compute(input);
 
     mLastNeuron->train(goal, rate);
+
+    clean();
 
     return result;
 }
 
+void NNetwork::clean()
+{
+    mLastNeuron->clean();
+}
+
 void NNetwork::display()
 {
-    for(QHash<QString, AbstractNeuron*>::iterator iter = mNeurons.begin(); iter != mNeurons.end(); ++iter)
-        cout << (*iter)->str() << endl;
+    //for(QHash<QString, AbstractNeuron*>::iterator iter = mNeurons.begin(); iter != mNeurons.end(); ++iter)
+    //    cout << (*iter)->str() << endl;
+
+    cout << mLastNeuron->str() << endl;
 }

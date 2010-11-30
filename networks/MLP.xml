@@ -3,24 +3,8 @@
         <node name="ZCR" />
         <node name="LSTER" />
     </inputs>
-    <layer>
-        <node name="Hidden_1">
-            <link parent="ZCR" weight="0.85" />
-            <link parent="LSTER" weight="0.4" />
-        </node>
-        <node name="Hidden_2">
-            <link parent="ZCR" weight="0.1" />
-            <link parent="LSTER" weight="0.6" />
-        </node>
-    </layer>
-    <layer>
-        <node name="Second_1">
-            <link parent="Hidden_1" weight="0.5" />
-            <link parent="Hidden_2" weight="0.5" />
-        </node>
-    </layer>
     <output>
-        <link parent="Hidden_1" weight="1" />
-        <link parent="Second_1" weight="2" />
+        <link parent="ZCR" weight="1" />
+        <link parent="LSTER" weight="2" />
     </output>
 </nnetwork>
