@@ -2,6 +2,7 @@
 #define INCLUDEDCORPUSH
 
 #include <string>
+#include <QFile>
 
 using namespace std;
 

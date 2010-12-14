@@ -1,43 +1,14 @@
 #include "corpus.h"
 
-/**
-class Corpus
-{
-    public:
-        //! Loads the corpus from an XML file
-        bool load(string file);
-
-        //! Trains a given network to match the corpus
-        void train(NNetwork &network);
-
-        //! Writes to the standard output the set of elements
-        void display();
-
-        //! Returns the number of elements (i.e. vectors) contained in the corpus
-        unsigned int size();
-
-        //! Returns the number of inputs of each training example (i.e. the number of coordinates of each vector)
-        unsigned int dimension();
-
-        //! Returns the elem pointed by the given index
-        float* elem(unsigned int index);
-
-    private:
-        float** mPool;
-        int mSize;
-        int mDimension;
-};
-**/
-
-bool Corpus::load(string file)
+bool Corpus::load(string filename)
 {
     bool dimensionIsSet = false;
     QDomDocument doc;
 
-    QFile file(fileName.c_str());
+    QFile file(filename.c_str());
     if(!file.open(QIODevice::ReadOnly))
     {
-        cout << "Unable to open file : " << fileName << endl;
+        cout << "Unable to open file : " << filename << endl;
         return false;
     }
     doc.setContent(&file);
@@ -74,11 +45,11 @@ void Corpus::train(NNetwork &network)
 
 void Corpus::display()
 {
-    for(unsigned int i = 0; i != size; ++i)
+    for(unsigned int i = 0; i != mSize; ++i)
     {
         cout << "[" << i << "] : ";
 
-        for(unsigned int j = 0; j != dimension; ++j)
+        for(unsigned int j = 0; j != mDimension; ++j)
         {
             cout << mPool[i][j] << "  ";
         }

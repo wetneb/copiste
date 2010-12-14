@@ -11,6 +11,24 @@
  * Copiste devrait devenir un logiciel d'archivage radiophonique numérique. Peut-être.
  */
 
+/**
+    État des lieux après la tempête :
+    - Réimplémenter l'entrainement et l'évaluation dans Corpus.
+    - Corriger la propagation des erreurs dans Neuron.
+    - Ajouter le bias.
+    - Réécrire des corpus de test.
+    - Ajouter un appel à clean() là où ça manque.
+
+    Bonus :
+    - Visualisation de corpus.
+    - Écriture de réseaux et corpus.
+    - Créer un corpus de fichiers audio
+    - Implémenter des algos fiables d'analyse audio
+    - Créer un dispositif de séquençage du flux
+    - Mélanger tout ça
+    - Créer une analyse statique puis en temps réel…
+ **/
+
 int main(int argc, char* argv[])
 {
     //QApplication app(argc, argv);

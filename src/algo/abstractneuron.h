@@ -6,7 +6,7 @@
 using namespace std;
 
 //! A typedef allowing us to change easely the hardware precision used in computations
-typedef neural_value float;
+typedef float neural_value;
 
 //! An abstract neuron
 class AbstractNeuron
