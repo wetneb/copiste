@@ -2,8 +2,8 @@
 
 bool Corpus::load(string filename)
 {
-    bool dimensionIsSet = false;
     QDomDocument doc;
+    int nbPointsSet = 0, nbCoordsSet = 0;
 
     QFile file(filename.c_str());
     if(!file.open(QIODevice::ReadOnly))
@@ -18,15 +18,31 @@ bool Corpus::load(string filename)
 
     if(node.toElement().tagName() == "corpus")
     {
+        mDimension = node.toElement().attribute("dimension", "1").toInt();
+        mSize = node.toElement().attribute("size", "100").toInt();
+
+        mPool = new neural_value*[mSize];
+
         node = node.firstChild();
-        while(!node.isNull())
+        while(!node.isNull() && nbPointsSet < mSize)
         {
             QDomElement elem = node.toElement();
 
-            //if() //TBC
-            /*******************
-             * TO BE CONTINUED *
-             *******************/
+            if(elem.tagName() == "point")
+            {
+                mPool[nbPointsSet] = new neural_value[mDimension];
+
+                nbCoordsSet = 0;
+                QDomNode pointNode = node.firstChild();
+                while(!pointNode.isNull() && nbCoordsSet < mDimension)
+                {
+                    mPool[nbPointsSet][nbCoordsSet] = pointNode.toElement().attribute("value", "1").toFloat();
+                    nbCoordsSet++;
+                }
+            }
+
+            nbPointsSet++;
+            node = node.nextSibling();
         }
     }
     else
@@ -45,11 +61,11 @@ void Corpus::train(NNetwork &network)
 
 void Corpus::display()
 {
-    for(unsigned int i = 0; i != mSize; ++i)
+    for(int i = 0; i != mSize; ++i)
     {
         cout << "[" << i << "] : ";
 
-        for(unsigned int j = 0; j != mDimension; ++j)
+        for(int j = 0; j != mDimension; ++j)
         {
             cout << mPool[i][j] << "  ";
         }

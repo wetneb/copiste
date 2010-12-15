@@ -553,7 +553,7 @@
 	<string>
 	"algo/abstractneuron.h"
 
-1292171891 source:/home/berthe/Programmation/NowPlaying/src/algo/neuron.cpp
+1292444387 source:/home/berthe/Programmation/NowPlaying/src/algo/neuron.cpp
 	"algo/neuron.h"
 	<cmath>
 
@@ -683,7 +683,7 @@
 	<iterator>
 	<list>
 
-1292171891 source:/home/berthe/Programmation/NowPlaying/src/core/main.cpp
+1292445026 source:/home/berthe/Programmation/NowPlaying/src/core/main.cpp
 	<QApplication>
 	<QFont>
 	<QPushButton>

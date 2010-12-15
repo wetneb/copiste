@@ -9,6 +9,7 @@ using namespace std;
 //! Stores a set of training examples for a neural net
 class Corpus;
 
+#include "abstractneuron.h"
 #include "nnetwork.h"
 
 class Corpus
@@ -30,10 +31,10 @@ class Corpus
         unsigned int dimension();
 
         //! Returns the elem pointed by the given index
-        float* elem(unsigned int index);
+        neural_value* elem(unsigned int index);
 
     private:
-        float** mPool;
+        neural_value** mPool;
         int mSize;
         int mDimension;
 };

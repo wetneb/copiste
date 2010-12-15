@@ -15,7 +15,6 @@
     État des lieux après la tempête :
     - Réimplémenter l'entrainement et l'évaluation dans Corpus.
     - Corriger la propagation des erreurs dans Neuron.
-    - Ajouter le bias.
     - Réécrire des corpus de test.
     - Ajouter un appel à clean() là où ça manque.
 

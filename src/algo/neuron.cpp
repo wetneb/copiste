@@ -36,6 +36,8 @@ void Neuron::load(QDomNode node, const NNetwork* network)
             mName = node.toElement().attribute("name").toStdString();
         else mName = "output";
 
+        mWeights[0] = node.toElement().attribute("bias", 0).toFloat();
+
         node = node.firstChild();
         while(!node.isNull())
         {
