@@ -19,7 +19,7 @@ class Corpus
         bool load(string file);
 
         //! Trains a given network to match the corpus
-        void train(NNetwork &network);
+        void train(NNetwork &network, float learningRate, int maxPasses);
 
         //! Writes to the standard output the set of elements
         void display();

@@ -97,7 +97,7 @@ void NNetwork::removeInput(unsigned int id)
 
 neural_value NNetwork::compute(vector<int> input)
 {
-    if(!mLastNeuron)
+    if(!mLastNeuron || input.size() < mInputs.size())
         return 0;
 
     // Set up inputs

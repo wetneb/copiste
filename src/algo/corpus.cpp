@@ -54,9 +54,35 @@ bool Corpus::load(string filename)
     return true;
 }
 
-void Corpus::train(NNetwork &network)
+void Corpus::train(NNetwork &network, float learningRate, int maxPasses)
 {
+    bool errorFound = true;
+    vector<int> inputVec;
+    inputVec.resize(mDimension);
 
+    for(int i = 0; i != maxPasses*mSize && ((i+1)%mSize || !errorFound); ++i)
+    {
+        // Restart a new pass
+        if((i+1)%mSize == 0)
+            errorFound = false;
+
+        // Clean the network
+        network.clean();
+
+        // Set up input vector
+        for(int coord = 0; coord != mDimension; ++i)
+            inputVec[coord] = mPool[i%mSize][coord+1];
+
+        // Check the correctness of the answer
+        neural_value answer = network.compute(inputVec);
+
+        // Train
+        if(answer*mPool[i%mSize][0] < 0)
+        {
+            errorFound = true;
+            network.train(inputVec, mPool[i%mSize][0], learningRate);
+        }
+    }
 }
 
 void Corpus::display()

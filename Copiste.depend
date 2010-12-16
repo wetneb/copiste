@@ -557,7 +557,7 @@
 	"algo/neuron.h"
 	<cmath>
 
-1292171891 source:/home/berthe/Programmation/NowPlaying/src/algo/nnetwork.cpp
+1292523434 source:/home/berthe/Programmation/NowPlaying/src/algo/nnetwork.cpp
 	"algo/nnetwork.h"
 	<iostream>
 	<QDomDocument>
