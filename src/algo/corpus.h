@@ -21,6 +21,9 @@ class Corpus
         //! Trains a given network to match the corpus
         void train(NNetwork &network, float learningRate, int maxPasses);
 
+        //! Displays the corpus compliance
+        void compliance(NNetwork &network);
+
         //! Writes to the standard output the set of elements
         void display();
 

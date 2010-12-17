@@ -4,6 +4,7 @@
 
 #include "algo/nnetwork.h"
 #include "gui/mainwindow.h"
+#include "algo/corpus.h"
 
 /**
  * \mainpage
@@ -13,10 +14,8 @@
 
 /**
     État des lieux après la tempête :
-    - Réimplémenter l'entrainement et l'évaluation dans Corpus.
+    - Corriger les initialisations des classes critiques
     - Corriger la propagation des erreurs dans Neuron.
-    - Réécrire des corpus de test.
-    - Ajouter un appel à clean() là où ça manque.
 
     Bonus :
     - Visualisation de corpus.
@@ -32,28 +31,16 @@ int main(int argc, char* argv[])
 {
     //QApplication app(argc, argv);
 
-    neural_value corpus[13][3] {
-        { 0, 0, 1 },
-        { 156, 2, 0.1 },
-        { 13, 0, 1 },
-        { 6, 9, 0.1 },
-        { 3, 3, 1 },
-        { 17, 0, 0.1 },
-        { 8, 11, 1 },
-        { 8, 15, 0.1 },
-        { 2, 9, 1},
-        { 2, 14, 0.1 },
-        { 0, 10, 1 },
-        { 12, 11, 0.1 },
-        { 15, 15, 0.1 }
-    };
 
     //MainWindow win;
+
+    Corpus corpus;
+    corpus.load("corpus/linear-discrimination.xml");
     NNetwork network;
     network.load("networks/MLP.xml");
     vector<int> input;
     input.resize(2);
-
+    /*
     for(unsigned int i = 0; i != 16800; ++i)
     {
         input[0] = corpus[i%13][0];
@@ -61,7 +48,9 @@ int main(int argc, char* argv[])
         cout << "Learning " << input[0] << ":" << input[1] << " -> "<<corpus[i%13][2]<<endl;
         network.train(input, corpus[i%13][2], 0.1);
     }
-
+        */
+    corpus.train(network, 0.1, 10);
+    cout <<"Trained.\n";
     network.display();
 
     int x = 0, y = 0;
@@ -76,6 +65,7 @@ int main(int argc, char* argv[])
         cout << network.compute(input) << endl;
         network.clean();
     }
+    cin >> input[0];
     return 0;//app.exec();
 }
 

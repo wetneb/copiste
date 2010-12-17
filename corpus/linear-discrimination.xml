@@ -1,0 +1,54 @@
+<corpus size="13" dimension="2">
+    <point goal="1">
+        <coord value="0" />
+        <coord value="0" />
+    </point>
+    <point goal="-1">
+        <coord value="156" />
+        <coord value="2" />
+    </point>
+    <point goal="1">
+        <coord value="13" />
+        <coord value="0" />
+    </point>
+    <point goal="-1">
+        <coord value="6" />
+        <coord value="9" />
+    </point>
+    <point goal="1">
+        <coord value="3" />
+        <coord value="3" />
+    </point>
+    <point goal="-1">
+        <coord value="17" />
+        <coord value="0" />
+    </point>
+    <point goal="1">
+        <coord value="8" />
+        <coord value="11" />
+    </point>
+    <point goal="-1">
+        <coord value="8" />
+        <coord value="15" />
+    </point>
+    <point goal="1">
+        <coord value="2" />
+        <coord value="9" />
+    </point>
+    <point goal="-1">
+        <coord value="2" />
+        <coord value="14" />
+    </point>
+        <point goal="1">
+        <coord value="0" />
+        <coord value="10" />
+    </point>
+    <point goal="-1">
+        <coord value="12" />
+        <coord value="11" />
+    </point>
+    <point goal="-1">
+        <coord value="15" />
+        <coord value="15" />
+    </point>
+</corpus>

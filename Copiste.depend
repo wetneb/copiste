@@ -71,12 +71,13 @@
 
 1290812274 /usr/local/share/qt4/include/vlc/deprecated.h
 
-1292363868 source:/home/berthe/Programmation/NowPlaying/src/algo/corpus.cpp
+1292626455 source:/home/berthe/Programmation/NowPlaying/src/algo/corpus.cpp
 	"corpus.h"
 
-1292363809 /home/berthe/Programmation/NowPlaying/src/algo/corpus.h
+1292624243 /home/berthe/Programmation/NowPlaying/src/algo/corpus.h
 	<string>
 	<QFile>
+	"abstractneuron.h"
 	"nnetwork.h"
 
 1289008511 /usr/local/share/qt4/include/QtCore/QFile
@@ -683,12 +684,13 @@
 	<iterator>
 	<list>
 
-1292445026 source:/home/berthe/Programmation/NowPlaying/src/core/main.cpp
+1292625584 source:/home/berthe/Programmation/NowPlaying/src/core/main.cpp
 	<QApplication>
 	<QFont>
 	<QPushButton>
 	"algo/nnetwork.h"
 	"gui/mainwindow.h"
+	"algo/corpus.h"
 
 1289008511 /usr/local/share/qt4/include/QtGui/QApplication
 	"qapplication.h"
