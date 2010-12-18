@@ -13,10 +13,6 @@
  */
 
 /**
-    État des lieux après la tempête :
-    - Corriger les initialisations des classes critiques
-    - Corriger la propagation des erreurs dans Neuron.
-
     Bonus :
     - Visualisation de corpus.
     - Écriture de réseaux et corpus.
@@ -38,6 +34,7 @@ int main(int argc, char* argv[])
     corpus.load("corpus/linear-discrimination.xml");
     NNetwork network;
     network.load("networks/MLP.xml");
+    network.randomize();
     vector<int> input;
     input.resize(2);
     /*
@@ -49,9 +46,11 @@ int main(int argc, char* argv[])
         network.train(input, corpus[i%13][2], 0.1);
     }
         */
-    corpus.train(network, 0.1, 10);
+    cout << "With "<<corpus.train(network, 1, 1000)<<" iterations :" << endl;
     cout <<"Trained.\n";
     network.display();
+    corpus.compliance(network);
+    network.clean();
 
     int x = 0, y = 0;
     while(y >= 0)

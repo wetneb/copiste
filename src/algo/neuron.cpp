@@ -1,14 +1,15 @@
 #include "algo/neuron.h"
 #include <cmath>
+#include <cstdlib>
 
 neural_value sigmoid(neural_value x)
 {
-    return (1 / (1.0 + exp(-x)));
+    return (2.0 / (1.0 + exp(-x))) - 1.0;
 }
 
 neural_value d_sigmoid(neural_value x)
 {
-    return exp(-x)/((1.0 + exp(-x))*(1.0 + exp(-x)));
+    return 2.0*exp(-x)/((1.0 + exp(-x))*(1.0 + exp(-x)));
 }
 
 Neuron::Neuron(string name) : mName(name),
@@ -56,16 +57,15 @@ void Neuron::load(QDomNode node, const NNetwork* network)
 void Neuron::train(neural_value goal, neural_value rate)
 {
     // Get the current value (cached)
-    cout << "G_ERR " << goal - value() << endl;
+    //cout << "G_ERR " << goal - value() << endl;
     mError = goal - value();
     mErrorCached = true;
 
+    // Propagate the error
+    spreadError();
+
     // Compute weights
     computeWeights(rate);
-
-    // Propagate the error
-    for(unsigned int i = 1; i != mParents.size(); ++i)
-        mParents[i]->error();
 }
 
 neural_value Neuron::error(AbstractNeuron *parent)
@@ -81,6 +81,14 @@ neural_value Neuron::error(AbstractNeuron *parent)
     return (parent ? mError*parentWeight(parent) : mError);
 }
 
+void Neuron::spreadError()
+{
+    error();
+
+    for(unsigned int i = 1; i != mParents.size(); ++i)
+        mParents[i]->spreadError();
+}
+
 void Neuron::computeWeights(neural_value rate)
 {
     // The value and the error are required
@@ -93,11 +101,20 @@ void Neuron::computeWeights(neural_value rate)
     // For each weight
     for(unsigned int i = 1; i != mWeights.size(); ++i)
     {
+        //cout << "   " << i << " : from "<<mWeights[i]<<" offset " << d_sigmoid(mValue) * mParents[i]->value() * rate * mError << " (" << mParents[i]->name() << " says " << mParents[i]->value() << ")" << endl;
         mWeights[i] += d_sigmoid(mValue) * mParents[i]->value() * rate * mError;
-        cout << "   " << i << " : offset " << d_sigmoid(mValue) * mParents[i]->value() * rate * mError << " (" << mParents[i]->name() << " says " << mParents[i]->value() << ")" << endl;
-
         mParents[i]->computeWeights(rate);
     }
+}
+
+void Neuron::randomize(bool spread)
+{
+    for(unsigned int i = 0; i != mParents.size()+1; ++i)
+        mWeights[i] = 2.0*rand()/RAND_MAX - 1;
+
+    if(spread)
+        for(unsigned int i = 1; i != mParents.size(); ++i)
+            mParents[i]->randomize(true);
 }
 
 void Neuron::addParent(AbstractNeuron* parent, neural_value weight)

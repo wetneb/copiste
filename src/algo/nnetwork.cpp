@@ -73,6 +73,15 @@ bool NNetwork::load(string fileName)
     return true;
 }
 
+void NNetwork::randomize()
+{
+    if(mLastNeuron)
+    {
+        srand(time(NULL));
+        mLastNeuron->randomize(true);
+    }
+}
+
 AbstractNeuron* NNetwork::getNeuronByName(string name) const
 {
     return mNeurons[QString(name.c_str())];
@@ -112,13 +121,18 @@ neural_value NNetwork::train(vector<int> input, neural_value goal, float rate)
     if(!mLastNeuron)
         return 0;
 
-    neural_value result = compute(input);
+    if(input.size() == mInputs.size())
+    {
+        neural_value result = compute(input);
 
-    mLastNeuron->train(goal, rate);
+        mLastNeuron->train(goal, rate);
 
-    clean();
+        clean();
+        return result;
+    }
+    else cout <<"Warning, bad input vector (size has to be "<<mInputs.size()<<", is "<<input.size()<< ")." << endl;
 
-    return result;
+    return 0;
 }
 
 void NNetwork::clean()

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <QHash>
+#include <cstdlib>
 
 class NNetwork;
 
@@ -21,6 +22,9 @@ class NNetwork
 
         //! Loads a network from an XML file
         bool load(string fileName);
+
+        //! Randomizes the weights, between -1 and 1 (useful before training)
+        void randomize();
 
         //! Adds an input. Returns the ID of the input
         unsigned int addInput(InputNeuron* input);

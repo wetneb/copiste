@@ -39,6 +39,8 @@
 			<Add library="QtXmlPatterns" />
 			<Add directory="/usr/local/share/qt4/lib" />
 		</Linker>
+		<Unit filename="corpus/linear-discrimination.xml" />
+		<Unit filename="networks/MLP.xml" />
 		<Unit filename="src/algo/abstractneuron.h" />
 		<Unit filename="src/algo/analysis.cpp" />
 		<Unit filename="src/algo/analysis.h" />

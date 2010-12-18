@@ -23,7 +23,7 @@
         <coord value="17" />
         <coord value="0" />
     </point>
-    <point goal="1">
+    <point goal="-1">
         <coord value="8" />
         <coord value="11" />
     </point>

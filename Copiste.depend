@@ -71,10 +71,10 @@
 
 1290812274 /usr/local/share/qt4/include/vlc/deprecated.h
 
-1292626455 source:/home/berthe/Programmation/NowPlaying/src/algo/corpus.cpp
+1292671724 source:/home/berthe/Programmation/NowPlaying/src/algo/corpus.cpp
 	"corpus.h"
 
-1292624243 /home/berthe/Programmation/NowPlaying/src/algo/corpus.h
+1292669827 /home/berthe/Programmation/NowPlaying/src/algo/corpus.h
 	<string>
 	<QFile>
 	"abstractneuron.h"
@@ -507,9 +507,10 @@
 
 1288049303 /usr/local/share/qt4/include/bits/stdio-ldbl.h
 
-1292171891 /home/berthe/Programmation/NowPlaying/src/algo/nnetwork.h
+1292676482 /home/berthe/Programmation/NowPlaying/src/algo/nnetwork.h
 	<vector>
 	<QHash>
+	<cstdlib>
 	"algo/abstractneuron.h"
 	"algo/neuron.h"
 	"algo/inputneuron.h"
@@ -532,10 +533,10 @@
 	<QtCore/qiodevice.h>
 	<QtCore/qglobal.h>
 
-1292363751 /home/berthe/Programmation/NowPlaying/src/algo/abstractneuron.h
+1292676517 /home/berthe/Programmation/NowPlaying/src/algo/abstractneuron.h
 	<iostream>
 
-1292171891 /home/berthe/Programmation/NowPlaying/src/algo/neuron.h
+1292676482 /home/berthe/Programmation/NowPlaying/src/algo/neuron.h
 	<string>
 	<sstream>
 	<vector>
@@ -550,15 +551,16 @@
 1289008518 /usr/local/share/qt4/include/QtXml/qdom.h
 	<QtCore/qstring.h>
 
-1292171891 /home/berthe/Programmation/NowPlaying/src/algo/inputneuron.h
+1292676482 /home/berthe/Programmation/NowPlaying/src/algo/inputneuron.h
 	<string>
 	"algo/abstractneuron.h"
 
-1292444387 source:/home/berthe/Programmation/NowPlaying/src/algo/neuron.cpp
+1292676501 source:/home/berthe/Programmation/NowPlaying/src/algo/neuron.cpp
 	"algo/neuron.h"
 	<cmath>
+	<cstdlib>
 
-1292523434 source:/home/berthe/Programmation/NowPlaying/src/algo/nnetwork.cpp
+1292676482 source:/home/berthe/Programmation/NowPlaying/src/algo/nnetwork.cpp
 	"algo/nnetwork.h"
 	<iostream>
 	<QDomDocument>
@@ -684,7 +686,7 @@
 	<iterator>
 	<list>
 
-1292625584 source:/home/berthe/Programmation/NowPlaying/src/core/main.cpp
+1292672178 source:/home/berthe/Programmation/NowPlaying/src/core/main.cpp
 	<QApplication>
 	<QFont>
 	<QPushButton>

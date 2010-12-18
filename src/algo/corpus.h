@@ -15,11 +15,17 @@ class Corpus;
 class Corpus
 {
     public:
+        //! Default constructor. Loads a file if specified.
+        Corpus(string file = "");
+
+        //! Frees the memory
+        ~Corpus();
+
         //! Loads the corpus from an XML file
         bool load(string file);
 
         //! Trains a given network to match the corpus
-        void train(NNetwork &network, float learningRate, int maxPasses);
+        int train(NNetwork &network, float learningRate, int maxPasses);
 
         //! Displays the corpus compliance
         void compliance(NNetwork &network);
@@ -35,6 +41,9 @@ class Corpus
 
         //! Returns the elem pointed by the given index
         neural_value* elem(unsigned int index);
+
+        //! Erases the corpus
+        void erase();
 
     private:
         neural_value** mPool;

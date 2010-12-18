@@ -18,11 +18,17 @@ class AbstractNeuron
         //! Returns the output value of the neuron
         virtual neural_value value() = 0;
 
+        //! Randomizes the weights of the neuron. And do it for the parents if "spread" is set to true.
+        virtual void randomize(bool spread = false) = 0;
+
         //! Adapt the neuron to match a given output
         virtual void train(neural_value value, float rate = 1) = 0;
 
         //! Return the weighted error for a given parent (weight is set to 1 if parent is 0)
         virtual float error(AbstractNeuron* parent = 0) = 0;
+
+        //! Calculates the error of the parents
+        virtual void spreadError() = 0;
 
         //! Change the weights using the error and the cached output value of the neuron
         virtual void computeWeights(float rate) = 0;

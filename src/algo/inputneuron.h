@@ -18,13 +18,19 @@ class InputNeuron : public AbstractNeuron
         //! Sets the value of the neuron
         void setValue(neural_value value) { mValue = value; }
 
-        // An input neuron is orphan (this method should never be called)
+        //! An input neuron is orphan (this method should never be called)
         neural_value error(AbstractNeuron* parent) { return 0; }
 
-        // A input neuron doesn't have any weights
+        //! Randomizing the weights of an input neuron has no effect
+        void randomize(bool spread = false) { ; }
+
+        //! An input neuron doesn't have any weights
         void computeWeights(neural_value rate) { ; }
 
-        // Training an input neuron has no effect
+        //! Spreading error from an input neuron has no effect
+        void spreadError() { ; }
+
+        //! Training an input neuron has no effect
         void train(neural_value goal, float variation = 1) { ; }
 
         string str() const { return string("<") + mName + " : >"; }

@@ -3,8 +3,18 @@
         <node name="ZCR" />
         <node name="LSTER" />
     </inputs>
+    <layer>
+        <node name="Inter_1">
+            <link parent="ZCR" weight="0.5" />
+            <link parent="LSTER" weight="0.5" />
+        </node>
+        <node name="Inter_2">
+            <link parent="ZCR" weight="0.75" />
+            <link parent="LSTER" weight="0.25" />
+        </node>
+    </layer>
     <output>
-        <link parent="ZCR" weight="1" />
-        <link parent="LSTER" weight="2" />
+        <link parent="Inter_1" weight="1" />
+        <link parent="Inter_2" weight="2" />
     </output>
 </nnetwork>

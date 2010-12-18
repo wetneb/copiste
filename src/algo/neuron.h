@@ -45,6 +45,10 @@ class Neuron : public AbstractNeuron
         neural_value error(AbstractNeuron* parent = 0);
         //! Adapt weights using the error
         void computeWeights(float rate);
+        //! Compute the error of the parents
+        void spreadError();
+        //! Randomizes the weights
+        void randomize(bool spread = false);
 
         //! Trains the neuron
         void train(neural_value goal, float rate = 1);

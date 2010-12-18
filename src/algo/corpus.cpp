@@ -1,10 +1,29 @@
 #include "corpus.h"
 
+Corpus::Corpus(string file)
+{
+    mPool = 0;
+    mDimension = 0;
+    mSize = 0;
+
+    if(file.size())
+        load(file);
+}
+
+Corpus::~Corpus()
+{
+    erase();
+}
+
 bool Corpus::load(string filename)
 {
     QDomDocument doc;
     int nbPointsSet = 0, nbCoordsSet = 0;
 
+    // Free everything
+    erase();
+
+    // Load the file and parse it
     QFile file(filename.c_str());
     if(!file.open(QIODevice::ReadOnly))
     {
@@ -14,6 +33,7 @@ bool Corpus::load(string filename)
     doc.setContent(&file);
     file.close();
 
+    // Read the contents
     QDomNode node = doc.documentElement();
 
     if(node.toElement().tagName() == "corpus")
@@ -37,9 +57,9 @@ bool Corpus::load(string filename)
                 QDomNode pointNode = node.firstChild();
                 while(!pointNode.isNull() && nbCoordsSet < mDimension && pointNode.toElement().tagName() == "coord")
                 {
-                    mPool[nbPointsSet][nbCoordsSet] = pointNode.toElement().attribute("value", "1").toFloat();
-                    nbCoordsSet++;
+                    mPool[nbPointsSet][nbCoordsSet+1] = pointNode.toElement().attribute("value", "1").toFloat();
 
+                    nbCoordsSet++;
                     pointNode = pointNode.nextSibling();
                 }
 
@@ -61,13 +81,14 @@ bool Corpus::load(string filename)
     return true;
 }
 
-void Corpus::train(NNetwork &network, float learningRate, int maxPasses)
+int Corpus::train(NNetwork &network, float learningRate, int maxPasses)
 {
     bool errorFound = false;
     vector<int> inputVec;
     inputVec.resize(mDimension);
 
-    for(int i = 0; i != maxPasses*mSize && ((i+1)%mSize || errorFound); ++i)
+    int i;
+    for(i = 0; i != maxPasses*mSize && ((i+1)%mSize || errorFound); ++i)
     {
         // Restart a new pass
         if((i+1)%mSize == 0)
@@ -86,10 +107,12 @@ void Corpus::train(NNetwork &network, float learningRate, int maxPasses)
         // Train
         if((mPool[i%mSize][0])*answer < 0)
         {
+            //cout <<"["<<inputVec[0]<<"]["<<inputVec[1]<<"] Goal = " << mPool[i%mSize][0] << ", result = "<< answer << endl;
             errorFound = true;
             network.train(inputVec, mPool[i%mSize][0], learningRate);
         }
     }
+    return i;
 }
 
 void Corpus::compliance(NNetwork &network)
@@ -104,14 +127,14 @@ void Corpus::compliance(NNetwork &network)
         network.clean();
 
         // Set up input vector
-        for(int coord = 0; coord != mDimension; ++i)
+        for(int coord = 0; coord != mDimension; ++coord)
             inputVec[coord] = mPool[i][coord+1];
 
         // Compute
         if(network.compute(inputVec)*mPool[i][0] < 0)
             errorsFound++;
     }
-    cout << "Corpus compliance : "<<100.0*errorsFound/mSize<<"% of errors, for "<<mSize<<" tests." << endl;
+    cout << "Corpus compliance : "<<100.0*errorsFound/mSize<<"% errors, on "<<mSize<<" tests." << endl;
 }
 
 void Corpus::display()
@@ -125,6 +148,18 @@ void Corpus::display()
             cout << mPool[i][j] << "  ";
         }
         cout << endl;
+    }
+}
+
+void Corpus::erase()
+{
+    if(mPool)
+    {
+        for(int i = 0; i != mSize; ++i)
+            delete mPool[i];
+        delete mPool;
+        mSize = 0;
+        mDimension = 0;
     }
 }
 
