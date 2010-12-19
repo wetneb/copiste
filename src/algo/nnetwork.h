@@ -38,10 +38,10 @@ class NNetwork
         AbstractNeuron* getNeuronByName(QString name) const;
 
         //! Computes the output from an input vector
-        float compute(vector<int> input);
+        float compute(vector<neural_value> input);
 
         //! Computes the output from an input vector and train to match a given goal
-        float train(vector<int> input, neural_value goal, float rate = 1);
+        float train(vector<neural_value> input, neural_value goal, float rate = 1);
 
         //! Cleans (empties the cache) of the network
         void clean();

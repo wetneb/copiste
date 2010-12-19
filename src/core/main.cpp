@@ -5,6 +5,7 @@
 #include "algo/nnetwork.h"
 #include "gui/mainwindow.h"
 #include "algo/corpus.h"
+#include "analysis/corpusview.h"
 
 /**
  * \mainpage
@@ -26,7 +27,7 @@
 int main(int argc, char* argv[])
 {
     //QApplication app(argc, argv);
-
+    srand(time(NULL));
 
     //MainWindow win;
 
@@ -34,37 +35,34 @@ int main(int argc, char* argv[])
     corpus.load("corpus/linear-discrimination.xml");
     NNetwork network;
     network.load("networks/MLP.xml");
-    network.randomize();
-    vector<int> input;
-    input.resize(2);
-    /*
-    for(unsigned int i = 0; i != 16800; ++i)
-    {
-        input[0] = corpus[i%13][0];
-        input[1] = corpus[i%13][1];
-        cout << "Learning " << input[0] << ":" << input[1] << " -> "<<corpus[i%13][2]<<endl;
-        network.train(input, corpus[i%13][2], 0.1);
-    }
-        */
-    cout << "With "<<corpus.train(network, 1, 1000)<<" iterations :" << endl;
-    cout <<"Trained.\n";
-    network.display();
-    corpus.compliance(network);
-    network.clean();
+    corpus.train(network, 0.1, 1000);
 
-    int x = 0, y = 0;
-    while(y >= 0)
+    /*
+    for(int n = 0; n != 100; ++n)
     {
-        cout << "Calcul interactif :\nX = ";
-        cin >> x;
-        cout << "Y = ";
-        cin >> y;
-        input[0] = x;
-        input[1] = y;
-        cout << network.compute(input) << endl;
-        network.clean();
+        float rate = pow(10, (n-100.0)/20.0);
+        cout << rate << " ";
+        int iterations = 0;
+        float compliance = 0;
+        for(unsigned int i=0; i != 10; ++i)
+        {
+            network.randomize();
+            iterations += corpus.train(network, 1, 1000);
+            compliance += corpus.compliance(network);
+        }
+        cout << iterations/10.0 << " " << compliance/10.0 << endl;
     }
-    cin >> input[0];
+    */
+
+    CorpusView cv;
+    cv.setViewPort(0.03, 0.03);
+    cv.addNetworkImage(&network);
+    cv.redraw();
+    cv.write("output.png");
+
+    int buf;
+    cin >> buf;
+
     return 0;//app.exec();
 }
 

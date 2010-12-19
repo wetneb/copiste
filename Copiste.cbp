@@ -51,6 +51,8 @@
 		<Unit filename="src/algo/neuron.h" />
 		<Unit filename="src/algo/nnetwork.cpp" />
 		<Unit filename="src/algo/nnetwork.h" />
+		<Unit filename="src/analysis/corpusview.cpp" />
+		<Unit filename="src/analysis/corpusview.h" />
 		<Unit filename="src/core/audiochunk.h" />
 		<Unit filename="src/core/main.cpp" />
 		<Unit filename="src/core/moc_streamplayer.cpp" />

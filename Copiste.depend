@@ -71,10 +71,10 @@
 
 1290812274 /usr/local/share/qt4/include/vlc/deprecated.h
 
-1292671724 source:/home/berthe/Programmation/NowPlaying/src/algo/corpus.cpp
+1292774557 source:/home/berthe/Programmation/NowPlaying/src/algo/corpus.cpp
 	"corpus.h"
 
-1292669827 /home/berthe/Programmation/NowPlaying/src/algo/corpus.h
+1292677231 /home/berthe/Programmation/NowPlaying/src/algo/corpus.h
 	<string>
 	<QFile>
 	"abstractneuron.h"
@@ -507,7 +507,7 @@
 
 1288049303 /usr/local/share/qt4/include/bits/stdio-ldbl.h
 
-1292676482 /home/berthe/Programmation/NowPlaying/src/algo/nnetwork.h
+1292774535 /home/berthe/Programmation/NowPlaying/src/algo/nnetwork.h
 	<vector>
 	<QHash>
 	<cstdlib>
@@ -560,7 +560,7 @@
 	<cmath>
 	<cstdlib>
 
-1292676482 source:/home/berthe/Programmation/NowPlaying/src/algo/nnetwork.cpp
+1292774577 source:/home/berthe/Programmation/NowPlaying/src/algo/nnetwork.cpp
 	"algo/nnetwork.h"
 	<iostream>
 	<QDomDocument>
@@ -686,13 +686,14 @@
 	<iterator>
 	<list>
 
-1292672178 source:/home/berthe/Programmation/NowPlaying/src/core/main.cpp
+1292773872 source:/home/berthe/Programmation/NowPlaying/src/core/main.cpp
 	<QApplication>
 	<QFont>
 	<QPushButton>
 	"algo/nnetwork.h"
 	"gui/mainwindow.h"
 	"algo/corpus.h"
+	"analysis/corpusview.h"
 
 1289008511 /usr/local/share/qt4/include/QtGui/QApplication
 	"qapplication.h"
@@ -1262,4 +1263,16 @@
 	<QXmlResultItems>
 	<QStringList>
 	<iostream>
+
+1292751680 /home/berthe/Programmation/NowPlaying/src/analysis/corpusview.h
+	<QImage>
+	<QPainter>
+	"algo/corpus.h"
+	"algo/nnetwork.h"
+
+1289008511 /usr/local/share/qt4/include/QtGui/QImage
+	"qimage.h"
+
+1292774512 source:/home/berthe/Programmation/NowPlaying/src/analysis/corpusview.cpp
+	"analysis/corpusview.h"
 

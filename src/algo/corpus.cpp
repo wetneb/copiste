@@ -84,7 +84,7 @@ bool Corpus::load(string filename)
 int Corpus::train(NNetwork &network, float learningRate, int maxPasses)
 {
     bool errorFound = false;
-    vector<int> inputVec;
+    vector<neural_value> inputVec;
     inputVec.resize(mDimension);
 
     int i;
@@ -115,10 +115,10 @@ int Corpus::train(NNetwork &network, float learningRate, int maxPasses)
     return i;
 }
 
-void Corpus::compliance(NNetwork &network)
+float Corpus::compliance(NNetwork &network)
 {
     int errorsFound = 0;
-    vector<int> inputVec;
+    vector<neural_value> inputVec;
     inputVec.resize(mDimension);
 
     for(int i = 0; i != mSize; ++i)
@@ -134,7 +134,7 @@ void Corpus::compliance(NNetwork &network)
         if(network.compute(inputVec)*mPool[i][0] < 0)
             errorsFound++;
     }
-    cout << "Corpus compliance : "<<100.0*errorsFound/mSize<<"% errors, on "<<mSize<<" tests." << endl;
+    return errorsFound/mSize;
 }
 
 void Corpus::display()

@@ -77,7 +77,7 @@ void NNetwork::randomize()
 {
     if(mLastNeuron)
     {
-        srand(time(NULL));
+        //srand(time(NULL));
         mLastNeuron->randomize(true);
     }
 }
@@ -104,7 +104,7 @@ void NNetwork::removeInput(unsigned int id)
         mInputs.erase(mInputs.begin()+id);
 }
 
-neural_value NNetwork::compute(vector<int> input)
+neural_value NNetwork::compute(vector<neural_value> input)
 {
     if(!mLastNeuron || input.size() < mInputs.size())
         return 0;
@@ -116,7 +116,7 @@ neural_value NNetwork::compute(vector<int> input)
     return mLastNeuron->value();
 }
 
-neural_value NNetwork::train(vector<int> input, neural_value goal, float rate)
+neural_value NNetwork::train(vector<neural_value> input, neural_value goal, float rate)
 {
     if(!mLastNeuron)
         return 0;

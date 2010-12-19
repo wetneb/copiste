@@ -14,7 +14,7 @@
         </node>
     </layer>
     <output>
-        <link parent="Inter_1" weight="1" />
-        <link parent="Inter_2" weight="2" />
+        <link parent="ZCR" weight="1" />
+        <link parent="LSTER" weight="2" />
     </output>
 </nnetwork>

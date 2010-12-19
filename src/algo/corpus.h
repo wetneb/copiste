@@ -28,7 +28,7 @@ class Corpus
         int train(NNetwork &network, float learningRate, int maxPasses);
 
         //! Displays the corpus compliance
-        void compliance(NNetwork &network);
+        float compliance(NNetwork &network);
 
         //! Writes to the standard output the set of elements
         void display();
