@@ -18,6 +18,13 @@ void CorpusView::erase()
     mScaleY = 1;
 }
 
+QColor colorFromValue(neural_value value)
+{
+    if(value < 0.001 && value > -0.001)
+        return QColor(0,0,255);
+    return QColor(127*(1.0+value),127*(1.0-value),0);
+}
+
 void CorpusView::redraw()
 {
     // Ajout des échelles
@@ -38,7 +45,7 @@ void CorpusView::redraw()
 
                 mNetwork->clean();
                 float value = mNetwork->compute(inputVec);
-                mPainter.setPen(QColor(127*(1.0+value),127*(1.0-value),0));
+                mPainter.setPen(colorFromValue(value));
 
                 mPainter.drawPoint(x,y);
             }
@@ -46,6 +53,18 @@ void CorpusView::redraw()
     }
 
     // Ajout du corpus, si défini
+    if(mCorpus)
+    {
+        cout << "Corpus drawn "<<mCorpus->size() << endl;
+        for(unsigned int index = 0; index != mCorpus->size(); ++index)
+        {
+            if(mCorpus->elem(index)[0] == 1)
+                mPainter.setPen(QColor(255,255,255));
+            else mPainter.setPen(QColor(0,0,0));
+            cout << "Coords for ["<<mCorpus->elem(index)[1]<<"]["<<mCorpus->elem(index)[2]<<"] : "<<(mCorpus->elem(index)[1] - mOrigX)/mScaleX<<", "<<(mCorpus->elem(index)[2]- mOrigY)/mScaleY<<endl;
+            mPainter.drawPoint((mCorpus->elem(index)[1] - mOrigX)/mScaleX, (mCorpus->elem(index)[2]- mOrigY)/mScaleY);
+        }
+    }
 }
 
 void CorpusView::addNetworkZeros()

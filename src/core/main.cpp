@@ -15,7 +15,7 @@
 
 /**
     Bonus :
-    - Visualisation de corpus.
+    - Visualisation de corpus : adaptation des seuils et des facteurs à la réponse du réseau
     - Écriture de réseaux et corpus.
     - Créer un corpus de fichiers audio
     - Implémenter des algos fiables d'analyse audio
@@ -32,31 +32,17 @@ int main(int argc, char* argv[])
     //MainWindow win;
 
     Corpus corpus;
-    corpus.load("corpus/linear-discrimination.xml");
+    corpus.load("corpus/bilinear-discrimination.xml");
     NNetwork network;
     network.load("networks/MLP.xml");
-    corpus.train(network, 0.1, 1000);
-
-    /*
-    for(int n = 0; n != 100; ++n)
-    {
-        float rate = pow(10, (n-100.0)/20.0);
-        cout << rate << " ";
-        int iterations = 0;
-        float compliance = 0;
-        for(unsigned int i=0; i != 10; ++i)
-        {
-            network.randomize();
-            iterations += corpus.train(network, 1, 1000);
-            compliance += corpus.compliance(network);
-        }
-        cout << iterations/10.0 << " " << compliance/10.0 << endl;
-    }
-    */
+    network.randomize();
+    cout << "Stopped training after " << corpus.train(network, 0.01, 10000) << " iterations." << endl;
+    cout <<"Corpus compliance:" << 100.0*(1-corpus.compliance(network)) <<"%" <<endl;
 
     CorpusView cv;
-    cv.setViewPort(0.03, 0.03);
+    cv.setViewPort(0.05, 0.05, -0.1, -0.1);
     cv.addNetworkImage(&network);
+    cv.setCorpus(&corpus);
     cv.redraw();
     cv.write("output.png");
 

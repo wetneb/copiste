@@ -40,7 +40,7 @@ class Corpus
         unsigned int dimension();
 
         //! Returns the elem pointed by the given index
-        neural_value* elem(unsigned int index);
+        neural_value* elem(unsigned int index) { return mPool[index]; }
 
         //! Erases the corpus
         void erase();

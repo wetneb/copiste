@@ -105,7 +105,7 @@ int Corpus::train(NNetwork &network, float learningRate, int maxPasses)
         neural_value answer = network.compute(inputVec);
 
         // Train
-        if((mPool[i%mSize][0])*answer < 0)
+        if((mPool[i%mSize][0])*answer <= 0)
         {
             //cout <<"["<<inputVec[0]<<"]["<<inputVec[1]<<"] Goal = " << mPool[i%mSize][0] << ", result = "<< answer << endl;
             errorFound = true;
@@ -127,14 +127,19 @@ float Corpus::compliance(NNetwork &network)
         network.clean();
 
         // Set up input vector
+        cout << "Testing ";
         for(int coord = 0; coord != mDimension; ++coord)
+        {
             inputVec[coord] = mPool[i][coord+1];
+            cout << "["<< inputVec[coord] << "]";
+        }
+        cout << " : Result : " << network.compute(inputVec)*mPool[i][0] << endl;
 
         // Compute
-        if(network.compute(inputVec)*mPool[i][0] < 0)
+        if(network.compute(inputVec)*mPool[i][0] <= 0)
             errorsFound++;
     }
-    return errorsFound/mSize;
+    return ((float)errorsFound)/mSize;
 }
 
 void Corpus::display()
