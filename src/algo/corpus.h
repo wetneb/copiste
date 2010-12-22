@@ -24,11 +24,14 @@ class Corpus
         //! Loads the corpus from an XML file
         bool load(string file);
 
+        //! Write the corpus to a file
+        void write(string file);
+
         //! Trains a given network to match the corpus
         int train(NNetwork &network, float learningRate, int maxPasses);
 
-        //! Displays the corpus compliance
-        float compliance(NNetwork &network);
+        //! Displays the corpus accuracy
+        float accuracy(NNetwork &network);
 
         //! Writes to the standard output the set of elements
         void display();

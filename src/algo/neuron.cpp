@@ -27,30 +27,47 @@ Neuron::~Neuron()
         mParents[i]->forgetChild(this);
 }
 
-void Neuron::load(QDomNode node, const NNetwork* network)
+void Neuron::load(QDomElement element, const NNetwork* network)
 {
-    if(!node.isNull() &&
-        ((node.toElement().tagName() == "node" && node.toElement().hasAttribute("name"))
-        || node.toElement().tagName()=="output"))
+    if(!element.isNull() &&
+        ((element.tagName() == "node" && element.hasAttribute("name"))
+        || element.tagName()=="output"))
     {
-        if(node.toElement().hasAttribute("name"))
-            mName = node.toElement().attribute("name").toStdString();
+        if(element.hasAttribute("name"))
+            mName = element.attribute("name").toStdString();
         else mName = "output";
 
-        mWeights[0] = node.toElement().attribute("bias", 0).toFloat();
+        mWeights[0] = element.attribute("bias", 0).toFloat();
 
-        node = node.firstChild();
-        while(!node.isNull())
+        element = element.firstChild().toElement();
+        while(!element.isNull())
         {
-            if(node.toElement().tagName() == "link" && node.toElement().hasAttribute("parent"))
+            if(element.tagName() == "link" && element.hasAttribute("parent"))
             {
-                addParent(network->getNeuronByName(node.toElement().attribute("parent")),
-                            node.toElement().attribute("weight", "1").toFloat());
+                addParent(network->getNeuronByName(element.attribute("parent")),
+                            element.attribute("weight", "1").toFloat());
             }
-            node = node.nextSibling();
+            element = element.nextSibling().toElement();
         }
     }
-    else cout << "Warning : wrong neuron definition : " << node.toElement().tagName().toStdString() << endl;
+    else cout << "Warning : wrong neuron definition : " << element.tagName().toStdString() << endl;
+}
+
+void Neuron::write(QDomElement elem)
+{
+    if(!elem.isNull())
+    {
+        elem.setTagName("node");
+        elem.setAttribute("bias", mWeights[0]);
+
+        for(unsigned int i = 0; i != mParents.size(); ++i)
+        {
+            QDomElement linkElem = elem.ownerDocument().createElement("link");
+            linkElem.setAttribute("parent", mParents[i]->name().c_str());
+            linkElem.setAttribute("weight", mWeights[i+1]);
+            elem.appendChild(linkElem);
+        }
+    }
 }
 
 // This method will be called only for the output neuron

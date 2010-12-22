@@ -25,7 +25,9 @@ class Neuron : public AbstractNeuron
         ~Neuron();
 
         //! Sets up the neuron with an XML node and a network
-        void load(QDomNode node, const NNetwork* network);
+        void load(QDomElement element, const NNetwork* network);
+        //! Writes down the network to a XML file
+        void write(QDomElement elem);
 
         //! Adds a parent, i.e. another neuron involved in computing the value of this neuron
         void addParent(AbstractNeuron* parent, neural_value weight);

@@ -81,6 +81,41 @@ bool Corpus::load(string filename)
     return true;
 }
 
+void Corpus::write(string fileName)
+{
+    // Open the file
+    QFile file(fileName.c_str());
+    if(!file.open(QFile::WriteOnly))
+        return;
+
+    // Create the document
+    QDomDocument doc;
+    QDomNode rootNode = doc.createElement("corpus");
+
+    for(int iPoint = 0; iPoint != mSize; ++iPoint)
+    {
+        QDomElement pointNode = doc.createElement("point");
+
+        pointNode.setAttribute("goal", mPool[iPoint][0]);
+
+        for(int iCoord = 0; iCoord != mDimension; ++iCoord)
+        {
+            QDomElement coordNode = doc.createElement("coord");
+
+            coordNode.setAttribute("value", mPool[iPoint][iCoord+1]);
+
+            pointNode.appendChild(coordNode);
+        }
+
+        rootNode.appendChild(pointNode);
+    }
+    doc.appendChild(rootNode);
+
+    // Write the file
+    file.write(doc.toString(4).toAscii());
+    file.close();
+}
+
 int Corpus::train(NNetwork &network, float learningRate, int maxPasses)
 {
     bool errorFound = false;
@@ -115,7 +150,7 @@ int Corpus::train(NNetwork &network, float learningRate, int maxPasses)
     return i;
 }
 
-float Corpus::compliance(NNetwork &network)
+float Corpus::accuracy(NNetwork &network)
 {
     int errorsFound = 0;
     vector<neural_value> inputVec;

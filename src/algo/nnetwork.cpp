@@ -51,7 +51,7 @@ bool NNetwork::load(string fileName)
                 while(!subNode.isNull() && subNode.toElement().tagName() == "node")
                 {
                     Neuron *neuron = new Neuron;
-                    neuron->load(subNode, this);
+                    neuron->load(subNode.toElement(), this);
                     mNeurons[QString(neuron->name().c_str())] = neuron;
                     subNode = subNode.nextSibling();
                 }
@@ -59,7 +59,7 @@ bool NNetwork::load(string fileName)
             else if(elem.tagName() == "output")
             {
                 Neuron *neuron = new Neuron;
-                neuron->load(node, this);
+                neuron->load(node.toElement(), this);
                 mLastNeuron = neuron;
             }
             node = node.nextSibling();
@@ -71,6 +71,34 @@ bool NNetwork::load(string fileName)
         return false;
     }
     return true;
+}
+
+void NNetwork::write(string filename)
+{
+    QDomDocument doc;
+    QDomElement rootElem = doc.createElement("nnetwork");
+
+    // Append inputs
+    QDomElement inputsElem = doc.createElement("inputs");
+    for(unsigned int i = 0; i != mInputs.size(); ++i)
+    {
+        QDomElement elem = doc.createElement("node");
+        elem.setAttribute("name", mInputs[i]->name());
+        inputsElem.appendChild(elem);
+    }
+    rootElem.appendChild(inputsElem);
+
+    // Append layers
+    QDomElement layerElem = doc.createElement("layer");
+    for(unsigned int i = 0; i != mNeurons.size(); ++i)
+    {
+        QDomElement elem = doc.createElement("node");
+        mNeurons[i]->write(elem);
+        layerElem.appendChild(elem);
+    }
+    rootElem.appendChild(layerElem);
+
+    doc.appendChild(rootElem);
 }
 
 void NNetwork::randomize()

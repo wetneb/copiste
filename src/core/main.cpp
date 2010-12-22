@@ -33,11 +33,12 @@ int main(int argc, char* argv[])
 
     Corpus corpus;
     corpus.load("corpus/bilinear-discrimination.xml");
+    corpus.write("corpus-copy.xml");
     NNetwork network;
     network.load("networks/MLP.xml");
     network.randomize();
     cout << "Stopped training after " << corpus.train(network, 0.01, 10000) << " iterations." << endl;
-    cout <<"Corpus compliance:" << 100.0*(1-corpus.compliance(network)) <<"%" <<endl;
+    cout <<"Corpus accuracy:" << 100.0*(1-corpus.accuracy(network)) <<"%" <<endl;
 
     CorpusView cv;
     cv.setViewPort(0.05, 0.05, -0.1, -0.1);
