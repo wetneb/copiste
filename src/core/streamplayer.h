@@ -14,6 +14,7 @@
 #include <sstream>
 #include "gui/graphique.h"
 #include "algo/analysis.h"
+#include "core/streamcatcher.h"
 
 // Temporaire, à supprimer
 #include <string>
@@ -40,6 +41,8 @@ class StreamPlayer : public QObject
 
         //! Audio Mutex (to prevent from crashes with VLC)
         QMutex mLock;
+        //! Stream handling thread (to prevent from latency)
+        StreamCatcher mCatcher;
 
         //! Sets the wawe diagram
         void setGraphiqueOnde(Graphique *graphique) { mGraphique = graphique; }

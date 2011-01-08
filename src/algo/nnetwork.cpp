@@ -83,17 +83,17 @@ void NNetwork::write(string filename)
     for(unsigned int i = 0; i != mInputs.size(); ++i)
     {
         QDomElement elem = doc.createElement("node");
-        elem.setAttribute("name", mInputs[i]->name());
+        elem.setAttribute("name", mInputs[i]->name().c_str());
         inputsElem.appendChild(elem);
     }
     rootElem.appendChild(inputsElem);
 
     // Append layers
     QDomElement layerElem = doc.createElement("layer");
-    for(unsigned int i = 0; i != mNeurons.size(); ++i)
+    for(QHash<QString, AbstractNeuron*>::iterator i = mNeurons.begin(); i != mNeurons.end(); ++i)
     {
         QDomElement elem = doc.createElement("node");
-        mNeurons[i]->write(elem);
+        //(*i)->write(elem);
         layerElem.appendChild(elem);
     }
     rootElem.appendChild(layerElem);

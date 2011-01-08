@@ -56,6 +56,8 @@
 		<Unit filename="src/core/audiochunk.h" />
 		<Unit filename="src/core/main.cpp" />
 		<Unit filename="src/core/moc_streamplayer.cpp" />
+		<Unit filename="src/core/streamcatcher.cpp" />
+		<Unit filename="src/core/streamcatcher.h" />
 		<Unit filename="src/core/streamplayer.cpp" />
 		<Unit filename="src/core/streamplayer.h" />
 		<Unit filename="src/gui/graphique.cpp" />

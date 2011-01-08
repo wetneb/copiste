@@ -26,31 +26,11 @@
 
 int main(int argc, char* argv[])
 {
-    //QApplication app(argc, argv);
+    QApplication app(argc, argv);
     srand(time(NULL));
 
-    //MainWindow win;
-
-    Corpus corpus;
-    corpus.load("corpus/bilinear-discrimination.xml");
-    corpus.write("corpus-copy.xml");
-    NNetwork network;
-    network.load("networks/MLP.xml");
-    network.randomize();
-    cout << "Stopped training after " << corpus.train(network, 0.01, 10000) << " iterations." << endl;
-    cout <<"Corpus accuracy:" << 100.0*(1-corpus.accuracy(network)) <<"%" <<endl;
-
-    CorpusView cv;
-    cv.setViewPort(0.05, 0.05, -0.1, -0.1);
-    cv.addNetworkImage(&network);
-    cv.setCorpus(&corpus);
-    cv.redraw();
-    cv.write("output.png");
-
-    int buf;
-    cin >> buf;
-
-    return 0;//app.exec();
+    MainWindow win;
+    return app.exec();
 }
 
 /**

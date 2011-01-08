@@ -17,7 +17,7 @@ StreamPlayer::StreamPlayer() : mPlaying(false),
     char smem_options[256];
     audioData = new char[128];
 
-    sprintf(smem_options, "#transcode{acodec=s16l}:smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}",// "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",
+    sprintf(smem_options, "#transcode{acodec=s16l}:duplicate{dst=display{delay=7000},dst=smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",// "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",
                             (long long int)(intptr_t)(void*)&handleStream, (long long int)(intptr_t)(void*)&prepareRender, (long long int)(intptr_t)(void*)this); // duplicate{dst=std,dst=smem{audio-postrender-callback=%lld,audio-data=%lld}}
     const char * const vlc_args[] = {
               "-I", "dummy", /* Don't use any interface */
@@ -95,48 +95,8 @@ void prepareRender( void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int s
 
 void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channels, unsigned int rate, unsigned int nb_samples, unsigned int bits_per_sample, unsigned int size, int64_t pts )
 {
-    // cout << "handleStream" << endl;
-    //if(nb_samples)
-    //   cout << "NbSamples : " << nb_samples << ", Channels : " << channels << " Size : " << size << ", bits per sample : " << bits_per_sample << ", pts : " << pts << endl;
-
-
-    std::stringstream buf;
-    buf << "NbSamples : " << nb_samples << ", Channels : " << channels << " Size : " << size << ", bits per sample : " << bits_per_sample << ", pts : " << pts << ", rate " << rate << endl;
-    ((StreamPlayer*)p_audio_data)->writeLine(buf.str());
-
-    uint16_t* temp = StreamPlayer::convert8to16(p_pcm_buffer, size);
-
-    uint16_t* pcm_buffer = new uint16_t[size/64];
-     StreamPlayer::reduce(temp, pcm_buffer, size, 9, 90);
-     //cout << ZCR(temp,size/2) << endl;
-    //StreamPlayer::addOffset(pcm_buffer, pcm_buffer, size/128, 10000);
-     // StreamPlayer::average(temp, size, 7, 2);
-    // ((StreamPlayer*)p_audio_data)->dumpStreamToFile16(temp, size/2);
-
-
-    // /*
-    if(((StreamPlayer*)p_audio_data)->graphiqueOnde())
-        ((StreamPlayer*)p_audio_data)->graphiqueOnde()->appendData((uint16_t*)pcm_buffer, size/512);
-    //*/
-
-    uint16_t* spectrum = naiveDFT(temp, 9);
-    ((StreamPlayer*)p_audio_data)->dumpStreamToFile16(spectrum, pow(2, 9));
-    ((StreamPlayer*)p_audio_data)->dumpStreamToFile16(temp, pow(2,9));
-    /*
-    uint16_t* reducedSpectrum = new uint16_t[128];
-    StreamPlayer::reduce(spectrum, reducedSpectrum, 512, 2, true);
-//    uint16_t* reducedSpectrum = StreamPlayer::average(spectrum, size
-    cout << "Frenquencies generated." << endl;
-
-    if(((StreamPlayer*)p_audio_data)->graphiqueSpectre())
-        ((StreamPlayer*)p_audio_data)->graphiqueSpectre()->setData((uint16_t*)reducedSpectrum, 128);
-
-    delete spectrum; */
-
-    //delete temp;
-    //delete pcm_buffer;
-
-    ((StreamPlayer*)p_audio_data)->mLock.unlock();
+    ((StreamPlayer*)p_audio_data)->mCatcher.setAudioChunk(p_audio_data, p_pcm_buffer, channels, rate, nb_samples, bits_per_sample, size, pts);
+    ((StreamPlayer*)p_audio_data)->mCatcher.run();
 }
 
 uint16_t* StreamPlayer::convert8to16(const uint8_t* source, int size)

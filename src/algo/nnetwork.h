@@ -23,6 +23,9 @@ class NNetwork
         //! Loads a network from an XML file
         bool load(string fileName);
 
+        //! Writes the netowrk to a file
+        void write(string filename);
+
         //! Randomizes the weights, between -1 and 1 (useful before training)
         void randomize();
 
