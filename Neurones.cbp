@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Neurones" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="bin/Neurones" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="/home/berthe/Programmation/Neurones/src" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="/usr/local/share/qt4/include" />
+			<Add directory="/usr/local/share/qt4/include/QtGui" />
+			<Add directory="/usr/local/share/qt4/include/QtCore" />
+			<Add directory="/usr/local/share/qt4/include/QtXml" />
+			<Add directory="/usr/local/share/qt4/include/QtXmlPatterns" />
+			<Add directory="/usr/include/boost" />
+		</Compiler>
+		<Linker>
+			<Add library="QtCore" />
+			<Add library="QtGui" />
+			<Add library="vlc" />
+			<Add library="QtXml" />
+			<Add library="QtXmlPatterns" />
+			<Add library="boost_program_options" />
+			<Add directory="/usr/local/share/qt4/lib" />
+		</Linker>
+		<Unit filename="main.cpp" />
+		<Unit filename="src/algo/abstractneuron.h" />
+		<Unit filename="src/algo/analysis.cpp" />
+		<Unit filename="src/algo/analysis.h" />
+		<Unit filename="src/algo/corpus.cpp" />
+		<Unit filename="src/algo/corpus.h" />
+		<Unit filename="src/algo/inputneuron.h" />
+		<Unit filename="src/algo/neuron.cpp" />
+		<Unit filename="src/algo/neuron.h" />
+		<Unit filename="src/algo/nnetwork.cpp" />
+		<Unit filename="src/algo/nnetwork.h" />
+		<Unit filename="src/analysis/corpusview.cpp" />
+		<Unit filename="src/analysis/corpusview.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
