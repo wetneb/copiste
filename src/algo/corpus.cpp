@@ -188,9 +188,9 @@ void Corpus::display()
     }
 }
 
-vector<int> Corpus::bounds()
+vector<float> Corpus::bounds()
 {
-    vector<int> result(mDimension*2,0);
+    vector<float> result(mDimension*2,0);
 
     for(int i = 0; i != mSize; ++i)
         for(int j = 0; j != mDimension; ++j)

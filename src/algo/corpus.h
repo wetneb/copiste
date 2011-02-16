@@ -46,7 +46,7 @@ class Corpus
         neural_value* elem(unsigned int index) { return mPool[index]; }
 
         //! Retuns the bounds of the corpus
-        vector<int> bounds();
+        vector<float> bounds();
 
         //! Erases the corpus
         void erase();
