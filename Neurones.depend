@@ -1,11 +1,11 @@
 # depslib dependency file v1.0
-1297789169 source:/home/berthe/Programmation/Neurones/main.cpp
+1297891185 source:/home/berthe/Programmation/Neurones/main.cpp
 	<iostream>
 	<QApplication>
 	<program_options.hpp>
 	"algo/corpus.h"
 	"algo/nnetwork.h"
-	"analysis/corpusview.h"
+	"gui/view2D.h"
 
 1297607665 source:/home/berthe/Programmation/Neurones/src/algo/analysis.cpp
 	"algo/analysis.h"
@@ -79,10 +79,10 @@
 
 1296598077 /usr/local/share/qt4/include/vlc/deprecated.h
 
-1297788902 source:/home/berthe/Programmation/Neurones/src/algo/corpus.cpp
+1297864780 source:/home/berthe/Programmation/Neurones/src/algo/corpus.cpp
 	"corpus.h"
 
-1297785927 /home/berthe/Programmation/Neurones/src/algo/corpus.h
+1297864780 /home/berthe/Programmation/Neurones/src/algo/corpus.h
 	<string>
 	<QFile>
 	"abstractneuron.h"
@@ -694,10 +694,10 @@
 	<iterator>
 	<list>
 
-1297788865 source:/home/berthe/Programmation/Neurones/src/analysis/corpusview.cpp
+1297889971 source:/home/berthe/Programmation/Neurones/src/analysis/corpusview.cpp
 	"analysis/corpusview.h"
 
-1297787600 /home/berthe/Programmation/Neurones/src/analysis/corpusview.h
+1297873709 /home/berthe/Programmation/Neurones/src/analysis/corpusview.h
 	<QImage>
 	<QPainter>
 	"algo/corpus.h"
@@ -2798,4 +2798,33 @@
 
 1289008519 /usr/local/share/qt4/include/QtCore/qpointer.h
 	<QtCore/qobject.h>
+
+1297890292 source:/home/berthe/Programmation/Neurones/src/gui/editor.cpp
+	"gui/editor.h"
+	<iostream>
+	<QPaintEvent>
+
+1297890233 /home/berthe/Programmation/Neurones/src/gui/editor.h
+	<QWidget>
+	"algo/nnetwork.h"
+	"algo/corpus.h"
+	"analysis/corpusview.h"
+
+1289008511 /usr/local/share/qt4/include/QtGui/QWidget
+	"qwidget.h"
+
+1297872067 source:/home/berthe/Programmation/Neurones/src/gui/moc_editor.cpp
+	"editor.h"
+
+1289008511 /usr/local/share/qt4/include/QtGui/QPaintEvent
+	"qevent.h"
+
+1297891299 /home/berthe/Programmation/Neurones/src/gui/view2D.h
+	<QWidget>
+	"algo/nnetwork.h"
+	"algo/corpus.h"
+	"analysis/corpusview.h"
+
+1297890552 source:/home/berthe/Programmation/Neurones/src/gui/moc_view2D.cpp
+	"view2D.h"
 

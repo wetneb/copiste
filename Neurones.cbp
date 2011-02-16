@@ -6,18 +6,25 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Release">
+			<Target title="Linear">
 				<Option output="bin/Neurones" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="-teg --net networks/MLP.xml --corpus corpus/linear-discrimination.xml --verbose" />
 				<Compiler>
 					<Add option="-O2" />
-					<Add directory="/home/berthe/Programmation/Neurones/src" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 				</Linker>
+			</Target>
+			<Target title="Nonlinear">
+				<Option output="bin/Neurones" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-teg --net networks/MLP.xml --corpus corpus/bilinear-discrimination.xml --verbose -m 10000 -r 0.001" />
 			</Target>
 		</Build>
 		<Compiler>
@@ -28,6 +35,7 @@
 			<Add directory="/usr/local/share/qt4/include/QtXml" />
 			<Add directory="/usr/local/share/qt4/include/QtXmlPatterns" />
 			<Add directory="/usr/include/boost" />
+			<Add directory="/home/berthe/Programmation/Neurones/src" />
 		</Compiler>
 		<Linker>
 			<Add library="QtCore" />
