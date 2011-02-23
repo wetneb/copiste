@@ -6,10 +6,13 @@
 
 #include "algo/corpus.h"
 #include "algo/nnetwork.h"
-#include "analysis/corpusview.h"
-
+#include "gui/view2D.h"
+#include "gui/editor.h"
 
 namespace po = boost::program_options;
+
+void plotHistory(float* history, int size);
+int* randomPermutation(int n);
 
 int main(int argc, char **argv)
 {
@@ -18,13 +21,14 @@ int main(int argc, char **argv)
     desc.add_options()
         ("train,t", "Train the network")
         ("eval,e", "Compute the error rate of the network")
-        ("graph,g", "Draw the graph of the network")
+        ("plot,p", "Plot the network and / or the corpus")
         ("net,n", po::value<std::string>(), "Path to the network")
         ("corpus,c", po::value<std::string>(), "Path to the corpus")
         ("out,o", po::value<std::string>(), "Path to the output (default: output.png)")
         ("rate,r", po::value<float>(), "Training rate (default: 0.01)")
         ("max,m", po::value<int>(), "Maximum iterations count for training (default: 1000)")
-        ("no-random", "Don't randomize weights before training")
+        ("no-random-weights", "Don't randomize weights before training")
+        ("no-random-samples", "Don't randomize the order of the training corpus")
         ("verbose", "Be verbose")
         ("help,h", "Display this message")
     ;
@@ -36,7 +40,10 @@ int main(int argc, char **argv)
     // Program's behaviour
     if(vm.count("help"))
     {
-        std::cout << "Neural network analysis tool." << std::endl;
+        std::cout << "Neural network analysis tool.\n\nExamples:" << std::endl;
+        std::cout << "Evaluate how accurate is a network on a corpus :\n   nnat -e --net my_network.xml --corpus my_corpus.xml\n" << std::endl;
+        std::cout << "Train a network to match a corpus :\n   nnat -t --net my_network.xml --corpus my_corpus.xml\n" << std::endl;
+        std::cout << "Plot a network and/or a corpus :\n   nnat -g --net my_network.xml --corpus my_corpus.xml\n" << std::endl;
         std::cout << desc << std::endl;
         return 0;
     }
@@ -84,43 +91,44 @@ int main(int argc, char **argv)
     // Running
     if(vm.count("train"))
     {
-        if(vm.count("no-random") == 0)
+        if(vm.count("no-random-weights") == 0)
             net.randomize();
-        cout << "Training ended after " << corpus.train(net, rate, iterMax) << " iterations.\n";
+        //float *history;
+        int nbIter = corpus.train(net, rate, iterMax, 0, (vm.count("no-random-weights") == 0));// 0 : &history
+
+        if(verbose)
+            cout << "Training ended after " << nbIter << " iterations.\n";
+        //plotHistory(history,iterMax*corpus.size(), 13);
     }
 
 
     if(vm.count("eval"))
     {
         float accuracy = corpus.accuracy(net, verbose);
-        std::cout << "Accuracy : "<<accuracy*100<<"%" << std::endl;
+        if(verbose)
+            std::cout << "Accuracy : "<<accuracy*100<<"%" << std::endl;
+        else
+            cout << (int)(accuracy*100) << endl;
     }
 
-    if(vm.count("graph"))
+    if(vm.count("plot"))
     {
         QApplication app(argc, argv);
-        CorpusView view;
 
-        vector<int> bounds = corpus.bounds();
-
-        /*
-        cout << "Bounds for this corpus :\n";
-        cout << "Min X : "<< bounds[0] << endl << "Max X : " << bounds[1] << endl << "Min Y : " << bounds[2] << "\nMax Y : " << bounds[3] << endl;
-        // */
-
-        view.setViewPort((bounds[1] - bounds[0])/(float)CORPUS_VIEW_OUTPUT_HEIGHT,
-                         (bounds[3] - bounds[2])/(float)CORPUS_VIEW_OUTPUT_WIDTH,
-                         bounds[0], bounds[2]);
+        Editor view;
 
         if(corpusFile != "")
             view.setCorpus(&corpus);
         if(netFile != "")
-            view.addNetworkImage(&net);
+            view.setNet(&net);
+        cout << "Set." << endl;
 
-        view.redraw(verbose);
+        view.show();
+        //view.renderToImage(outFile);
 
-        view.write(outFile, "PNG", verbose);
+        return app.exec();
     }
 
     return 0;
 }
+

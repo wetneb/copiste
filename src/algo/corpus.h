@@ -2,6 +2,7 @@
 #define INCLUDEDCORPUSH
 
 #include <string>
+#include <cmath>
 #include <QFile>
 
 using namespace std;
@@ -27,8 +28,8 @@ class Corpus
         //! Write the corpus to a file
         void write(string file);
 
-        //! Trains a given network to match the corpus
-        int train(NNetwork &network, float learningRate, int maxPasses);
+        //! Trains a given network to match the corpus (writing error rates in **history)
+        int train(NNetwork &network, float learningRate, int maxPasses, float **history = 0, bool random = true);
 
         //! Displays the corpus accuracy
         float accuracy(NNetwork &network, bool verbose = false);
@@ -56,6 +57,5 @@ class Corpus
         int mSize;
         int mDimension;
 };
-
 
 #endif

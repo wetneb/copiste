@@ -113,14 +113,13 @@ void Neuron::computeWeights(neural_value rate)
     if(!mErrorCached or !mValueCached)
         return;
 
-
     mWeights[0] += d_sigmoid(mValue)* rate * mError;
 
     // For each weight
     for(unsigned int i = 1; i != mWeights.size(); ++i)
     {
         //cout << "   " << i << " : from "<<mWeights[i]<<" offset " << d_sigmoid(mValue) * mParents[i]->value() * rate * mError << " (" << mParents[i]->name() << " says " << mParents[i]->value() << ")" << endl;
-        mWeights[i] += d_sigmoid(mValue) * mParents[i]->value() * rate * mError;
+        mWeights[i] += mParents[i]->value() * rate * mError * d_sigmoid(mValue);
         mParents[i]->computeWeights(rate);
     }
 }
