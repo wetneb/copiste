@@ -4,6 +4,8 @@
 #include <QThread>
 #include <vlc/vlc.h>
 
+class StreamPlayer;
+
 class StreamCatcher : public QThread
 {
     public:
@@ -18,7 +20,7 @@ class StreamCatcher : public QThread
     private:
         bool mDataSet;
 
-        void* mAudioData;
+        StreamPlayer* mAudioData;
         uint8_t* mPCMBuffer;
         unsigned int mChannels;
         unsigned int mRate;

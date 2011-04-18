@@ -12,6 +12,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
+
+class StreamPlayer;
+
 #include "gui/graphique.h"
 #include "algo/analysis.h"
 #include "core/streamcatcher.h"
@@ -63,6 +66,7 @@ class StreamPlayer : public QObject
         static void addOffset(uint16_t* source, uint16_t* dest, int size, int offset);
         //! Dumps values to a file (useful in a debugging process) (16 bit version)
         void dumpStreamToFile16(uint16_t* source, int size);
+        void dumpStreamToFile16x2(uint16_t* source, uint16_t* second, int size);
         //! Dumps values to a file (8 bit version)
         void dumpStreamToFile8(uint8_t* source, int size);
         //! Write a line to the dump file

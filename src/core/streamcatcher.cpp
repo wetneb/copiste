@@ -8,7 +8,7 @@ void StreamCatcher::setAudioChunk(void* p_audio_data, uint8_t* p_pcm_buffer, uns
 {
     if(wait())
     {
-        mAudioData = p_audio_data;
+        mAudioData = (StreamPlayer*)p_audio_data;
         mPCMBuffer = p_pcm_buffer;
         mChannels = channels;
         mRate = rate;
@@ -25,6 +25,7 @@ void StreamCatcher::run()
 {
     if(mDataSet)
     {
+        if(mSize >= 1024) {
         //! Debug section
 
         // std::stringstream buf;
@@ -34,8 +35,8 @@ void StreamCatcher::run()
 
         //! Conversion section
         uint16_t* temp = StreamPlayer::convert8to16(mPCMBuffer, mSize);
-
-        uint16_t* pcm_buffer = new uint16_t[mSize/64];
+        std::cout << mSize <<".\n";
+        //uint16_t* pcm_buffer = new uint16_t[mSize/64];
         //StreamPlayer::reduce(temp, pcm_buffer, mSize, 9, 90);
         //StreamPlayer::addOffset(pcm_buffer, pcm_buffer, size/128, 10000);
          // StreamPlayer::average(temp, size, 7, 2);
@@ -50,10 +51,10 @@ void StreamCatcher::run()
 
 
         //! Analysis section
-         //cout << ZCR(temp,size/2) << endl;
-        // uint16_t* spectrum = naiveDFT(temp, 9);
+        //std::cout << ZCR(temp,mSize/2) << std::endl;
+        uint16_t* spectrum = naiveDFT(temp, 10);
         //########################################
-        //((StreamPlayer*)p_audio_data)->dumpStreamToFile16(spectrum, pow(2, 9));
+        mAudioData->dumpStreamToFile16x2(temp, spectrum, 1024);
         //((StreamPlayer*)p_audio_data)->dumpStreamToFile16(temp, pow(2,9));
         //########################################
 
@@ -71,7 +72,7 @@ void StreamCatcher::run()
 
         //delete temp;
         //delete pcm_buffer;
-
+        }
         ((StreamPlayer*)mAudioData)->mLock.unlock();
     }
 }

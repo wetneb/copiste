@@ -17,7 +17,7 @@ StreamPlayer::StreamPlayer() : mPlaying(false),
     char smem_options[256];
     audioData = new char[128];
 
-    sprintf(smem_options, "#transcode{acodec=s16l}:duplicate{dst=display{delay=7000},dst=smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",// "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",
+    sprintf(smem_options, "#transcode{acodec=s16l}:smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}", // duplicate{dst=display{delay=7000},dst=
                             (long long int)(intptr_t)(void*)&handleStream, (long long int)(intptr_t)(void*)&prepareRender, (long long int)(intptr_t)(void*)this); // duplicate{dst=std,dst=smem{audio-postrender-callback=%lld,audio-data=%lld}}
     const char * const vlc_args[] = {
               "-I", "dummy", /* Don't use any interface */
@@ -60,15 +60,13 @@ void StreamPlayer::update()
 void StreamPlayer::play()
 {
     if(!mMedia)
-    {
-        cout << "Big Begin ######" << endl;
         mMedia = libvlc_media_new_path (mVlcInstance, mUrl.toAscii());
-    }
+
     libvlc_media_player_set_media (mMp, mMedia);
-    cout << "Out of the block ####" <<endl;
+
     if(!mPlaying)
         libvlc_media_player_play (mMp);
-    cout << "Startted to play #######" << endl;
+
     mPlaying = true;
 }
 
@@ -169,8 +167,24 @@ void StreamPlayer::dumpStreamToFile16(uint16_t* source, int size)
     }
 
     std::stringstream buf;
+
     for(int i = 0; i != size; ++i)
-        buf << source[i] << "\n";
+        buf << i+1 << "\t" << source[i] << "\n";
+    mDumpFile.write(buf.str().c_str());
+}
+
+void StreamPlayer::dumpStreamToFile16x2(uint16_t* source, uint16_t* second, int size)
+{
+    if(!mDumpFile.isOpen())
+    {
+        mDumpFile.setFileName("dumpedStream.txt");
+        mDumpFile.open(QIODevice::WriteOnly);
+    }
+
+    std::stringstream buf;
+
+    for(int i = 0; i != size; ++i)
+        buf << i+1 << "\t" << source[i] << "\t" << second[i%(size/2)] << "\n";
     mDumpFile.write(buf.str().c_str());
 }
 
@@ -187,8 +201,11 @@ void StreamPlayer::dumpStreamToFile8(uint8_t* source, int size)
     std::stringstream buf;
     for(int i = 0; i != size/2; ++i)
     {
+        buf << i+1 << "\t" << (int)source[i] << "\n";
+        /*
         buf << (int)source[2*i] << " " << (int)((((int)source[2*i+1]) << 8) | source[2*i]) << "\n";
         buf << (int)source[2*i+1] << " " << (int)((((int)source[2*i+1]) << 8) | source[2*i]) << "\n";
+        // */
     }
     mDumpFile.write(buf.str().c_str());
 }
