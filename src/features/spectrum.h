@@ -41,6 +41,7 @@ class SpectrumExtr : public FeatureExtractor
         uint16_t* mResults;
         int* mButterfly;
         int mSize;
+        int mBound;
 };
 
 #endif

@@ -2,8 +2,6 @@
 
 #include <cmath>
 
-//#include <iostream> // Delete me !
-
 bool SpectrumExtr::extract(uint16_t* data, int size)
 {
     // Size checks : if the size changed, we have to reallocate the buffer
@@ -106,7 +104,7 @@ bool SpectrumExtr::extract(uint16_t* data, int size)
     return true;
 }
 
-SpectrumExtr::SpectrumExtr(int size) : mResults(0), mButterfly(0), mSize(size)
+SpectrumExtr::SpectrumExtr(int size) : mResults(0), mButterfly(0), mSize(size), mBound((1 << 31))
 {
     reallocate();
 }
@@ -148,7 +146,11 @@ void SpectrumExtr::reallocate()
 
 void SpectrumExtr::normalize(int bound)
 {
-    // Find the maximum
+    // If the data is already normalized to this bound, don't change anything
+    if(mBound == bound)
+        return;
+
+    // Find the maximum (the last bound may not be a maximum)
     uint16_t max = 0;
     for(int i = 0; i < mSize; i++)
         if(mResults[i] > max)
@@ -159,12 +161,14 @@ void SpectrumExtr::normalize(int bound)
     for(int i = 0; i < mSize; i++)
         mResults[i] *= ratio;
 
+    mBound = bound;
 }
 
 float SpectrumExtr::value(int index)
 {
+    // Normalize the value (in [-1; 1])
     if(index < mSize)
-        return mResults[index];
+        return (2.0 *mResults[index] / mBound - 1.0);
     return 0;
 }
 
