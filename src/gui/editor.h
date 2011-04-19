@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QStatusBar>
 #include <QMenuBar>
+#include <QToolBar>
 
 class Editor;
 
@@ -30,6 +31,7 @@ class Editor : public QMainWindow
 
     private:
         View2D mView;
+        QToolBar *mToolbar;
 };
 
 #endif

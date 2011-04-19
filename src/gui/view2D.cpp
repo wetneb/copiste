@@ -91,9 +91,8 @@ void View2D::renderScene()
             painter.drawPixmap((mCorpus->elem(index)[1] - mViewport.x)/mViewport.scaleX - 5, (mCorpus->elem(index)[2]- mViewport.y)/mViewport.scaleY - 5, *img);
         }
     }
-    cout << "Ending…\n";
+
     painter.end();
-    cout << "Ended.\n";
 
     mViewport.img = newPic;
 
@@ -150,22 +149,35 @@ void View2D::mousePressEvent(QMouseEvent *event)
 void View2D::mouseReleaseEvent(QMouseEvent *event)
 {
     int x = event->x(), y = event->y();
-    QRect rect(QPoint(min(x, mStartX), min(y, mStartY)), QPoint(max(x, mStartX), max(y, mStartY)));
-    mZooming = false;
-
-    if(rect.height() > 50 && rect.width() > 50)
+    if(event->button() == Qt::LeftButton)
     {
-        Viewport newViewport = mViewport;
-        newViewport.x += newViewport.scaleX*rect.x();
-        newViewport.y += newViewport.scaleY*rect.y();
-        newViewport.scaleX *= rect.width() / (float)width();
-        newViewport.scaleY *= rect.height() / (float)height();
+        QRect rect(QPoint(min(x, mStartX), min(y, mStartY)), QPoint(max(x, mStartX), max(y, mStartY)));
+        mZooming = false;
 
-        mViewport = newViewport;
+        if(rect.height() > 50 && rect.width() > 50)
+        {
+            Viewport newViewport = mViewport;
+            newViewport.x += newViewport.scaleX*rect.x();
+            newViewport.y += newViewport.scaleY*rect.y();
+            newViewport.scaleX *= rect.width() / (float)width();
+            newViewport.scaleY *= rect.height() / (float)height();
 
-        renderScene();
-        repaint();
+            mViewport = newViewport;
+
+            renderScene();
+            repaint();
+        }
+        else event->ignore();
     }
+    else if(event->button() == Qt::RightButton)
+    {
+        neural_value *sampleVec = new neural_value[3];
+        sampleVec[0] = 1;
+        sampleVec[1] = x*mViewport.scaleX + mViewport.x;
+        sampleVec[2] = y*mViewport.scaleY + mViewport.y;
+        mCorpus->addElem(sampleVec);
+    }
+    else event->ignore();
 }
 
 void View2D::handleKeyReleaseEvent(QKeyEvent *event)
@@ -186,6 +198,7 @@ void View2D::keyReleaseEvent(QKeyEvent *event)
     {
         renderScene();
     }
+    else event->ignore();
 }
 
 void View2D::setNet(NNetwork *net)

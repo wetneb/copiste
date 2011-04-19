@@ -16,7 +16,6 @@
 /**
     Bonus :
     - Visualisation de corpus : adaptation des seuils et des facteurs à la réponse du réseau
-    - Écriture de réseaux et corpus.
     - Créer un corpus de fichiers audio
     - Implémenter des algos fiables d'analyse audio
     - Créer un dispositif de séquençage du flux

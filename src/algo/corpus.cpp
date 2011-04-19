@@ -5,6 +5,7 @@ Corpus::Corpus(string file)
     mPool = 0;
     mDimension = 0;
     mSize = 0;
+    mPoolSize = 0;
 
     if(file.size())
         load(file);
@@ -42,6 +43,7 @@ bool Corpus::load(string filename, bool verbose)
         mSize = node.toElement().attribute("size", "100").toInt();
 
         mPool = new neural_value*[mSize];
+        mPoolSize = mSize;
 
         node = node.firstChild();
         while(!node.isNull() && nbPointsSet < mSize)
@@ -267,3 +269,18 @@ unsigned int Corpus::dimension()
     return mDimension;
 }
 
+void Corpus::addElem(neural_value* elem)
+{
+    if(mSize >= mPoolSize)
+    {
+        mPoolSize *= 2;
+        neural_value** newPool = new neural_value*[mPoolSize];
+        for(int i = 0; i < mSize; ++i)
+            newPool[i] = mPool[i];
+        delete mPool;
+        mPool = newPool;
+    }
+
+    mPool[mSize] = elem;
+    mSize++;
+}

@@ -6,6 +6,12 @@ Editor::Editor(QWidget *parent) : QMainWindow(parent)
     statusBar()->showMessage("Ready.");
     menuBar()->addAction("Redraw");
     menuBar()->addAction("Train");
+    menuBar()->addAction("Reset");
+
+    mToolbar = addToolBar("Corpus Tools");
+    mToolbar->setAllowedAreas(Qt::LeftToolBarArea);
+    mToolbar->addAction(QIcon(POINT_0_PATH),"Black point");
+    mToolbar->addAction(QIcon(POINT_1_PATH),"White point");
 
     connect(&mView, SIGNAL(rendering()), this, SLOT(dispRendering()));
     connect(&mView, SIGNAL(rendered()), this, SLOT(dispRendered()));
@@ -29,12 +35,19 @@ void Editor::handleAction(QAction *action)
         mView.renderScene();
         mView.repaint();
     }
-    else if(action->text() == "Train")
+    else if(action->text() == "Reset")
     {
         mView.net()->randomize();
+    }
+    else if(action->text() == "Train")
+    {
         mView.corpus()->train(*mView.net(), 0.01, 10000);
         mView.renderScene();
         mView.repaint();
+    }
+    else if(action->text() == "Focus")
+    {
+        mView.setFocus(Qt::OtherFocusReason);
     }
 }
 

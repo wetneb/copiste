@@ -8,8 +8,8 @@ class View2D;
 #include "algo/nnetwork.h"
 #include "algo/corpus.h"
 
-#define VIEW_OUTPUT_WIDTH 800
-#define VIEW_OUTPUT_HEIGHT 600
+#define VIEW_OUTPUT_WIDTH 700
+#define VIEW_OUTPUT_HEIGHT 500
 #define POINT_0_PATH "img/point-0.png"
 #define POINT_1_PATH "img/point-1.png"
 

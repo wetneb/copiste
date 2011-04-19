@@ -46,6 +46,9 @@ class Corpus
         //! Returns the elem pointed by the given index
         neural_value* elem(unsigned int index) { return mPool[index]; }
 
+        //! Add a sample to the corpus
+        void addElem(neural_value* elem);
+
         //! Retuns the bounds of the corpus
         vector<float> bounds();
 
@@ -56,6 +59,8 @@ class Corpus
         neural_value** mPool;
         int mSize;
         int mDimension;
+
+        int mPoolSize;
 };
 
 #endif

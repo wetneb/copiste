@@ -2,7 +2,7 @@
 #include <cmath>
 #include <cstdlib>
 
-neural_value sigmoid(neural_value x)
+neural_value sigmoid(neural_value x) // This is actually the hyperbolic tangent
 {
     return (2.0 / (1.0 + exp(-x))) - 1.0;
 }
