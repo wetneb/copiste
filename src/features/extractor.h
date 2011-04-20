@@ -2,11 +2,19 @@
 #define INCLUDED_EXTRACTORH
 
 #include <vlc/vlc.h>
+#include <iostream>
+
+using namespace std;
+
+//! TODO : ideally, this class could implement parameter handling (hash table, or whatever)
 
 //! An abstract class, used to compute features from the data
 class FeatureExtractor
 {
     public:
+        //! Constructor. Can set the typical chunk size.
+        FeatureExtractor(int chunkSize = 0) { ; }
+
         //! Run the algorithm and store the results
         virtual bool extract(uint16_t* data, int size) = 0;
 
@@ -15,6 +23,18 @@ class FeatureExtractor
 
         //! Get the number of available values
         virtual int size() = 0;
+
+        //! Set a float parameter
+        virtual void setFloat(string key, float value) = 0;
+
+        //! Set a int parameter
+        virtual void setInt(string key, int value) = 0;
+
+        //! Get a float parameter
+        virtual float getFloat(string key) = 0;
+
+        //! Get a int parameter
+        virtual int getInt(string key) = 0;
 };
 
 

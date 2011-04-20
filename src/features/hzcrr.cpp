@@ -1,7 +1,7 @@
 #include "features/hzcrr.h"
 
 //! Default constructor
-HZCRRExtr::HZCRRExtr()
+HZCRRExtr::HZCRRExtr(int chunkSize)
 {
     mHZCRR = 0;
     mBound = DEFAULT_ZCR_BOUND;
@@ -24,5 +24,37 @@ bool HZCRRExtr::extract(uint16_t* data, int size)
         mHZCRR = (float)highCount * mChunkSize / size;
     }
     return size;
+}
+
+//! Set a float parameter (available : "bound")
+void HZCRRExtr::setFloat(string key, float value)
+{
+    if(key == "bound")
+        mBound = value;
+}
+
+//! Set a int parameter (available : "chunkSize")
+void HZCRRExtr::setInt(string key, int value)
+{
+    if(key == "chunkSize")
+        mChunkSize = value;
+}
+
+//! Get a float parameter (available : "bound")
+float HZCRRExtr::getFloat(string key)
+{
+    float ret = 0;
+    if(key == "bound")
+        ret = mBound;
+    return ret;
+}
+
+//! Get a int parameter (available : "chunkSize")
+int HZCRRExtr::getInt(string key)
+{
+    int ret = 0;
+    if(key == "chunkSize")
+        ret = mChunkSize;
+    return ret;
 }
 

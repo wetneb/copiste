@@ -1,31 +1,31 @@
-#ifndef INCLUDED_HZCRRH
-#define INCLUDED_HZCRRH
+#ifndef INCLUDED_LSTERH
+#define INCLUDED_LSTERH
 
 //! Computes the High ZCR Ratio
-class HZCRRExtr;
+class LSTERExtr;
 
 #include "features/extractor.h"
-#include "features/zcr.h"
+#include "features/ste.h"
 
-#define DEFAULT_ZCR_BOUND 0.7
-#define DEFAULT_HZCRR_CHUNK_SIZE 64
+#define DEFAULT_STE_BOUND 0.5
+#define DEFAULT_LSTER_CHUNK_SIZE 64
 
-class HZCRRExtr : public FeatureExtractor
+class LSTERExtr : public FeatureExtractor
 {
     public:
         //! Default constructor
-        HZCRRExtr(int chunkSize = 0);
+        LSTERExtr(int chunkSize = 0);
 
         //! Run the algorithm and store the results
         bool extract(uint16_t* data, int size);
 
         //! Retrive the results (from the index). The values are usually between -1 and 1
-        float value(int index = 0) { return mHZCRR; };
+        float value(int index = 0) { return mLSTER; };
 
         //! Get the number of available values
         int size() { return 1; }
 
-        //! Set a float parameter (available : "bound")
+        //! Set a float parameter (available : "bound", from 0 to 1)
         void setFloat(string key, float value);
 
         //! Set a int parameter (available : "chunkSize")
@@ -36,12 +36,12 @@ class HZCRRExtr : public FeatureExtractor
 
         //! Get a int parameter (available : "chunkSize")
         int getInt(string key);
-
     private:
-        ZCRExtr mZcrExtr;
-        float mHZCRR;
+        STEExtr mSteExtr;
+        float mLSTER;
         float mBound;
         int mChunkSize;
 };
 
 #endif
+
