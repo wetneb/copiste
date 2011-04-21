@@ -51,9 +51,9 @@ class StreamPlayer
         /// Computing functions : designed to be overloaded by the user
 
         //! Callback called when we start playing a file
-        void sequenceStarts() { ; }
+        virtual void sequenceStarts() { ; }
         //! Callback called when the data is ready in the buffer (miam). The user don't have to manage the memory.
-        void useBuffer() { ; }
+        virtual void useBuffer() { ; }
         //! Callback called when the file ended
         virtual void sequenceEnds() { ; }
 

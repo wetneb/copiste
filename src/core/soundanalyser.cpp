@@ -3,7 +3,7 @@
 //! Sets up a new sound analyser
 SoundAnalyser::SoundAnalyser() : mBasePath("."), mDimension(0), mNbSamples(0), mCurrentFile(-1), mVerbose(false)
 {
-    registerExtractor("Spectrum", new SpectrumExtr(AUDIO_CHUNK_SIZE));
+    //registerExtractor("Spectrum", new SpectrumExtr(AUDIO_CHUNK_SIZE));
     registerExtractor("ZCR", new ZCRExtr(AUDIO_CHUNK_SIZE));
     registerExtractor("HZCRR", new HZCRRExtr(AUDIO_CHUNK_SIZE));
     registerExtractor("STE", new STEExtr(AUDIO_CHUNK_SIZE));
@@ -32,6 +32,7 @@ bool SoundAnalyser::compute()
     mDimension = 0;
     for(unsigned int i = 0; i < mExtr.size(); i++)
         mDimension += (mExtr[i]).second->size();
+    cout << "Dimension : "<< mDimension << endl;
 
     // Find the audio files
     if(boost::filesystem::is_directory(mBasePath))
@@ -81,8 +82,12 @@ void SoundAnalyser::sequenceEnds()
     // Store the old file
     if(mCurrentFile >= 0)
     {
+        cout << "Results :"<< endl;
         for(int i = 0; i < mDimension; i++)
+        {
             mFeatures[mCurrentFile][i] /= mNbSamples;
+            cout << mExtr[i].first << " :\t" << mFeatures[mCurrentFile][i] << endl;
+        }
     }
 
     mCurrentFile++;
@@ -104,6 +109,24 @@ void SoundAnalyser::sequenceEnds()
     }
 
     mSwitchLock.unlock();
+}
+
+void SoundAnalyser::useBuffer()
+{
+    // For each feature
+    int featuresSize = 0;
+    for(unsigned int i = 0; i < mExtr.size(); ++i)
+    {
+        // Compute
+        FeatureExtractor *extr = mExtr[i].second;
+        extr->extract(mBuffer, AUDIO_CHUNK_SIZE);
+        for(int j = 0; j < extr->size(); j++)
+            mFeatures[mCurrentFile][featuresSize + j] = extr->value(j);
+
+        featuresSize += extr->size();
+    }
+
+    mNbSamples += AUDIO_CHUNK_SIZE;
 }
 
 //! Write down the results
