@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+// In this file, the most important functions are shown at first (we don't follow the order of the header)
+
 bool SpectrumExtr::extract(uint16_t* data, int size)
 {
     // Size checks : if the size changed, we have to reallocate the buffer
@@ -19,7 +21,7 @@ bool SpectrumExtr::extract(uint16_t* data, int size)
     for(int i = 0; i < mSize; i++)
     {
         int j = mButterfly[i];
-        float window = (j <= size/2 ? (2.0*j/size) : (1 - 2.0*(j - size/2)/size));
+        float window = blackmanHarrisWin(j, mSize);
         re[i] = window*data[j];
         im[i] = 0;
     }
@@ -70,38 +72,53 @@ bool SpectrumExtr::extract(uint16_t* data, int size)
 
     delete re;
     delete im;
-    // */
-    /*
-    double bufRe, bufIm;
-    long long currentVal;
-
-    uint16_t ref = -1;
-    ref /= 2;
-
-    // Actual computation using the formula
-    for(int i = 0; i != size/2; ++i)
-    {
-        bufRe = 0;
-        float pulse = -2.0*M_PI*i/(size);
-        for(int j = 0; j != size; ++j)
-        {
-            float window = (j <= size/2 ? (2.0*j/size) : (1 - 2.0*(j - size/2)/size));
-            currentVal = (data[j]/16)*window;// - ref;
-            bufRe += currentVal*cos(pulse*j);
-        }
-
-        bufIm = 0;
-        for(int j = 0; j != size; ++j)
-        {
-            float window = (j <= size/2 ? (2.0*j/size) : (1 - 2.0*(j - size/2)/size));
-            currentVal = data[j]*window/16;// - ref;
-            bufRe += currentVal*sin(pulse*j);
-        }
-
-        mResults[i] = (bufRe/100.0)*(bufRe/100.0) + (bufIm/100.0)*(bufIm/100.0); //1000.0*log(bufRe*bufRe + bufIm*bufIm);
-    }
-    // */
     return true;
+}
+
+// This is the default window. It doesn't change the signal.
+// # # # # # # # # #
+// #               #
+// #               #
+// #               #
+// #               #
+inline float SpectrumExtr::rectangularWin(int i, int maxSize)
+{
+    return (i >= 0 && i < maxSize) ? 1.0 : 0;
+}
+
+// This is a basic window :
+//         #
+//       #   #
+//     #       #
+//   #           #
+// #               #
+inline float SpectrumExtr::triangularWin(int i, int maxSize)
+{
+    return (i >= 0 && i < maxSize) ? (i <= maxSize/2 ? (2.0*i/maxSize) : (1 - 2.0*(i - maxSize/2)/maxSize)) : 0;
+}
+
+// A window more powerful
+//
+//           #  #
+//       #         #
+//     #             #
+// # #                 # #
+//
+inline float SpectrumExtr::hammingWin(int i, int maxSize)
+{
+    return (i >= 0 && i < maxSize) ? (0.54 - 0.46*cos(2*M_PI*i/maxSize)) : 0;
+}
+
+// Another composite of sinus waves, showing good results
+//
+//           #  #
+//       #          #
+//     #              #
+//   #                  #
+// #                      #
+inline float SpectrumExtr::blackmanHarrisWin(int i, int maxSize)
+{
+    return 0.35875  - 0.48829*cos(2*M_PI*i/(maxSize - 1)) + 0.14128*cos(4*M_PI*i/(maxSize - 1)) + 0.0106411*cos(6*M_PI*i/(maxSize-1));
 }
 
 SpectrumExtr::SpectrumExtr(int size) : mResults(0), mButterfly(0), mSize(size), mBound((1 << 31))
@@ -111,20 +128,15 @@ SpectrumExtr::SpectrumExtr(int size) : mResults(0), mButterfly(0), mSize(size), 
 
 void SpectrumExtr::reallocate()
 {
-    // n = log2(size)
     // This code ensures we are using an exact power of 2 as size
-    int n = 0;
-    while(mSize > 1)
-    {
-        n++;
-        mSize >>= 1;
-    }
-    mSize = (1 << n);
+    int n = log2(size);
+    mSize = pow2(n);
 
     if(mSize != 0)
         mResults = new uint16_t[mSize];
 
     // Butterfly computation
+    // We just invert the bits of each number in binary representation
     if(mButterfly != 0)
         delete mButterfly;
 
@@ -188,22 +200,22 @@ int SpectrumExtr::getInt(string key)
     return ret;
 }
 
-uint16_t* SpectrumExtr::spectrum()
+inline uint16_t* SpectrumExtr::spectrum()
 {
     return mResults;
 }
 
-int SpectrumExtr::size()
+inline int SpectrumExtr::size()
 {
     return mSize;
 }
 
-int SpectrumExtr::regularSize(int size)
+inline int SpectrumExtr::regularSize(int size)
 {
     return (1 << log2(size));
 }
 
-int SpectrumExtr::log2(int x)
+inline int SpectrumExtr::log2(int x)
 {
     int n = 0;
     while(x > 1)
@@ -212,6 +224,11 @@ int SpectrumExtr::log2(int x)
         x >>= 1;
     }
     return n;
+}
+
+inline int SpectrumExtr::pow2(int n)
+{
+    return (1 << n); // bitwise computation : just shift the bit n times
 }
 
 SpectrumExtr::~SpectrumExtr()

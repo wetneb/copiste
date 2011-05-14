@@ -4,11 +4,13 @@
 //! Implementation of StreamPlayer, designed for feature extraction
 class SoundAnalyser;
 
+// Libraries
 #include <vector>
 #include <utility>
 #include <string>
 #include <boost/filesystem.hpp>
 
+// Stream handling
 #include "core/streamplayer.h"
 #include "features/extractor.h"
 
@@ -19,6 +21,9 @@ class SoundAnalyser;
 #include "features/ste.h"
 #include "features/lster.h"
 
+// Storage
+#include "algo/corpus.h"
+
 using namespace std;
 
 class SoundAnalyser : public StreamPlayer
@@ -26,14 +31,15 @@ class SoundAnalyser : public StreamPlayer
     public:
         //! Sets up a new sound analyser
         SoundAnalyser();
-
         //! Destructor.
         ~SoundAnalyser();
+        //! Adds a new extractor
+        void registerExtractor(string name, FeatureExtractor* extr);
 
         //! Set up from an XML file
         bool setup(string fileName);
-        //! Set the corpus directory
-        void setBasePath(string basePath) { mBasePath = basePath; }
+        //! Write down the results
+        bool write(Corpus* corpus);
 
         //! Compute the features
         bool compute();
@@ -45,12 +51,6 @@ class SoundAnalyser : public StreamPlayer
         //! Switch to the next file
         void sequenceEnds();
 
-        //! Write down the results
-        bool write(string fileName);
-
-        //! Adds a new extractor
-        void registerExtractor(string name, FeatureExtractor* extr);
-
         //! Sets verbosity
         void setVerbose(bool verbose) { mVerbose = verbose; }
 
@@ -58,12 +58,14 @@ class SoundAnalyser : public StreamPlayer
         string mBasePath;
         vector<pair<string, FeatureExtractor* > > mExtr;
         vector<string> mFiles;
+        vector<bool> mGoals;
         vector<float*> mFeatures;
         int mDimension;
 
         boost::mutex mSwitchLock;
-        long int mNbSamples;
+        long int mNbChunks;
         int mCurrentFile;
+        bool mComputed;
         bool mVerbose;
 };
 

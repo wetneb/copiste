@@ -1,12 +1,12 @@
 #include "core/soundanalyser.h"
 
 //! Sets up a new sound analyser
-SoundAnalyser::SoundAnalyser() : mBasePath("."), mDimension(0), mNbSamples(0), mCurrentFile(-1), mVerbose(false)
+SoundAnalyser::SoundAnalyser() : mBasePath("."), mDimension(0), mNbChunks(0), mCurrentFile(-1), mComputed(false), mVerbose(false)
 {
     //registerExtractor("Spectrum", new SpectrumExtr(AUDIO_CHUNK_SIZE));
-    registerExtractor("ZCR", new ZCRExtr(AUDIO_CHUNK_SIZE));
+    //registerExtractor("ZCR", new ZCRExtr(AUDIO_CHUNK_SIZE));
     registerExtractor("HZCRR", new HZCRRExtr(AUDIO_CHUNK_SIZE));
-    registerExtractor("STE", new STEExtr(AUDIO_CHUNK_SIZE));
+    //registerExtractor("STE", new STEExtr(AUDIO_CHUNK_SIZE));
     registerExtractor("LSTER", new LSTERExtr(AUDIO_CHUNK_SIZE));
 }
 
@@ -15,19 +15,59 @@ SoundAnalyser::~SoundAnalyser()
 {
     for(unsigned int i = 0; i < mExtr.size(); i++)
         delete mExtr[i].second;
+    //if(mSwitchLock.try_lock())
+     //   mSwitchLock.unlock();
+}
+
+bool isPrefix(string pre, string str)
+{
+    unsigned int index = 0;
+    while(index < pre.size() && index < str.size() && str[index] == pre[index])
+        index++;
+    return (index == pre.size());
 }
 
 //! Set up from an XML file
 bool SoundAnalyser::setup(string fileName)
 {
-    // Here some XML loading code
+    // Load the discrimination rules
+    QDomDocument doc;
+    vector<pair<string, bool> > rules;
 
-    return true;
-}
+    // Load the file and parse it
+    QFile file(fileName.c_str());
+    if(!file.open(QIODevice::ReadOnly))
+    {
+        cerr << "Unable to open file : " << fileName << endl;
+        return false;
+    }
+    doc.setContent(&file);
+    file.close();
 
-//! Compute the features
-bool SoundAnalyser::compute()
-{
+    // Read the contents
+    QDomNode node = doc.documentElement();
+
+    if(node.toElement().tagName() == "target")
+    {
+        mBasePath = node.toElement().attribute("corpus", "").toStdString();
+
+        node = node.firstChild();
+        while(!node.isNull())
+        {
+            QDomElement elem = node.toElement();
+
+            if(elem.tagName() == "class" && elem.attribute("prefix", "") != "")
+                rules.push_back(make_pair(elem.attribute("prefix", "").toStdString(), (elem.attribute("goal", "1").toInt() != 0)));
+
+            node = node.nextSibling();
+        }
+    }
+    else
+    {
+        cout << "Invalid document : expecting <target> markup." << endl;
+        return false;
+    }
+
     // Compute the number of coordinates we have to store
     mDimension = 0;
     for(unsigned int i = 0; i < mExtr.size(); i++)
@@ -40,19 +80,23 @@ bool SoundAnalyser::compute()
         /// Longue vie à boost::filesystem !
         for (boost::filesystem::directory_iterator iter(mBasePath); iter != boost::filesystem::directory_iterator(); ++iter)
         {
-            bool validFile = false;
-
             if(boost::filesystem::is_regular_file(iter->status()))
             {
                 string filename = iter->path().filename().string();
-                if(filename[0] == 'A' || filename[0] =='B')
-                    validFile = true;
-            }
 
-            if(validFile)
-                mFiles.push_back(string("file://" + boost::filesystem::absolute(iter->path()).string()));
-            else if(mVerbose)
-                std::cout << "Ignoring "<<iter->path().filename() << std::endl;
+                // Search the filename in the prefix table
+                unsigned int prefixId = 0;
+                for(; prefixId < rules.size() && !isPrefix(rules[prefixId].first, filename); prefixId++);
+
+
+                if(prefixId < rules.size())
+                {
+                    mFiles.push_back(string("file://" + boost::filesystem::absolute(iter->path()).string()));
+                    mGoals.push_back((int)(rules[prefixId].second));
+                }
+                else
+                    std::cout << "Ignoring "<< filename << std::endl;
+            }
         }
     }
     else
@@ -61,6 +105,12 @@ bool SoundAnalyser::compute()
         return false;
     }
 
+    return true;
+}
+
+//! Compute the features
+bool SoundAnalyser::compute()
+{
     if(mFiles.size())
     {
         // Clean up the previous data
@@ -72,6 +122,9 @@ bool SoundAnalyser::compute()
 
         sequenceEnds();
     }
+    else
+        mComputed = true;
+
     return true;
 }
 
@@ -82,20 +135,23 @@ void SoundAnalyser::sequenceEnds()
     // Store the old file
     if(mCurrentFile >= 0)
     {
-        cout << "Results :"<< endl;
-        for(int i = 0; i < mDimension; i++)
+        int printed = 0;
+        for(unsigned int i = 0; i < mExtr.size(); i++)
         {
-            mFeatures[mCurrentFile][i] /= mNbSamples;
-            cout << mExtr[i].first << " :\t" << mFeatures[mCurrentFile][i] << endl;
+            for(int j = 0; j < mExtr[i].second->size(); j++)
+            {
+                mFeatures[mCurrentFile][printed + j] /= mNbChunks;
+                cout << mExtr[i].first << "["<<j+1<<"] :" << mFeatures[mCurrentFile][printed + j] << endl;
+            }
+            printed += mExtr[i].second->size();
         }
     }
 
     mCurrentFile++;
-
     // Start a new file
     if(mCurrentFile < (int)mFiles.size())
     {
-        mNbSamples = 0;
+        mNbChunks = 0;
 
         mFeatures[mCurrentFile] = new float[mDimension];
         for(int i = 0; i < mDimension; ++i)
@@ -103,10 +159,15 @@ void SoundAnalyser::sequenceEnds()
 
         // Set up the media player
         if(mVerbose)
-            std::cout << "["<<mCurrentFile + 1<<"/"<<mFiles.size()<<"] : "<<mFiles[mCurrentFile]<< std::endl;
+        {
+            string filename = boost::filesystem::path(mFiles[mCurrentFile]).filename().string();
+            std::cout << "["<<mCurrentFile + 1<<"/"<<mFiles.size()<<"] : "<<filename<< std::endl;
+        }
+
         setUrl(mFiles[mCurrentFile]);
         play();
     }
+    else mComputed = true;
 
     mSwitchLock.unlock();
 }
@@ -126,14 +187,38 @@ void SoundAnalyser::useBuffer()
         featuresSize += extr->size();
     }
 
-    mNbSamples += AUDIO_CHUNK_SIZE;
+    mNbChunks++;
 }
 
 //! Write down the results
-bool SoundAnalyser::write(string fileName)
+bool SoundAnalyser::write(Corpus *corpus)
 {
-    // Some XML writing code
+    //waitComputed();
 
+    if(corpus->dimension() != (unsigned int)mDimension)
+        corpus->erase(mDimension);
+
+    for(unsigned int i = 0; i < mFeatures.size(); ++i)
+    {
+        // Declare a new sample
+        float* sample = new float[mDimension+1];
+        sample[0] = 0; // Default value
+
+        // Bind the file to a class (to be changed)
+        if(i < mFiles.size())
+        {
+            boost::filesystem::path pt(mFiles[i]);
+            sample[0] = mGoals[i];
+        }
+
+        // Add the features
+        for(int j = 0; j < mDimension; j++)
+            sample[j+1] = mFeatures[i][j];
+
+        // Add it to the corpus
+        corpus->addElem(sample);
+    }
+    //mSwitchLock.unlock();
     return true;
 }
 
@@ -147,14 +232,14 @@ void SoundAnalyser::registerExtractor(string name, FeatureExtractor* extr)
 void SoundAnalyser::waitComputed()
 {
     boost::posix_time::seconds waitTime(1);
-    bool computed = false;
-    while(!computed)
+
+    mSwitchLock.lock();
+    while(!mComputed)
     {
-        boost::this_thread::sleep(waitTime);
-        mSwitchLock.lock();
-        computed = (mCurrentFile == -1 || mCurrentFile >= (int)mFiles.size());
         mSwitchLock.unlock();
+        boost::this_thread::sleep(waitTime);
     }
+    cout << "Returning" << endl;
 }
 
 /*

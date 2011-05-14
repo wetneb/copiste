@@ -8,7 +8,10 @@ using namespace std;
 
 //! TODO : ideally, this class could implement parameter handling (hash table, or whatever)
 
-//! An abstract class, used to compute features from the data
+/**
+ * \class FeatureExtractor
+ * \brief An abstract class, used as an interface between the processing unit and the features algorithms
+ */
 class FeatureExtractor
 {
     public:

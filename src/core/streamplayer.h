@@ -3,7 +3,7 @@
 
 #include <vlc/vlc.h>
 
-//! TODO Remove these dependencies from Qt (QFile shouldn't be a problem, VLC implements mutexes)
+//! TODO Remove these dependencies from Qt (QFile shouldn't be a problem, and VLC implements mutexes)
 #include <QFile> // to be removed !
 #include <QMutex>
 
@@ -30,6 +30,9 @@ void prepareRender(void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int si
 /**
  * \class StreamPlayer
  * \brief Manages stream decoding and sends it to the computing part of the application
+ * This class is intended to be rewritten for more specific usages (spectrum analysis, feature extraction, aso.).
+ * Its the interface between libVLC (which reads the media, decodes, resamples, and does all the hard DSP) and
+ * the using of the data.
  */
 class StreamPlayer
 {
@@ -47,6 +50,12 @@ class StreamPlayer
 
         //! Plays the media
         void play();
+        //! Returns the playing time
+        libvlc_time_t playingTime();
+        //! Returns the total time (played + to be played)
+        libvlc_time_t totalTime();
+        //! Stops playing
+        void stop();
 
         /// Computing functions : designed to be overloaded by the user
 
@@ -74,6 +83,8 @@ class StreamPlayer
         void dumpStreamToFile8(uint8_t* source, int size);
         //! Write a line to the dump file
         void writeLine(std::string line);
+        //! Get 2^n
+        int pow2(int n);
 
         /// Watching thread
         void watch();
@@ -100,7 +111,7 @@ class StreamPlayer
         boost::thread mWatchThread;
         boost::mutex mPlayingLock;
 
-        //!XXXXXX To be deleted
+        //!XXXXXX TODO To be deleted
         QFile mDumpFile;
         bool mDebugWritten;
 };

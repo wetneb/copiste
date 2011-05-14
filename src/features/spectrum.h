@@ -2,12 +2,21 @@
 #define INCLUDED_SPECTRUMH
 
 #include "features/extractor.h"
+/** TODO : compute the window when reallocating. Create functions to change the window **/
 
-//! Retrives the spectrum using FFT (currently, the naive algorithm)
+
+/**
+ * \class SpectrumExtr
+ * \brief Retrives the spectrum using FFT
+ */
 class SpectrumExtr : public FeatureExtractor
 {
     public:
         /// Memory management
+        // The algorithm automaticly adapts its data (output, butterfly, window)
+        // to the size of the data it gets.
+        // In order to be more efficient in the actual computing, we try to compute
+        // everything before.
 
         //! Inits the FFT algorithm
         SpectrumExtr(int chunkSize = 0);
@@ -17,13 +26,34 @@ class SpectrumExtr : public FeatureExtractor
         ~SpectrumExtr();
 
         /// Algorithm
+        // It is the standard FFT algorithm : the recursive design has been translated into
+        // an iterative process. The output is normalized as the values can get quite high
+        // rates.
 
         //! Run the algorithm
         bool extract(uint16_t* data, int size);
         //! Normalize the values (so that the values go from 0 to bound)
         void normalize(int bound);
 
+    private:
+        /// Windows
+        // The windows are intended to minimize the lack of precision of the actual computation
+        // of the Fourier Transform. That's a well-known phenomon : when you try to compute
+        // the spectrum of a perfect sinus wave, you don't get a pefect dirac as expected, but
+        // a large wave with some noise.
+
+        ///! Rectangular
+        static float rectangularWin(int i, int maxSize);
+        ///! Linear
+        static float triangularWin(int i, int maxSize);
+        ///! Hamming
+        static float hammingWin(int i, int maxSize);
+        //! Blackman - Harris
+        static float blackmanHarrisWin(int i, int maxSize);
+
+    public:
         /// Accessors
+        // These functions can be used to retrive the result of the computation.
 
         //! Retrieve the results (from the index). The values are usually between -1 and 1
         float value(int index);
@@ -40,19 +70,25 @@ class SpectrumExtr : public FeatureExtractor
         //! Get a int parameter (available : "bound")
         int getInt(string key);
 
+    private:
         /// Utilities
+        // The size of the data sent to the algorithm must be a power of 2.
 
         //! Get the highest lower power of two
         static int regularSize(int size);
         //! Get E(log2(x))
         static int log2(int x);
+        //! Get 2^n
+        static int pow2(int n);
 
+    public:
         /// Watching thread
         void watch();
 
     private:
         uint16_t* mResults;
         int* mButterfly;
+        float* mWindow;
         int mSize;
         int mBound;
 };

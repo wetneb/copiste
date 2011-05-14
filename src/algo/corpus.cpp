@@ -11,6 +11,14 @@ Corpus::Corpus(string file)
         load(file);
 }
 
+Corpus::Corpus(int dim)
+{
+    mPool = 0;
+    mDimension = dim;
+    mSize = 0;
+    mPoolSize = 0;
+}
+
 Corpus::~Corpus()
 {
     erase();
@@ -46,6 +54,7 @@ bool Corpus::load(string filename, bool verbose)
         mPoolSize = mSize;
 
         node = node.firstChild();
+        /** TODO : redesign this so that the "size" parameter can be removed safely **/
         while(!node.isNull() && nbPointsSet < mSize)
         {
             QDomElement elem = node.toElement();
@@ -94,15 +103,17 @@ void Corpus::write(string fileName)
 
     // Create the document
     QDomDocument doc;
-    QDomNode rootNode = doc.createElement("corpus");
+    QDomElement rootNode = doc.createElement("corpus");
+    rootNode.setAttribute("dimension", mDimension);
+    //rootNode.appendChild(attr);
 
-    for(int iPoint = 0; iPoint != mSize; ++iPoint)
+    for(int iPoint = 0; iPoint < mSize; ++iPoint)
     {
         QDomElement pointNode = doc.createElement("point");
 
         pointNode.setAttribute("goal", mPool[iPoint][0]);
 
-        for(int iCoord = 0; iCoord != mDimension; ++iCoord)
+        for(int iCoord = 0; iCoord < mDimension; ++iCoord)
         {
             QDomElement coordNode = doc.createElement("coord");
 
@@ -247,16 +258,18 @@ vector<float> Corpus::bounds()
     return result;
 }
 
-void Corpus::erase()
+void Corpus::erase(int dimension)
 {
     if(mPool)
     {
         for(int i = 0; i != mSize; ++i)
             delete mPool[i];
         delete mPool;
-        mSize = 0;
-        mDimension = 0;
+        mPool = 0;
+        mPoolSize = 0;
     }
+    mSize = 0;
+    mDimension = dimension;
 }
 
 unsigned int Corpus::size()

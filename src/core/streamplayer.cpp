@@ -3,17 +3,13 @@
 #include <iostream>
 using namespace std;
 
-// Puissances de deux
-int pow2(int n) { return (1 << n); }
-
-
 StreamPlayer::StreamPlayer() : mPlaying(false),
                                mMp(0),
                                mMedia(0),
                                mWatchThread(boost::bind(&StreamPlayer::watch, this)),
                                mDebugWritten(false)
 {
-    // Initialisation de VLC
+    // Set up VLC
     char smem_options[256];
     mAudioData = 0;
     mAudioDataSize = 0;
@@ -21,8 +17,6 @@ StreamPlayer::StreamPlayer() : mPlaying(false),
     sprintf(smem_options, "#transcode{acodec=s16l}:smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}",// "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",
                            (long long int)(intptr_t)(void*)&handleStream, (long long int)(intptr_t)(void*)&prepareRender, (long long int)(intptr_t)(void*)this); // duplicate{dst=std,dst=smem{audio-postrender-callback=%lld,audio-data=%lld}}
     const char * const vlc_args[] = {
-              "-I", "dummy", /* Don't use any interface */
-              "--ignore-config", /* Don't use VLC's config */
          //     "--extraintf=logger", //log anything
         //    "--verbose=2", //be much more verbose then normal for debugging purpose
               "--sout", smem_options //smem_options // Stream to memory
@@ -33,13 +27,12 @@ StreamPlayer::StreamPlayer() : mPlaying(false),
     mMp = libvlc_media_player_new(mVlcInstance);
     libvlc_audio_set_volume (mMp,80);
 
-    //cout << "Audio chain : " << smem_options << endl;
-
-    // Initialisation de l'extraction de données :
+    // Init data extraction
     mBuffer = new uint16_t[AUDIO_CHUNK_SIZE];
     mBufferSize = 0;
 }
 
+// Cleans up everything
 StreamPlayer::~StreamPlayer()
 {
     libvlc_media_player_stop(mMp);
@@ -48,6 +41,7 @@ StreamPlayer::~StreamPlayer()
     libvlc_release(mVlcInstance);
 }
 
+// Start "playing" a stream (actually, start reading it and send it to the algorithms)
 void StreamPlayer::play()
 {
     if(!mMedia)
@@ -62,6 +56,26 @@ void StreamPlayer::play()
     sleep(10);
 }
 
+// Time we've been playing this file, in ms (useful to evaluate how far did we compute)
+libvlc_time_t StreamPlayer::playingTime()
+{
+    return libvlc_media_player_get_time(mMp);
+}
+
+// Total length of the current file, in ms
+libvlc_time_t StreamPlayer::totalTime()
+{
+    return libvlc_media_player_get_length(mMp);
+}
+
+// Stop computing
+void StreamPlayer::stop()
+{
+    if(mPlaying)
+        libvlc_media_player_stop(mMp);
+}
+
+// Get ready to render the stream to the buffer
 void prepareRender( void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int size )
 {
     StreamPlayer *sp = ((StreamPlayer*)p_audio_data);
@@ -83,15 +97,18 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
     unsigned int remaining = 0;
     StreamPlayer *sp = ((StreamPlayer*)p_audio_data);
 
+    // The data is sent to us as bytes, but encoded on 2 bytes
+    // TODO: dynamicly check that this is the case and that we're not mishandling the data
     uint16_t* temp = StreamPlayer::convert8to16(p_pcm_buffer, size);
     size /= 2;
 
+    // We implemented a mechanism that takes the data sent by libVLC and cut it into chunks
+    // of the same size (a power of two) so that the algorithms can handle it in the right way
     while(remaining < size)
     {
         // Filling buffer
         while(sp->mBufferSize < AUDIO_CHUNK_SIZE && remaining < size)
         {
-            //cout << "Buff: "<< sp->mBufferSize << endl;
             sp->mBuffer[sp->mBufferSize] = temp[remaining];
             sp->mBufferSize++;
             remaining += channels;
@@ -99,6 +116,7 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
 
         if(sp->mBufferSize == AUDIO_CHUNK_SIZE)
         {
+            // The buffer is sent to the "user"
             sp->useBuffer();
 
             // Emptying buffer
@@ -110,6 +128,7 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
     sp->mLock.unlock();
 }
 
+// Wait for the computation to end
 void StreamPlayer::watch()
 {
     boost::posix_time::millisec waitTime(500);
@@ -117,6 +136,9 @@ void StreamPlayer::watch()
         boost::this_thread::sleep(waitTime);
 
     mPlaying = libvlc_media_player_is_playing(mMp);
+
+    // How do we get out of here ? When mPlaying is set to false, this thread will be killed
+    // TODO: change this, this may be the cause of our problems at the end of the computation
     while(1)
     {
         mPlayingLock.lock();
@@ -131,6 +153,7 @@ void StreamPlayer::watch()
     }
 }
 
+// Rewrite data
 uint16_t* StreamPlayer::convert8to16(const uint8_t* source, int size)
 {
     uint16_t* dest = new uint16_t[size/2];
@@ -149,6 +172,7 @@ uint16_t* StreamPlayer::convert8to16(const uint8_t* source, int size)
     return dest;
 }
 
+// Unused function that adds an offset to an array
 void StreamPlayer::addOffset(uint16_t* source, uint16_t* dest, int size, int offset)
 {
     for(int i = 0; i != size; ++i)
@@ -157,6 +181,7 @@ void StreamPlayer::addOffset(uint16_t* source, uint16_t* dest, int size, int off
     }
 }
 
+// Reduces the length of the array by computing local averages on it (kind of basic resampling)
 uint16_t* StreamPlayer::average(uint16_t* source, int size, int passes, int scale)
 {
     int factor = pow2(passes) * scale;
@@ -173,7 +198,7 @@ uint16_t* StreamPlayer::average(uint16_t* source, int size, int passes, int scal
     return dest;
 }
 
-
+// Another basic resampling
 void StreamPlayer::reduce(uint16_t* source, uint16_t* dest, int size, int passes, int scale)
 {
     unsigned int chunkSize = pow2(passes);
@@ -192,6 +217,7 @@ void StreamPlayer::reduce(uint16_t* source, uint16_t* dest, int size, int passes
     }
 }
 
+// Dump the data to a file (useful for debugging processes)
 void StreamPlayer::dumpStreamToFile16(uint16_t* source, int size)
 {
     if(!mDumpFile.isOpen())
@@ -207,6 +233,7 @@ void StreamPlayer::dumpStreamToFile16(uint16_t* source, int size)
     mDumpFile.write(buf.str().c_str());
 }
 
+// Dump two streams to a file
 void StreamPlayer::dumpStreamToFile16x2(uint16_t* source, uint16_t* second, int size)
 {
     if(!mDumpFile.isOpen())
@@ -222,6 +249,7 @@ void StreamPlayer::dumpStreamToFile16x2(uint16_t* source, uint16_t* second, int 
     mDumpFile.write(buf.str().c_str());
 }
 
+// Dump a stream as a sequence of bytes
 void StreamPlayer::dumpStreamToFile8(uint8_t* source, int size)
 {
     if(!mDumpFile.isOpen())
@@ -244,6 +272,7 @@ void StreamPlayer::dumpStreamToFile8(uint8_t* source, int size)
     mDumpFile.write(buf.str().c_str());
 }
 
+// Write a line to the debugging output
 void StreamPlayer::writeLine(string line)
 {
     if(!mDebugWritten)
@@ -258,39 +287,6 @@ void StreamPlayer::writeLine(string line)
     }
 }
 
-/*
-void
-VideoClipWorkflow::lock( VideoClipWorkflow *cw, void **pp_ret, int size )
-{
-    Q_UNUSED( size );
-    LightVideoFrame*    lvf = NULL;
+// Power of two
+inline int StreamPlayer::pow2(int n) { return (1 << n); }
 
-    cw->m_renderLock->lock();
-    if ( cw->m_availableBuffers.isEmpty() == true )
-    {
-        lvf = new LightVideoFrame( cw->m_width, cw->m_height );
-    }
-    else
-        lvf = cw->m_availableBuffers.dequeue();
-    cw->m_computedBuffers.enqueue( lvf );
-    *pp_ret = (*(lvf))->frame.octets;
-}
-
-void
-VideoClipWorkflow::unlock( VideoClipWorkflow *cw, void *buffer, int width,
-                           int height, int bpp, int size, qint64 pts )
-{
-    Q_UNUSED( buffer );
-    Q_UNUSED( width );
-    Q_UNUSED( height );
-    Q_UNUSED( bpp );
-    Q_UNUSED( size );
-
-    cw->computePtsDiff( pts );
-    LightVideoFrame     *lvf = cw->m_computedBuffers.last();
-    (*(lvf))->ptsDiff = cw->m_currentPts - cw->m_previousPts;
-    cw->commonUnlock();
-    cw->m_renderWaitCond->wakeAll();
-    cw->m_renderLock->unlock();
-}
-*/

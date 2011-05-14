@@ -7,7 +7,7 @@ class HZCRRExtr;
 #include "features/extractor.h"
 #include "features/zcr.h"
 
-#define DEFAULT_ZCR_BOUND 0.7
+#define DEFAULT_ZCR_BOUND 0.5
 #define DEFAULT_HZCRR_CHUNK_SIZE 64
 
 class HZCRRExtr : public FeatureExtractor
