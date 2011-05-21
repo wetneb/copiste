@@ -84,7 +84,7 @@ class StreamPlayer
         //! Write a line to the dump file
         void writeLine(std::string line);
         //! Get 2^n
-        int pow2(int n);
+        static int pow2(int n);
 
         /// Watching thread
         void watch();

@@ -7,7 +7,7 @@ namespace po = boost::program_options;
 #include <iostream>
 using namespace std; // A supprimer
 
-#include "core/soundanalyser.h"
+#include "core/corpusbuilder.h"
 
 /**
  * Plans pour la suite :
@@ -48,19 +48,17 @@ int main(int argc, char **argv)
               options(desc).positional(p).run(), vm);
     po::notify(vm);
 
-    SoundAnalyser sa;
+    CorpusBuilder cb;
 
     if(vm.count("input-file"))
     {
         string corpusPath = vm["input-file"].as< string >();
         cout << "Corpus path : " << corpusPath << endl;
-        sa.setVerbose(true);
-        sa.setup(corpusPath);
-        sa.compute();
-        sa.waitComputed();
-
+        cb.setVerbose(true);
+        cb.setup(corpusPath);
+        cb.compute();
         Corpus corpus;
-        sa.write(&corpus);
+        cb.write(&corpus);
 
         corpus.write("/tmp/output.xml");
         corpus.display();
@@ -68,7 +66,7 @@ int main(int argc, char **argv)
         cout << "Computed." << endl;
     }
     cout << "Done" << endl;
-    boost::posix_time::seconds tm(10);
+    boost::posix_time::seconds tm(5);
     boost::this_thread::sleep(tm);
     cout << "Waited" << endl;
     return 0;

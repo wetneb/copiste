@@ -3,10 +3,8 @@
 #include <iostream>
 using namespace std;
 
-StreamPlayer::StreamPlayer() : mPlaying(false),
-                               mMp(0),
+StreamPlayer::StreamPlayer() : mMp(0),
                                mMedia(0),
-                               mWatchThread(boost::bind(&StreamPlayer::watch, this)),
                                mDebugWritten(false)
 {
     // Set up VLC
@@ -49,11 +47,11 @@ void StreamPlayer::play()
 
     libvlc_media_player_set_media (mMp, mMedia);
 
-    if(!mPlaying)
-        libvlc_media_player_play (mMp);
+    libvlc_media_player_play (mMp);
 
     mPlaying = true;
-    sleep(10);
+    boost::thread watchThread(boost::bind(&StreamPlayer::watch, this));
+    watchThread.detach();
 }
 
 // Time we've been playing this file, in ms (useful to evaluate how far did we compute)
@@ -72,7 +70,10 @@ libvlc_time_t StreamPlayer::totalTime()
 void StreamPlayer::stop()
 {
     if(mPlaying)
+    {
         libvlc_media_player_stop(mMp);
+        mWatchThread.interrupt();
+    }
 }
 
 // Get ready to render the stream to the buffer
@@ -132,25 +133,22 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
 void StreamPlayer::watch()
 {
     boost::posix_time::millisec waitTime(500);
-    while(mMp == 0)
-        boost::this_thread::sleep(waitTime);
+    bool seenPlaying = false;
 
-    mPlaying = libvlc_media_player_is_playing(mMp);
-
-    // How do we get out of here ? When mPlaying is set to false, this thread will be killed
-    // TODO: change this, this may be the cause of our problems at the end of the computation
-    while(1)
+    mPlayingLock.lock();
+    while(libvlc_media_player_is_playing(mMp) || !seenPlaying)
     {
-        mPlayingLock.lock();
-        if(mPlaying != libvlc_media_player_is_playing(mMp))
-        {
-            mPlaying = !mPlaying;
-            if(!mPlaying)
-                sequenceEnds();
-        }
+        if(!seenPlaying && libvlc_media_player_is_playing(mMp))
+            seenPlaying = true;
         mPlayingLock.unlock();
+
         boost::this_thread::sleep(waitTime);
+
+        mPlayingLock.lock();
     }
+    mPlayingLock.unlock();
+
+    sequenceEnds();
 }
 
 // Rewrite data

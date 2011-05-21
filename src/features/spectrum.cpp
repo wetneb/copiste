@@ -129,7 +129,7 @@ SpectrumExtr::SpectrumExtr(int size) : mResults(0), mButterfly(0), mSize(size), 
 void SpectrumExtr::reallocate()
 {
     // This code ensures we are using an exact power of 2 as size
-    int n = log2(size);
+    int n = log2(size());
     mSize = pow2(n);
 
     if(mSize != 0)
@@ -200,7 +200,7 @@ int SpectrumExtr::getInt(string key)
     return ret;
 }
 
-inline uint16_t* SpectrumExtr::spectrum()
+uint16_t* SpectrumExtr::spectrum()
 {
     return mResults;
 }

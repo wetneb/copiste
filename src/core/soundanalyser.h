@@ -1,14 +1,13 @@
 #ifndef INCLUDED_SOUNDANALYSERH
 #define INCLUDED_SOUNDANALYSERH
 
-//! Implementation of StreamPlayer, designed for feature extraction
+//! Implementation of StreamPlayer, designed for generic feature extraction
 class SoundAnalyser;
 
 // Libraries
 #include <vector>
 #include <utility>
 #include <string>
-#include <boost/filesystem.hpp>
 
 // Stream handling
 #include "core/streamplayer.h"
@@ -26,7 +25,7 @@ class SoundAnalyser;
 
 using namespace std;
 
-class SoundAnalyser : public StreamPlayer
+class SoundAnalyser : private StreamPlayer
 {
     public:
         //! Sets up a new sound analyser
@@ -36,37 +35,50 @@ class SoundAnalyser : public StreamPlayer
         //! Adds a new extractor
         void registerExtractor(string name, FeatureExtractor* extr);
 
-        //! Set up from an XML file
-        bool setup(string fileName);
-        //! Write down the results
-        bool write(Corpus* corpus);
-
-        //! Compute the features
-        bool compute();
+        //! Compute the features of a given file
+        bool compute(string url);
         //! Wait up to the end of the computation
         void waitComputed();
 
+        /// Features management
+
+        //! Return the number of different features we computed
+        unsigned int nbFeatures() { return mExtr.size(); }
+        //! Return the number of elements of the nth feature
+        unsigned int nbElems(unsigned int n);
+        //! Return the array of features for the nth sample
+        float** features(unsigned int n);
+        //! Return the number of sample we've been computing
+        unsigned int nbSamples() { return mFeatures.size(); }
+        //! Clears the features
+        void clearFeatures();
+        //! Get the dimension : sum of all the nbElems(i)
+        unsigned int dimension() { return mDimension; }
+        //! Get the name of the nth feature
+        string name(unsigned int n);
+
         //! Handle audio chunks
         void useBuffer();
-        //! Switch to the next file
+        //! End the computation
         void sequenceEnds();
 
-        //! Sets verbosity
-        void setVerbose(bool verbose) { mVerbose = verbose; }
-
     private:
-        string mBasePath;
+        // To be kept
         vector<pair<string, FeatureExtractor* > > mExtr;
-        vector<string> mFiles;
-        vector<bool> mGoals;
-        vector<float*> mFeatures;
+        vector<float**> mFeatures;
+
         int mDimension;
 
-        boost::mutex mSwitchLock;
-        long int mNbChunks;
+        // To be moved
+        string mBasePath;
+        vector<string> mFiles;
+        vector<bool> mGoals;
         int mCurrentFile;
-        bool mComputed;
         bool mVerbose;
+
+        // To be kept
+        boost::mutex mSwitchLock;
+        bool mComputed;
 };
 
 #endif
