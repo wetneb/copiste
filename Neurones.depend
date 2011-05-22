@@ -80,10 +80,10 @@
 
 1302603754 /usr/local/share/qt4/include/vlc/deprecated.h
 
-1303560494 source:/home/berthe/Programmation/Neurones/src/algo/corpus.cpp
+1305980300 source:/home/berthe/Programmation/Neurones/src/algo/corpus.cpp
 	"corpus.h"
 
-1303492241 /home/berthe/Programmation/Neurones/src/algo/corpus.h
+1305980300 /home/berthe/Programmation/Neurones/src/algo/corpus.h
 	<string>
 	<cmath>
 	<QFile>
@@ -520,7 +520,7 @@
 1297607665 /home/berthe/Programmation/Neurones/src/algo/abstractneuron.h
 	<iostream>
 
-1297616159 /home/berthe/Programmation/Neurones/src/algo/nnetwork.h
+1305980300 /home/berthe/Programmation/Neurones/src/algo/nnetwork.h
 	<vector>
 	<QHash>
 	<cstdlib>
@@ -546,7 +546,7 @@
 	<QtCore/qiodevice.h>
 	<QtCore/qglobal.h>
 
-1297789770 /home/berthe/Programmation/Neurones/src/algo/neuron.h
+1305980300 /home/berthe/Programmation/Neurones/src/algo/neuron.h
 	<string>
 	<sstream>
 	<vector>
@@ -565,12 +565,12 @@
 	<string>
 	"algo/abstractneuron.h"
 
-1298457543 source:/home/berthe/Programmation/Neurones/src/algo/neuron.cpp
+1305980300 source:/home/berthe/Programmation/Neurones/src/algo/neuron.cpp
 	"algo/neuron.h"
 	<cmath>
 	<cstdlib>
 
-1297788611 source:/home/berthe/Programmation/Neurones/src/algo/nnetwork.cpp
+1305980300 source:/home/berthe/Programmation/Neurones/src/algo/nnetwork.cpp
 	"algo/nnetwork.h"
 	<iostream>
 	<QDomDocument>
@@ -2900,7 +2900,7 @@
 	<iostream>
 	"features/streamplayer.h"
 
-1305371399 /home/berthe/Programmation/Neurones/src/features/extractor.h
+1305980300 /home/berthe/Programmation/Neurones/src/features/extractor.h
 	<vlc/vlc.h>
 	<iostream>
 
@@ -2929,47 +2929,47 @@
 	"features/spectrum.h"
 	<cmath>
 
-1305450778 /home/berthe/Programmation/Neurones/src/features/spectrum.h
+1305980300 /home/berthe/Programmation/Neurones/src/features/spectrum.h
 	"features/extractor.h"
 
-1303322145 source:/home/berthe/Programmation/Neurones/src/features/hzcrr.cpp
+1306005923 source:/home/berthe/Programmation/Neurones/src/features/hzcrr.cpp
 	"features/hzcrr.h"
 
-1304104382 /home/berthe/Programmation/Neurones/src/features/hzcrr.h
+1306006863 /home/berthe/Programmation/Neurones/src/features/hzcrr.h
 	"features/extractor.h"
 	"features/zcr.h"
 
-1303321882 /home/berthe/Programmation/Neurones/src/features/zcr.h
+1305980300 /home/berthe/Programmation/Neurones/src/features/zcr.h
 	"features/extractor.h"
 
-1303229895 source:/home/berthe/Programmation/Neurones/src/features/zcr.cpp
+1305980300 source:/home/berthe/Programmation/Neurones/src/features/zcr.cpp
 	"features/zcr.h"
 
-1303322154 source:/home/berthe/Programmation/Neurones/src/features/lster.cpp
+1305980300 source:/home/berthe/Programmation/Neurones/src/features/lster.cpp
 	"features/lster.h"
 
-1303321827 /home/berthe/Programmation/Neurones/src/features/lster.h
+1306005991 /home/berthe/Programmation/Neurones/src/features/lster.h
 	"features/extractor.h"
 	"features/ste.h"
 
-1303321870 /home/berthe/Programmation/Neurones/src/features/ste.h
+1305980300 /home/berthe/Programmation/Neurones/src/features/ste.h
 	"features/extractor.h"
 	<cmath>
 
-1305450778 source:/home/berthe/Programmation/Neurones/src/features/spectrum.cpp
+1305980300 source:/home/berthe/Programmation/Neurones/src/features/spectrum.cpp
 	"features/spectrum.h"
 	<cmath>
 
-1303294953 source:/home/berthe/Programmation/Neurones/src/features/ste.cpp
+1305980300 source:/home/berthe/Programmation/Neurones/src/features/ste.cpp
 	"features/ste.h"
 
-1305456000 source:/home/berthe/Programmation/Neurones/src/core/mainFeatures.cpp
+1305980300 source:/home/berthe/Programmation/Neurones/src/core/mainFeatures.cpp
 	"features/extractor.h"
 	<program_options.hpp>
 	<iostream>
 	"core/corpusbuilder.h"
 
-1305457453 /home/berthe/Programmation/Neurones/src/core/streamplayer.h
+1305980300 /home/berthe/Programmation/Neurones/src/core/streamplayer.h
 	<vlc/vlc.h>
 	<QFile>
 	<QMutex>
@@ -2981,7 +2981,7 @@
 	<string>
 	"features/spectrum.h"
 
-1305457703 source:/home/berthe/Programmation/Neurones/src/core/streamplayer.cpp
+1305980300 source:/home/berthe/Programmation/Neurones/src/core/streamplayer.cpp
 	"core/streamplayer.h"
 	<iostream>
 
@@ -5818,10 +5818,10 @@
 	<boost/date_time/time_zone_base.hpp>
 	<boost/date_time/time_parsing.hpp>
 
-1305457746 source:/home/berthe/Programmation/Neurones/src/core/soundanalyser.cpp
+1306005625 source:/home/berthe/Programmation/Neurones/src/core/soundanalyser.cpp
 	"core/soundanalyser.h"
 
-1305452049 /home/berthe/Programmation/Neurones/src/core/soundanalyser.h
+1305980300 /home/berthe/Programmation/Neurones/src/core/soundanalyser.h
 	<vector>
 	<utility>
 	<string>
@@ -6036,19 +6036,37 @@
 	<iostream>
 	"core/spectrumRecorder.h"
 
-1305373248 /home/berthe/Programmation/Neurones/src/core/spectrumRecorder.h
+1305980300 /home/berthe/Programmation/Neurones/src/core/spectrumRecorder.h
 	<QImage>
 	<boost/thread.hpp>
 	"core/streamplayer.h"
 	"features/spectrum.h"
 
-1305053029 source:/home/berthe/Programmation/Neurones/src/core/spectrumRecorder.cpp
+1305980300 source:/home/berthe/Programmation/Neurones/src/core/spectrumRecorder.cpp
 	"core/spectrumRecorder.h"
 
-1305456213 source:/home/berthe/Programmation/Neurones/src/core/corpusbuilder.cpp
+1305980300 source:/home/berthe/Programmation/Neurones/src/core/corpusbuilder.cpp
 	"core/corpusbuilder.h"
 
-1305451889 /home/berthe/Programmation/Neurones/src/core/corpusbuilder.h
+1305980300 /home/berthe/Programmation/Neurones/src/core/corpusbuilder.h
 	<boost/filesystem.hpp>
 	"soundanalyser.h"
+
+1306006536 source:/home/berthe/Programmation/Neurones/src/core/featuredrawer.cpp
+	"core/featuredrawer.h"
+
+1306004967 /home/berthe/Programmation/Neurones/src/core/featuredrawer.h
+	<iostream>
+	<QImage>
+	<QColor>
+	<QPainter>
+	"core/soundanalyser.h"
+
+1298376173 /usr/local/share/qt4/include/QtGui/QColor
+	"qcolor.h"
+
+1305995134 source:/home/berthe/Programmation/Neurones/src/core/mainGraph.cpp
+	<program_options.hpp>
+	<iostream>
+	"core/featuredrawer.h"
 

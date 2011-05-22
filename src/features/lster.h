@@ -7,7 +7,7 @@ class LSTERExtr;
 #include "features/extractor.h"
 #include "features/ste.h"
 
-#define DEFAULT_STE_BOUND 0.5
+#define DEFAULT_STE_BOUND 0.8
 #define DEFAULT_LSTER_CHUNK_SIZE 64
 
 class LSTERExtr : public FeatureExtractor

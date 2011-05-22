@@ -17,7 +17,7 @@ bool HZCRRExtr::extract(uint16_t* data, int size)
         for(int i = 0; i < size; i += mChunkSize)
         {
             mZcrExtr.extract(data + i*sizeof(uint16_t), mChunkSize);
-            if(mZcrExtr.value() >= mHZCRR)
+            if(mZcrExtr.value() >= mBound)
                 highCount++;
         }
 

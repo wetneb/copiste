@@ -10,6 +10,14 @@ class HZCRRExtr;
 #define DEFAULT_ZCR_BOUND 0.5
 #define DEFAULT_HZCRR_CHUNK_SIZE 64
 
+/**
+ * \brief Extracts the High ZCR Ratio (ZCR stands for Zero Crossing Rate)
+ *
+ * This value is defined by Lie Lu, Hong-Jiang Zhang by the percentage of
+ * the frames that have ZCR above 1.5 the average on an 1 sec window.
+ * TODO : Fix the implementation.
+ * TODO : Allow it to use the ZCR values that have already been computed.
+ */
 class HZCRRExtr : public FeatureExtractor
 {
     public:

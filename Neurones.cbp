@@ -53,9 +53,10 @@
 				<Option parameters="test/suhov-crop.wav" />
 			</Target>
 			<Target title="Graph">
-				<Option output="Neurones" prefix_auto="1" extension_auto="1" />
+				<Option output="Graph" prefix_auto="1" extension_auto="1" />
 				<Option type="0" />
 				<Option compiler="gcc" />
+				<Option parameters="test/suhov-crop.wav" />
 			</Target>
 		</Build>
 		<Compiler>
@@ -133,8 +134,17 @@
 		<Unit filename="src/core/corpusbuilder.h">
 			<Option target="Features" />
 		</Unit>
+		<Unit filename="src/core/featuredrawer.cpp">
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/core/featuredrawer.h">
+			<Option target="Graph" />
+		</Unit>
 		<Unit filename="src/core/mainFeatures.cpp">
 			<Option target="Features" />
+		</Unit>
+		<Unit filename="src/core/mainGraph.cpp">
+			<Option target="Graph" />
 		</Unit>
 		<Unit filename="src/core/mainNeurones.cpp">
 			<Option target="Linear" />
@@ -145,9 +155,11 @@
 		</Unit>
 		<Unit filename="src/core/soundanalyser.cpp">
 			<Option target="Features" />
+			<Option target="Graph" />
 		</Unit>
 		<Unit filename="src/core/soundanalyser.h">
 			<Option target="Features" />
+			<Option target="Graph" />
 		</Unit>
 		<Unit filename="src/core/spectrumRecorder.cpp">
 			<Option target="Spectrum" />

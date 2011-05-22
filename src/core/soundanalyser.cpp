@@ -4,10 +4,10 @@
 SoundAnalyser::SoundAnalyser() : mDimension(0), mBasePath("."), mCurrentFile(-1), mVerbose(false), mComputed(false)
 {
     //registerExtractor("Spectrum", new SpectrumExtr(AUDIO_CHUNK_SIZE));
-    //registerExtractor("ZCR", new ZCRExtr(AUDIO_CHUNK_SIZE));
-    registerExtractor("HZCRR", new HZCRRExtr(AUDIO_CHUNK_SIZE));
-    //registerExtractor("STE", new STEExtr(AUDIO_CHUNK_SIZE));
-    registerExtractor("LSTER", new LSTERExtr(AUDIO_CHUNK_SIZE));
+    registerExtractor("ZCR", new ZCRExtr(AUDIO_CHUNK_SIZE));
+    //registerExtractor("HZCRR", new HZCRRExtr(AUDIO_CHUNK_SIZE));
+    registerExtractor("STE", new STEExtr(AUDIO_CHUNK_SIZE));
+    //registerExtractor("LSTER", new LSTERExtr(AUDIO_CHUNK_SIZE));
 }
 
 //! Destructor.
