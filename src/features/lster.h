@@ -7,14 +7,17 @@ class LSTERExtr;
 #include "features/extractor.h"
 #include "features/ste.h"
 
-#define DEFAULT_STE_BOUND 0.8
-#define DEFAULT_LSTER_CHUNK_SIZE 64
+#define DEFAULT_STE_BOUND 0.5
+#define DEFAULT_LSTER_CHUNK_SIZE 40
 
 class LSTERExtr : public FeatureExtractor
 {
     public:
         //! Default constructor
         LSTERExtr(int chunkSize = 0);
+
+        //! Set the STE extractor (the previous one is returned)
+        STEExtr* setSTEExtractor(STEExtr* extr);
 
         //! Run the algorithm and store the results
         bool extract(uint16_t* data, int size);
@@ -37,7 +40,10 @@ class LSTERExtr : public FeatureExtractor
         //! Get a int parameter (available : "chunkSize")
         int getInt(string key);
     private:
-        STEExtr mSteExtr;
+        STEExtr *mSteExtr;
+        float* mHistory;
+        int mCurrentFrame;
+
         float mLSTER;
         float mBound;
         int mChunkSize;

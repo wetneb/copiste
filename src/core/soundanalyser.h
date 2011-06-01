@@ -25,6 +25,10 @@ class SoundAnalyser;
 
 using namespace std;
 
+/**
+ * TODO : Register ALL the features and create a tab saying what should be used
+ */
+
 class SoundAnalyser : private StreamPlayer
 {
     public:
@@ -62,6 +66,11 @@ class SoundAnalyser : private StreamPlayer
         //! End the computation
         void sequenceEnds();
 
+        //! Mirrors
+
+        //! Get the sampling frequency
+        unsigned int samplingFrequency() { return mFrequency; }
+
     private:
         // To be kept
         vector<pair<string, FeatureExtractor* > > mExtr;
@@ -79,6 +88,7 @@ class SoundAnalyser : private StreamPlayer
         // To be kept
         boost::mutex mSwitchLock;
         bool mComputed;
+        libvlc_time_t mLastUpdateTime;
 };
 
 #endif

@@ -4,10 +4,36 @@
 SoundAnalyser::SoundAnalyser() : mDimension(0), mBasePath("."), mCurrentFile(-1), mVerbose(false), mComputed(false)
 {
     //registerExtractor("Spectrum", new SpectrumExtr(AUDIO_CHUNK_SIZE));
-    registerExtractor("ZCR", new ZCRExtr(AUDIO_CHUNK_SIZE));
-    //registerExtractor("HZCRR", new HZCRRExtr(AUDIO_CHUNK_SIZE));
-    registerExtractor("STE", new STEExtr(AUDIO_CHUNK_SIZE));
-    //registerExtractor("LSTER", new LSTERExtr(AUDIO_CHUNK_SIZE));
+    ZCRExtr *zcr =  new ZCRExtr(AUDIO_CHUNK_SIZE);
+    registerExtractor("ZCR", zcr);
+    HZCRRExtr *hzcrr = new HZCRRExtr(AUDIO_CHUNK_SIZE);
+    hzcrr->setZCRExtractor(zcr);
+    hzcrr->setFloat("bound", 2.0);
+    hzcrr->setInt("chunksNumber", 80);
+    registerExtractor("HZCRR", hzcrr);
+
+/*
+    HZCRRExtr *hzcrr1 = new HZCRRExtr(AUDIO_CHUNK_SIZE);
+    hzcrr1->setInt("chunksNumber", 80);
+    hzcrr1->setZCRExtractor(zcr);
+    hzcrr1->setFloat("bound", 2.0);
+    registerExtractor("HZCRR-1", hzcrr1);
+
+    HZCRRExtr *hzcrr2 = new HZCRRExtr(AUDIO_CHUNK_SIZE);
+    hzcrr2->setInt("chunksNumber", 80);
+    hzcrr1->setZCRExtractor(zcr);
+    hzcrr2->setFloat("bound", 2.2);
+    registerExtractor("HZCRR-2", hzcrr2); */
+
+    STEExtr *ste = new STEExtr(AUDIO_CHUNK_SIZE);
+    registerExtractor("STE", ste);
+
+    LSTERExtr *lster2 = new LSTERExtr(AUDIO_CHUNK_SIZE);
+    registerExtractor("LSTER", lster2);
+    lster2->setSTEExtractor(ste);
+    lster2->setFloat("bound", 0.45);
+
+    mLastUpdateTime = 0;
 }
 
 //! Destructor.
@@ -53,12 +79,25 @@ void SoundAnalyser::sequenceEnds()
     mComputed = true;
 
     mSwitchLock.unlock();
+
+    if(mLastUpdateTime != 0)
+    {
+        cout << "\e[F\e[KDone." << endl;
+    }
 }
 
 void SoundAnalyser::useBuffer()
 {
     if(mExtr.size())
     {
+        if(mLastUpdateTime < playingTime() - 500)
+        {
+            if(mLastUpdateTime != 0)
+                cout << "\e[F" << flush; // Magic sequence which flushes the last written line (not so magic, see ANSI spec)
+            cout << "Computing... " << 100 * playingTime() / totalTime() << "%" << endl;
+            mLastUpdateTime = playingTime();
+        }
+
         float **featureArray = new float*[mExtr.size()];
         for(unsigned int i = 0; i < mExtr.size(); ++i)
             featureArray[i] = new float[mExtr[i].second->size()];

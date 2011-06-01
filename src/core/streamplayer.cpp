@@ -4,8 +4,7 @@
 using namespace std;
 
 StreamPlayer::StreamPlayer() : mMp(0),
-                               mMedia(0),
-                               mDebugWritten(false)
+                               mMedia(0)
 {
     // Set up VLC
     char smem_options[256];
@@ -17,6 +16,7 @@ StreamPlayer::StreamPlayer() : mMp(0),
     const char * const vlc_args[] = {
          //     "--extraintf=logger", //log anything
         //    "--verbose=2", //be much more verbose then normal for debugging purpose
+              "--no-sout-smem-time-sync",
               "--sout", smem_options //smem_options // Stream to memory
                };
 
@@ -126,6 +126,10 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
     }
     delete temp;
 
+    // Update the frequency if needed
+    if(rate != sp->mFrequency)
+        sp->mFrequency = rate;
+
     sp->mLock.unlock();
 }
 
@@ -212,76 +216,6 @@ void StreamPlayer::reduce(uint16_t* source, uint16_t* dest, int size, int passes
         }
         dest[2*i] = max/scale;
         dest[2*i + 1] = max/scale;
-    }
-}
-
-// Dump the data to a file (useful for debugging processes)
-void StreamPlayer::dumpStreamToFile16(uint16_t* source, int size)
-{
-    if(!mDumpFile.isOpen())
-    {
-        mDumpFile.setFileName("dumpedStream.txt");
-        mDumpFile.open(QIODevice::WriteOnly);
-    }
-
-    std::stringstream buf;
-
-    for(int i = 0; i != size; ++i)
-        buf << i+1 << "\t" << source[i] << "\n";
-    mDumpFile.write(buf.str().c_str());
-}
-
-// Dump two streams to a file
-void StreamPlayer::dumpStreamToFile16x2(uint16_t* source, uint16_t* second, int size)
-{
-    if(!mDumpFile.isOpen())
-    {
-        mDumpFile.setFileName("dumpedStream.txt");
-        mDumpFile.open(QIODevice::WriteOnly);
-    }
-
-    std::stringstream buf;
-
-    for(int i = 0; i != size; ++i)
-        buf << i+1 << "\t" << source[i] << "\t" << second[i%(size/2)] << "\n";
-    mDumpFile.write(buf.str().c_str());
-}
-
-// Dump a stream as a sequence of bytes
-void StreamPlayer::dumpStreamToFile8(uint8_t* source, int size)
-{
-    if(!mDumpFile.isOpen())
-    {
-        mDumpFile.setFileName("dumpedStream.txt");
-        mDumpFile.open(QIODevice::WriteOnly);
-    }
-
-    uint16_t reference = (uint16_t)(-1);
-    reference /= 2;
-    std::stringstream buf;
-    for(int i = 0; i != size/2; ++i)
-    {
-        buf << i+1 << "\t" << (int)source[i] << "\n";
-        /*
-        buf << (int)source[2*i] << " " << (int)((((int)source[2*i+1]) << 8) | source[2*i]) << "\n";
-        buf << (int)source[2*i+1] << " " << (int)((((int)source[2*i+1]) << 8) | source[2*i]) << "\n";
-        // */
-    }
-    mDumpFile.write(buf.str().c_str());
-}
-
-// Write a line to the debugging output
-void StreamPlayer::writeLine(string line)
-{
-    if(!mDebugWritten)
-    {
-        if(!mDumpFile.isOpen())
-        {
-            mDumpFile.setFileName("dumpedStream.txt");
-            mDumpFile.open(QIODevice::WriteOnly);
-        }
-        mDumpFile.write(line.c_str());
-        mDebugWritten = true;
     }
 }
 

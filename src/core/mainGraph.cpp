@@ -1,5 +1,6 @@
 
 #include <program_options.hpp>
+#include <filesystem.hpp>
 
 namespace po = boost::program_options;
 
@@ -35,7 +36,7 @@ int main(int argc, char **argv)
         fd.compute(filename);
         fd.waitComputed();
         fd.draw();
-        fd.writeToFile("output/features.png");
+        fd.writeToFile(string("output/"+(boost::filesystem::path(filename).filename().string())+"-features.png"));
     }
 
     return 0;

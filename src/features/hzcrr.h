@@ -6,23 +6,25 @@ class HZCRRExtr;
 
 #include "features/extractor.h"
 #include "features/zcr.h"
+#include "core/streamplayer.h" // for AUDIO_CHUNK_SIZE
 
-#define DEFAULT_ZCR_BOUND 0.5
-#define DEFAULT_HZCRR_CHUNK_SIZE 64
+#define DEFAULT_ZCR_BOUND 2.0
+#define DEFAULT_HZCRR_CHUNKS_NUMBER (44100 / AUDIO_CHUNK_SIZE)
 
 /**
  * \brief Extracts the High ZCR Ratio (ZCR stands for Zero Crossing Rate)
  *
  * This value is defined by Lie Lu, Hong-Jiang Zhang by the percentage of
  * the frames that have ZCR above 1.5 the average on an 1 sec window.
- * TODO : Fix the implementation.
- * TODO : Allow it to use the ZCR values that have already been computed.
  */
 class HZCRRExtr : public FeatureExtractor
 {
     public:
         //! Default constructor
         HZCRRExtr(int chunkSize = 0);
+
+        //! Set the ZCR extractor (the previous one is returned)
+        ZCRExtr* setZCRExtractor(ZCRExtr* extr);
 
         //! Run the algorithm and store the results
         bool extract(uint16_t* data, int size);
@@ -36,20 +38,23 @@ class HZCRRExtr : public FeatureExtractor
         //! Set a float parameter (available : "bound")
         void setFloat(string key, float value);
 
-        //! Set a int parameter (available : "chunkSize")
+        //! Set a int parameter (available : "chunksNumber")
         void setInt(string key, int value);
 
         //! Get a float parameter (available : "bound")
         float getFloat(string key);
 
-        //! Get a int parameter (available : "chunkSize")
+        //! Get a int parameter (available : "chunksNumber")
         int getInt(string key);
 
     private:
-        ZCRExtr mZcrExtr;
+        ZCRExtr* mZcrExtr;
+        float* mHistory;
+        int mCurrentFrame;
+
         float mHZCRR;
         float mBound;
-        int mChunkSize;
+        int mChunksNumber;
 };
 
 #endif

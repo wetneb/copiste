@@ -6,31 +6,42 @@ LSTERExtr::LSTERExtr(int chunkSize)
     mLSTER = 0;
     mBound = DEFAULT_STE_BOUND;
     mChunkSize = DEFAULT_LSTER_CHUNK_SIZE;
+    mSteExtr = 0;
+
+    // Fill the history with dummy data at first
+    mHistory = new float[mChunkSize];
+    for(int i = 0; i < mChunkSize; i++)
+        mHistory[i] = i%2;
+    mLSTER = 0.5;
+    mCurrentFrame = 0;
 }
 
 //! Run the algorithm and store the results
 bool LSTERExtr::extract(uint16_t* data, int size)
 {
+    if(mSteExtr == 0)
+        mSteExtr = new STEExtr();
+
     if(size)
     {
-        int lowCount = 0;
-        uint16_t zero = (-1);
-        zero >>= 1;
+        mSteExtr->extract(data, size);
+        mHistory[mCurrentFrame] = mSteExtr->value();
 
-        // Compute the average energy
-        int average = 0;
-        for(int i = 0; i < size; ++i)
-            average += ((int)data[i] - zero) * ((int)data[i] - zero) / size;
+        float average = 0;
+        for(int i = 0; i < mChunkSize; i++)
+            average += mHistory[i];
+        average /= mChunkSize;
+        float bound = mBound*average;
 
-        // Count the low STE
-        int upperBound = mBound * average;
-        for(int i = 0; i < size; ++i)
-        {
-            if(((int)data[i] - zero) * ((int)data[i] - zero) < upperBound)
-                lowCount++;
-        }
+        unsigned int low = 0;
+        for(int i = 1; i < mChunkSize; i++)
+            if(mHistory[i] < bound)
+                low++;
 
-        mLSTER = lowCount / size;
+
+        mCurrentFrame = (mCurrentFrame + 1) % mChunkSize;
+
+        mLSTER = (float)low / mChunkSize;
     }
     return size;
 }
@@ -65,6 +76,14 @@ int LSTERExtr::getInt(string key)
     if(key == "chunkSize")
         ret = mChunkSize;
     return ret;
+}
+
+//! Set the STE extractor (the previous one is returned)
+STEExtr* LSTERExtr::setSTEExtractor(STEExtr* extr)
+{
+    STEExtr* old = mSteExtr;
+    mSteExtr = extr;
+    return old;
 }
 
 

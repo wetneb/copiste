@@ -3,7 +3,7 @@
 //! Run the algorithm and store the results
 bool ZCRExtr::extract(uint16_t* data, int size)
 {
-    if(size)
+    if(size && (data[0] != mLastFirstValue))
     {
         int crossingsCount = 0;
         uint16_t zero = (-1);
@@ -20,6 +20,7 @@ bool ZCRExtr::extract(uint16_t* data, int size)
         }
 
         mZCR = (float)crossingsCount / size;
+        mLastFirstValue = data[0];
     }
     return size;
 }

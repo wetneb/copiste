@@ -12,7 +12,12 @@ class ZCRExtr : public FeatureExtractor
         //! Default constructor
         ZCRExtr(int chunkSize = 0) { mZCR = 0; }
 
-        //! Run the algorithm and store the results
+        /**
+         * \brief Run the algorithm and store the results.
+         * If the first value of the data is the same as the previous one, the last value
+         * will be used. This is just a matter of optimisation and the collisions aren't
+         * a problem since they won't change basicly the ZCR variations or the HZCRR.
+         */
         bool extract(uint16_t* data, int size);
 
         //! Retrive the results (from the index). The values are usually between -1 and 1
@@ -34,6 +39,7 @@ class ZCRExtr : public FeatureExtractor
         int getInt(string key) { return 0; }
     private:
         float mZCR;
+        uint16_t mLastFirstValue;
 };
 
 #endif

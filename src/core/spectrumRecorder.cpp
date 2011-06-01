@@ -11,7 +11,6 @@ SpectrumRecorder::SpectrumRecorder(int windowSize, int sampleFrequency, int maxH
 
     mCurrentRow = 0;
     mComputed = true;
-    mLastUpdateTime = 0;
 }
 
 //! Computes the spectrum
@@ -43,17 +42,8 @@ void SpectrumRecorder::useBuffer()
     // libvlc_media_player_get_length/time
     if(mCurrentRow < mMaxHeight)
     {
-        if(mLastUpdateTime < playingTime() - 500)
-        {
-            if(mLastUpdateTime != 0)
-                cout << "\e[F" << flush; // Magic sequence which flushes the last written line (not so magic, see ANSI spec)
-            cout << "Computing... " << 100 * playingTime() / totalTime() << "%" << endl;
-            mLastUpdateTime = playingTime();
-        }
-
         mExtr.extract(mBuffer, AUDIO_CHUNK_SIZE);
         mExtr.normalize(255);
-
         for(int i = 0; i < mWindowSize / 2; ++i)
             mOut.setPixel(i, mCurrentRow, qRgb(0, mExtr.spectrum()[i], 0));
         mCurrentRow++;

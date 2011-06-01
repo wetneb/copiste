@@ -8,7 +8,7 @@
 
 #include "core/soundanalyser.h"
 
-#define FEATURE_DRAWER_DEFAULT_WIDTH 800
+#define FEATURE_DRAWER_DEFAULT_WIDTH 1600
 #define FEATURE_DRAWER_DEFAULT_HEIGHT 600
 
 using namespace std;

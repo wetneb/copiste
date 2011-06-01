@@ -33,6 +33,11 @@ void prepareRender(void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int si
  * This class is intended to be rewritten for more specific usages (spectrum analysis, feature extraction, aso.).
  * Its the interface between libVLC (which reads the media, decodes, resamples, and does all the hard DSP) and
  * the using of the data.
+ *
+ * TODO : add parameters : enable to set verbosity (display progress or not)
+ * TODO                    enable to compute directly or not
+ * TODO                    enable to send the stream to speakers or not
+ * TODO                    enable to…
  */
 class StreamPlayer
 {
@@ -76,13 +81,6 @@ class StreamPlayer
         static void reduce(uint16_t* source, uint16_t* dest, int size, int passes, int scale=1);
         //! Adds an offset to each value of the array
         static void addOffset(uint16_t* source, uint16_t* dest, int size, int offset);
-        //! Dumps values to a file (useful in a debugging process) (16 bit version)
-        void dumpStreamToFile16(uint16_t* source, int size);
-        void dumpStreamToFile16x2(uint16_t* source, uint16_t* second, int size);
-        //! Dumps values to a file (8 bit version)
-        void dumpStreamToFile8(uint8_t* source, int size);
-        //! Write a line to the dump file
-        void writeLine(std::string line);
         //! Get 2^n
         static int pow2(int n);
 
@@ -97,6 +95,7 @@ class StreamPlayer
         // Prerender callback
         char* mAudioData;
         unsigned int mAudioDataSize;
+        unsigned int mFrequency; // detected from VLC
 
     private:
         // Paramètres
@@ -110,10 +109,6 @@ class StreamPlayer
 
         boost::thread mWatchThread;
         boost::mutex mPlayingLock;
-
-        //!XXXXXX TODO To be deleted
-        QFile mDumpFile;
-        bool mDebugWritten;
 };
 
 #endif

@@ -29,7 +29,6 @@ void FeatureDrawer::draw()
     {
         for(unsigned int e = 0; e < nbElems(f); e++)
         {
-            cout << name(f) << " : "<< endl;
             mMin[offset] = features(0)[f][e];
             mMax[offset] = features(0)[f][e];
 
@@ -41,13 +40,26 @@ void FeatureDrawer::draw()
                     mMax[offset] = features(i)[f][e];
             }
 
-            cout << "Min : " << mMin[offset] <<", max : "<< mMax[offset] << endl;
-
             offset++;
         }
     }
 
-    //return;
+    mOut.fill(QColor(0,0,0).rgb());
+    QPainter painter(&mOut);
+
+    // Draw lines
+
+    // Seconds
+    offset = samplingFrequency() / AUDIO_CHUNK_SIZE;
+    painter.setPen(QColor(30,30,30));
+    for(int i = 0; i < mOut.width(); i += offset)
+        painter.drawLine(i, 0, i, mOut.height());
+
+    // Features
+    painter.setPen(QColor(60,60,60));
+    offset = mOut.height() / dimension();
+    for(int i = mOut.height()-1; i >= 0; i -= offset)
+        painter.drawLine(0, i, mOut.width(), i);
 
     // Draw
     QColor colors[] = { Qt::red,
@@ -59,12 +71,9 @@ void FeatureDrawer::draw()
                         Qt::gray,
                         Qt::black };
 
-    mOut.fill(QColor(0,0,0).rgb());
-    QPainter painter(&mOut);
     offset = 0;
     for(unsigned int f = 0; f < nbFeatures(); f++)
     {
-        cout << "Drawing feature "<<name(f)<<" with color number "<<offset<<endl;
         for(unsigned int e = 0; e < nbElems(f); e++)
         {
             float chunk = mOut.height() / dimension();
@@ -73,7 +82,7 @@ void FeatureDrawer::draw()
             painter.setPen(colors[offset%8]);
 
             QPoint lastPoint(0,0);
-            for(int i = 0; i < mOut.width(); ++i)
+            for(int i = 0; i < mOut.width() && i < (int)nbSamples(); ++i)
             {
                 painter.drawLine(lastPoint, QPoint(i, mOut.height() - chunk*offset - (features(i)[f][e] - mMin[offset])/scale));
                 lastPoint = QPoint(i, mOut.height() - chunk*offset - (features(i)[f][e] - mMin[offset])/scale);
