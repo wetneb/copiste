@@ -225,6 +225,21 @@
 			<Option target="Features" />
 			<Option target="Graph" />
 		</Unit>
+		<Unit filename="src/filters/average.cpp">
+			<Option target="Features" />
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/filters/average.h">
+			<Option target="Features" />
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/filters/filter.h">
+			<Option target="Features" />
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
 		<Unit filename="src/gui/editor.cpp">
 			<Option target="Linear" />
 			<Option target="Nonlinear" />

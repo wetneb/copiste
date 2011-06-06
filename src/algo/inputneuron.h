@@ -44,6 +44,8 @@ class InputNeuron : public AbstractNeuron
         void addChild(AbstractNeuron* child) { ; }
         void forgetChild(AbstractNeuron* child) { ; }
 
+        bool write(QDomElement elem) { return false; }
+
     private:
         string mName;
         neural_value mValue;

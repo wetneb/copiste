@@ -1,6 +1,8 @@
 #ifndef INCLUDEDABSTRACTNEURONH
 #define INCLUDEDABSTRACTNEURONH
 
+#include <QDomNode>
+
 #include <iostream>
 
 using namespace std;
@@ -48,6 +50,9 @@ class AbstractNeuron
 
         //! Cleans the cache (forgets the output value and the error, but keeps weights and parents)
         virtual void clean() = 0;
+
+        //! Writes the neuron to a DOM element
+        virtual bool write(QDomElement elem) = 0;
 };
 
 #endif

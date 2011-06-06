@@ -42,7 +42,7 @@ void prepareRender(void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int si
 class StreamPlayer
 {
     public:
-        /// Set up functions
+        // Set up functions
 
         //! Default constructor. Starts VLC instance.
         StreamPlayer();
@@ -62,7 +62,7 @@ class StreamPlayer
         //! Stops playing
         void stop();
 
-        /// Computing functions : designed to be overloaded by the user
+        // Computing functions : designed to be overloaded by the user
 
         //! Callback called when we start playing a file
         virtual void sequenceStarts() { ; }
@@ -71,7 +71,7 @@ class StreamPlayer
         //! Callback called when the file ended
         virtual void sequenceEnds() { ; }
 
-        /// Handling functions
+        // Handling functions
 
         //! Converts an array of uint8_t to another array of uint16_t (assuming the values are coded on two bytes)
         static uint16_t* convert8to16(const uint8_t* source, int size);
@@ -84,7 +84,7 @@ class StreamPlayer
         //! Get 2^n
         static int pow2(int n);
 
-        /// Watching thread
+        //! Watching thread
         void watch();
 
         //! Feature extraction : those variables need to be public (I know, I can write accessors...)

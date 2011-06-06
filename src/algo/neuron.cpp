@@ -53,21 +53,21 @@ void Neuron::load(QDomElement element, const NNetwork* network)
     else cout << "Warning : wrong neuron definition : " << element.tagName().toStdString() << endl;
 }
 
-void Neuron::write(QDomElement elem)
+bool Neuron::write(QDomElement elem)
 {
     if(!elem.isNull())
     {
-        elem.setTagName("node");
         elem.setAttribute("bias", mWeights[0]);
 
-        for(unsigned int i = 0; i != mParents.size(); ++i)
+        for(unsigned int i = 1; i != mParents.size(); ++i)
         {
             QDomElement linkElem = elem.ownerDocument().createElement("link");
             linkElem.setAttribute("parent", mParents[i]->name().c_str());
-            linkElem.setAttribute("weight", mWeights[i+1]);
+            linkElem.setAttribute("weight", mWeights[i]);
             elem.appendChild(linkElem);
         }
     }
+    return !elem.isNull();
 }
 
 // This method will be called only for the output neuron

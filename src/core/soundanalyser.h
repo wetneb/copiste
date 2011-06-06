@@ -23,6 +23,9 @@ class SoundAnalyser;
 // Storage
 #include "algo/corpus.h"
 
+// Filters
+#include "filters/average.h"
+
 using namespace std;
 
 /**
@@ -37,7 +40,7 @@ class SoundAnalyser : private StreamPlayer
         //! Destructor.
         ~SoundAnalyser();
         //! Adds a new extractor
-        void registerExtractor(string name, FeatureExtractor* extr);
+        void registerExtractor(string name, FeatureExtractor* extr, bool used = true);
 
         //! Compute the features of a given file
         bool compute(string url);
@@ -58,6 +61,10 @@ class SoundAnalyser : private StreamPlayer
         void clearFeatures();
         //! Get the dimension : sum of all the nbElems(i)
         unsigned int dimension() { return mDimension; }
+        //! Get the real dimension : sum of all the nbElems we care (the values which are actually used for detection)
+        unsigned int realDimension() { return mRealDimension; }
+        //! Is this feature used for detection ?
+        bool isUsed(unsigned int index);
         //! Get the name of the nth feature
         string name(unsigned int n);
 
@@ -74,9 +81,12 @@ class SoundAnalyser : private StreamPlayer
     private:
         // To be kept
         vector<pair<string, FeatureExtractor* > > mExtr;
+        vector<bool> mUsed;
         vector<float**> mFeatures;
 
         int mDimension;
+        int mRealDimension;
+        int mUsedExtractors;
 
         // To be moved
         string mBasePath;

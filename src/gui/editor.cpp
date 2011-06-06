@@ -41,7 +41,7 @@ void Editor::handleAction(QAction *action)
     }
     else if(action->text() == "Train")
     {
-        mView.corpus()->train(*mView.net(), 0.01, 10000);
+        mView.corpus()->train(*mView.net(), 0.001, 10000);
         mView.renderScene();
         mView.repaint();
     }

@@ -109,10 +109,10 @@ void View2D::setCorpus(Corpus *corpus)
     {
         mCorpus = corpus;
         vector<float> bounds = corpus->bounds();
-        mViewport.scaleX = (bounds[1] - bounds[0])/height();
-        mViewport.scaleY = (bounds[3] - bounds[2])/width();
-        mViewport.x = bounds[0];
-        mViewport.y = bounds[2];
+        mViewport.scaleX = 1.8*(bounds[1] - bounds[0])/height();
+        mViewport.scaleY = 1.8*(bounds[3] - bounds[2])/width();
+        mViewport.x = bounds[0] - 0.1*(bounds[1] - bounds[0]);
+        mViewport.y = bounds[2] - 0.1*(bounds[3] - bounds[2]);
 
         renderScene();
         repaint();

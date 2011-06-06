@@ -65,10 +65,6 @@ int main(int argc, char **argv)
 
         cout << "Computed." << endl;
     }
-    cout << "Done" << endl;
-    boost::posix_time::seconds tm(5);
-    boost::this_thread::sleep(tm);
-    cout << "Waited" << endl;
     return 0;
 }
 

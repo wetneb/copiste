@@ -1,16 +1,22 @@
 #include "core/soundanalyser.h"
 
 //! Sets up a new sound analyser
-SoundAnalyser::SoundAnalyser() : mDimension(0), mBasePath("."), mCurrentFile(-1), mVerbose(false), mComputed(false)
+SoundAnalyser::SoundAnalyser() : mDimension(0),
+                                mRealDimension(0),
+                                mUsedExtractors(0),
+                                mBasePath("."),
+                                mCurrentFile(-1),
+                                mVerbose(false),
+                                mComputed(false)
 {
     //registerExtractor("Spectrum", new SpectrumExtr(AUDIO_CHUNK_SIZE));
     ZCRExtr *zcr =  new ZCRExtr(AUDIO_CHUNK_SIZE);
-    registerExtractor("ZCR", zcr);
+    registerExtractor("ZCR", zcr, false);
     HZCRRExtr *hzcrr = new HZCRRExtr(AUDIO_CHUNK_SIZE);
     hzcrr->setZCRExtractor(zcr);
     hzcrr->setFloat("bound", 2.0);
     hzcrr->setInt("chunksNumber", 80);
-    registerExtractor("HZCRR", hzcrr);
+    registerExtractor("HZCRR", hzcrr, false);
 
 /*
     HZCRRExtr *hzcrr1 = new HZCRRExtr(AUDIO_CHUNK_SIZE);
@@ -25,13 +31,24 @@ SoundAnalyser::SoundAnalyser() : mDimension(0), mBasePath("."), mCurrentFile(-1)
     hzcrr2->setFloat("bound", 2.2);
     registerExtractor("HZCRR-2", hzcrr2); */
 
-    STEExtr *ste = new STEExtr(AUDIO_CHUNK_SIZE);
-    registerExtractor("STE", ste);
 
-    LSTERExtr *lster2 = new LSTERExtr(AUDIO_CHUNK_SIZE);
-    registerExtractor("LSTER", lster2);
-    lster2->setSTEExtractor(ste);
-    lster2->setFloat("bound", 0.45);
+    STEExtr *ste = new STEExtr(AUDIO_CHUNK_SIZE);
+    registerExtractor("STE", ste, false);
+
+    LSTERExtr *lster = new LSTERExtr(AUDIO_CHUNK_SIZE);
+    registerExtractor("LSTER", lster, false);
+    lster->setSTEExtractor(ste);
+    lster->setFloat("bound", 0.45);
+
+    AverageFilter *averageLSTER = new AverageFilter();
+    averageLSTER->bind(lster);
+    averageLSTER->setInt("size", 100);
+    registerExtractor("Average LSTER", averageLSTER);
+
+    AverageFilter* average = new AverageFilter();
+    average->bind(hzcrr);
+    average->setInt("size", 100);
+    registerExtractor("Average HZCRR", average);
 
     mLastUpdateTime = 0;
 }
@@ -74,16 +91,17 @@ bool SoundAnalyser::compute(string url)
 
 void SoundAnalyser::sequenceEnds()
 {
-    mSwitchLock.lock();
-
-    mComputed = true;
-
-    mSwitchLock.unlock();
-
     if(mLastUpdateTime != 0)
     {
         cout << "\e[F\e[KDone." << endl;
+         mLastUpdateTime = 0;
     }
+
+    //mSwitchLock.lock();
+
+    mComputed = true;
+
+    //mSwitchLock.unlock();
 }
 
 void SoundAnalyser::useBuffer()
@@ -116,14 +134,21 @@ void SoundAnalyser::useBuffer()
 }
 
 //! Adds a new extractor
-void SoundAnalyser::registerExtractor(string name, FeatureExtractor* extr)
+void SoundAnalyser::registerExtractor(string name, FeatureExtractor* extr, bool used)
 {
     if(extr)
     {
         mExtr.push_back(make_pair(name, extr));
+        mUsed.push_back(used);
 
         // Update the dimension
         mDimension += extr->size();
+        if(used)
+            mRealDimension += extr->size();
+
+        if(used)
+            mUsedExtractors++;
+
     }
 }
 
@@ -131,16 +156,24 @@ void SoundAnalyser::waitComputed()
 {
     boost::posix_time::seconds waitTime(1);
 
-    mSwitchLock.lock();
+    //mSwitchLock.lock();
     while(!mComputed)
     {
-        mSwitchLock.unlock();
+        //mSwitchLock.unlock();
         boost::this_thread::sleep(waitTime);
 
-        mSwitchLock.lock();
+        //mSwitchLock.lock();
     }
-    mSwitchLock.unlock();
+    //mSwitchLock.unlock();
     mComputed = false;
+}
+
+//! Is this feature used for detection ?
+bool SoundAnalyser::isUsed(unsigned int index)
+{
+    if(index < mUsed.size())
+        return mUsed[index];
+    return false;
 }
 
 //! Return the number of elements of the nth feature

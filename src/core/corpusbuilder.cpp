@@ -3,11 +3,7 @@
 //! Sets up a new corpus builder
 CorpusBuilder::CorpusBuilder() : mBasePath("."), mCurrentFile(-1), mVerbose(false)
 {
-    //registerExtractor("Spectrum", new SpectrumExtr(AUDIO_CHUNK_SIZE));
-    registerExtractor("ZCR", new ZCRExtr(AUDIO_CHUNK_SIZE));
-    // registerExtractor("HZCRR", new HZCRRExtr(AUDIO_CHUNK_SIZE));
-    registerExtractor("STE", new STEExtr(AUDIO_CHUNK_SIZE));
-    // registerExtractor("LSTER", new LSTERExtr(AUDIO_CHUNK_SIZE));
+    ;
 }
 
 bool isPrefix(string pre, string str)
@@ -48,7 +44,7 @@ bool CorpusBuilder::setup(string fileName)
             QDomElement elem = node.toElement();
 
             if(elem.tagName() == "class" && elem.attribute("prefix", "") != "")
-                rules.push_back(make_pair(elem.attribute("prefix", "").toStdString(), (elem.attribute("goal", "1").toInt() != 0)));
+                rules.push_back(make_pair(elem.attribute("prefix", "").toStdString(), (elem.attribute("goal", "1").toInt() == 1)));
 
             node = node.nextSibling();
         }
@@ -103,8 +99,8 @@ void CorpusBuilder::compute()
 
         while((unsigned int)mCurrentFile < mFiles.size())
         {
-            mResults.push_back(new float[dimension()]);
-            for(unsigned int i = 0; i < dimension(); ++i)
+            mResults.push_back(new float[realDimension()]);
+            for(unsigned int i = 0; i < realDimension(); ++i)
                 mResults[mCurrentFile][i] = 0;
 
             // Set up the media player
@@ -121,17 +117,20 @@ void CorpusBuilder::compute()
             int saved = 0;
             for(unsigned int i = 0; i < nbFeatures(); i++)
             {
-                for(unsigned int j = 0; j < nbElems(i); j++)
+                if(isUsed(i))
                 {
-                    mResults[mCurrentFile][saved + j] = 0;
-                    // Compute the average
-                    for(unsigned int k = 0; k < nbSamples(); k++)
-                        mResults[mCurrentFile][saved + j] += features(k)[i][j];
-                    mResults[mCurrentFile][saved + j] /= nbSamples();
+                    for(unsigned int j = 0; j < nbElems(i); j++)
+                    {
+                        mResults[mCurrentFile][saved + j] = 0;
+                        // Compute the average
+                        for(unsigned int k = 0; k < nbSamples(); k++)
+                            mResults[mCurrentFile][saved + j] += features(k)[i][j];
+                        mResults[mCurrentFile][saved + j] /= nbSamples();
 
-                    cout << name(i) << "["<<j+1<<"] :" << mResults[mCurrentFile][saved + j] << endl;
+                        cout << name(i) << "["<<j+1<<"] :" << mResults[mCurrentFile][saved + j] << endl;
+                    }
+                    saved += nbElems(i);
                 }
-                saved += nbElems(i);
             }
 
             mCurrentFile++;
@@ -142,26 +141,24 @@ void CorpusBuilder::compute()
 //! Write down the results
 bool CorpusBuilder::write(Corpus *corpus)
 {
-    //waitComputed();
-
-    if(corpus->dimension() != (unsigned int)dimension())
-        corpus->erase(dimension());
+    if(corpus->dimension() != (unsigned int)realDimension())
+        corpus->erase(realDimension());
 
     for(unsigned int i = 0; i < mResults.size(); ++i)
     {
         // Declare a new sample
-        float* sample = new float[dimension()+1];
+        float* sample = new float[realDimension()+1];
         sample[0] = 0; // Default value
 
         // Bind the file to a class (to be changed)
         if(i < mFiles.size())
         {
             boost::filesystem::path pt(mFiles[i]);
-            sample[0] = mGoals[i];
+            sample[0] = (mGoals[i] ? 1 : (-1));
         }
 
         // Add the features
-        for(unsigned int j = 0; j < dimension(); j++)
+        for(unsigned int j = 0; j < realDimension(); j++)
             sample[j+1] = mResults[i][j];
 
         // Add it to the corpus

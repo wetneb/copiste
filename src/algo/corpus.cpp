@@ -234,7 +234,7 @@ void Corpus::display()
     {
         cout << "[" << i << "] : ";
 
-        for(int j = 0; j != mDimension; ++j)
+        for(int j = 0; j < mDimension+1; ++j)
         {
             cout << mPool[i][j] << "  ";
         }
@@ -286,12 +286,20 @@ void Corpus::addElem(neural_value* elem)
 {
     if(mSize >= mPoolSize)
     {
-        mPoolSize *= 2;
-        neural_value** newPool = new neural_value*[mPoolSize];
-        for(int i = 0; i < mSize; ++i)
-            newPool[i] = mPool[i];
-        delete mPool;
-        mPool = newPool;
+        if(mPoolSize > 0)
+        {
+            mPoolSize *= 2;
+            neural_value** newPool = new neural_value*[mPoolSize];
+            for(int i = 0; i < mPoolSize/2; ++i)
+                newPool[i] = mPool[i];
+            delete mPool;
+            mPool = newPool;
+        }
+        else
+        {
+            mPoolSize = 1;
+            mPool = new neural_value*[mPoolSize];
+        }
     }
 
     mPool[mSize] = elem;

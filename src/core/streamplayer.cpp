@@ -16,7 +16,7 @@ StreamPlayer::StreamPlayer() : mMp(0),
     const char * const vlc_args[] = {
          //     "--extraintf=logger", //log anything
         //    "--verbose=2", //be much more verbose then normal for debugging purpose
-              "--no-sout-smem-time-sync",
+             "--no-sout-smem-time-sync",
               "--sout", smem_options //smem_options // Stream to memory
                };
 

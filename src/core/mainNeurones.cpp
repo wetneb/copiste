@@ -47,7 +47,7 @@ int main(int argc, char **argv)
         std::cout << desc << std::endl;
         return 0;
     }
-    else if(vm.count("eval") == 0 && vm.count("train") == 0 && vm.count("graph") == 0)
+    else if(vm.count("eval") == 0 && vm.count("train") == 0 && vm.count("plot") == 0)
     {
         std::cout << "No target has been set. Type --help for usage instructions." << std::endl;
         return 0;
@@ -93,12 +93,14 @@ int main(int argc, char **argv)
     {
         if(vm.count("no-random-weights") == 0)
             net.randomize();
-        //float *history;
-        int nbIter = corpus.train(net, rate, iterMax, 0, (vm.count("no-random-weights") == 0));// 0 : &history
+        float *history;
+        int nbIter = corpus.train(net, rate, iterMax, &history, (vm.count("no-random-weights") == 0));// 0 : &history
 
         if(verbose)
             cout << "Training ended after " << nbIter << " iterations.\n";
-        //plotHistory(history,iterMax*corpus.size(), 13);
+        plotHistory(history,iterMax*corpus.size(), 13);
+
+        net.write("trained-network.xml");
     }
 
 
