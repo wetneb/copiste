@@ -2,59 +2,76 @@
 #define INCLUDEDSTREAMPLAYERH
 
 #include <vlc/vlc.h>
-#include <QString>
-#include <QObject>
-#include <QTimer>
-#include <QMutex>
-#include <QMessageBox>
-#include <QFile>
 
+//! TODO Remove these dependencies from Qt (QFile shouldn't be a problem, and VLC implements mutexes)
+#include <QFile> // to be removed !
+#include <QMutex>
+
+#include <boost/thread.hpp>
+#include <boost/date_time.hpp>
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
+#include <string>
+
+#include "features/spectrum.h"
+
+#define AUDIO_CHUNK_SIZE 2048
+
+using namespace std;
 
 class StreamPlayer;
 
-#include "gui/graphique.h"
-#include "algo/analysis.h"
-#include "core/streamcatcher.h"
-
-// Temporaire, à supprimer
-#include <string>
-
 // Callbacks audio
-void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channels, unsigned int rate, unsigned int nb_samples, unsigned int bits_per_sample, unsigned int size, int64_t pts);
+void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channels, unsigned int rate,
+                  unsigned int nb_samples, unsigned int bits_per_sample, unsigned int size, int64_t pts);
 void prepareRender(void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int size);
 
 /**
  * \class StreamPlayer
  * \brief Manages stream decoding and sends it to the computing part of the application
+ * This class is intended to be rewritten for more specific usages (spectrum analysis, feature extraction, aso.).
+ * Its the interface between libVLC (which reads the media, decodes, resamples, and does all the hard DSP) and
+ * the using of the data.
+ *
+ * TODO : add parameters : enable to set verbosity (display progress or not)
+ * TODO                    enable to compute directly or not
+ * TODO                    enable to send the stream to speakers or not
+ * TODO                    enable to…
  */
-class StreamPlayer : public QObject
+class StreamPlayer
 {
-    Q_OBJECT
     public:
+        // Set up functions
+
         //! Default constructor. Starts VLC instance.
         StreamPlayer();
         //! Default destructor. Frees memory and closes VLC.
         ~StreamPlayer();
-
         //! Returns URL of the currently playing stream
-        QString url() { return mUrl; }
+        string url() { return mUrl; }
+        //! Defines the URL of the stream to play
+        void setUrl(string url) { mUrl = url; }
 
-        //! Audio Mutex (to prevent from crashes with VLC)
-        QMutex mLock;
-        //! Stream handling thread (to prevent from latency)
-        StreamCatcher mCatcher;
+        //! Plays the media
+        void play();
+        //! Returns the playing time
+        libvlc_time_t playingTime();
+        //! Returns the total time (played + to be played)
+        libvlc_time_t totalTime();
+        //! Stops playing
+        void stop();
 
-        //! Sets the wawe diagram
-        void setGraphiqueOnde(Graphique *graphique) { mGraphique = graphique; }
-        //! Set the spectrum diagram
-        void setGraphiqueSpectre(Graphique *graphique) { mSpectre = graphique; }
-        //! Returns the wawe diagram
-        Graphique* graphiqueOnde() { return mGraphique; }
-        //! Returns the spectrum diagram
-        Graphique* graphiqueSpectre() { return mSpectre; }
+        // Computing functions : designed to be overloaded by the user
+
+        //! Callback called when we start playing a file
+        virtual void sequenceStarts() { ; }
+        //! Callback called when the data is ready in the buffer (miam). The user don't have to manage the memory.
+        virtual void useBuffer() { ; }
+        //! Callback called when the file ended
+        virtual void sequenceEnds() { ; }
+
+        // Handling functions
 
         //! Converts an array of uint8_t to another array of uint16_t (assuming the values are coded on two bytes)
         static uint16_t* convert8to16(const uint8_t* source, int size);
@@ -64,30 +81,25 @@ class StreamPlayer : public QObject
         static void reduce(uint16_t* source, uint16_t* dest, int size, int passes, int scale=1);
         //! Adds an offset to each value of the array
         static void addOffset(uint16_t* source, uint16_t* dest, int size, int offset);
-        //! Dumps values to a file (useful in a debugging process) (16 bit version)
-        void dumpStreamToFile16(uint16_t* source, int size);
-        void dumpStreamToFile16x2(uint16_t* source, uint16_t* second, int size);
-        //! Dumps values to a file (8 bit version)
-        void dumpStreamToFile8(uint8_t* source, int size);
-        //! Write a line to the dump file
-        void writeLine(std::string line);
+        //! Get 2^n
+        static int pow2(int n);
 
-    public slots:
-        //! Starts playing the stream
-        void play();
-        //! Stop the currenty playing stream
-        void stop();
-        //! Changes the URL of the stream
-        void setUrl(QString url) { mUrl = url; }
-        //! Changes the volume of the stream
-        void setVol(int val);
+        //! Watching thread
+        void watch();
 
-    private slots:
-        void update();
+        //! Feature extraction : those variables need to be public (I know, I can write accessors...)
+        uint16_t* mBuffer;
+        int mBufferSize;
+        QMutex mLock;
+
+        // Prerender callback
+        char* mAudioData;
+        unsigned int mAudioDataSize;
+        unsigned int mFrequency; // detected from VLC
 
     private:
         // Paramètres
-        QString mUrl;
+        string mUrl;
         bool mPlaying;
 
         // VLC
@@ -95,16 +107,8 @@ class StreamPlayer : public QObject
         libvlc_media_player_t *mMp;
         libvlc_media_t *mMedia;
 
-        // Lecture
-        QTimer mTimer;
-
-        // Temporaire
-        Graphique* mGraphique;
-        Graphique* mSpectre;
-
-        // Debug
-        QFile mDumpFile;
-        bool mDebugWritten;
+        boost::thread mWatchThread;
+        boost::mutex mPlayingLock;
 };
 
 #endif

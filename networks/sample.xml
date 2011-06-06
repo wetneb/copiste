@@ -1,12 +1,12 @@
 <nnetwork>
     <inputs>
-        <node name="ZCR" />
         <node name="LSTER" />
+        <node name="HZCRR" />
     </inputs>
     <layer>
         <node name="Hidden_1">
-            <link parent="ZCR" weight="0.85" />
-            <link parent="LSTER" weight="0.4" />
+            <link parent="LSTER" weight="0.85" />
+            <link parent="HZCRR" weight="0.4" />
         </node>
     </layer>
     <output>

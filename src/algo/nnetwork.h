@@ -17,8 +17,8 @@ using namespace std;
 class NNetwork
 {
     public:
-        //! Default constructor. Does nothing.
-        NNetwork() { ; }
+        //! Default constructor.
+        NNetwork(string fileName = "");
 
         //! Loads a network from an XML file
         bool load(string fileName);

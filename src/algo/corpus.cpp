@@ -5,9 +5,18 @@ Corpus::Corpus(string file)
     mPool = 0;
     mDimension = 0;
     mSize = 0;
+    mPoolSize = 0;
 
     if(file.size())
         load(file);
+}
+
+Corpus::Corpus(int dim)
+{
+    mPool = 0;
+    mDimension = dim;
+    mSize = 0;
+    mPoolSize = 0;
 }
 
 Corpus::~Corpus()
@@ -15,7 +24,7 @@ Corpus::~Corpus()
     erase();
 }
 
-bool Corpus::load(string filename)
+bool Corpus::load(string filename, bool verbose)
 {
     QDomDocument doc;
     int nbPointsSet = 0, nbCoordsSet = 0;
@@ -27,7 +36,7 @@ bool Corpus::load(string filename)
     QFile file(filename.c_str());
     if(!file.open(QIODevice::ReadOnly))
     {
-        cout << "Unable to open file : " << filename << endl;
+        cerr << "Unable to open file : " << filename << endl;
         return false;
     }
     doc.setContent(&file);
@@ -42,8 +51,10 @@ bool Corpus::load(string filename)
         mSize = node.toElement().attribute("size", "100").toInt();
 
         mPool = new neural_value*[mSize];
+        mPoolSize = mSize;
 
         node = node.firstChild();
+        /** TODO : redesign this so that the "size" parameter can be removed safely **/
         while(!node.isNull() && nbPointsSet < mSize)
         {
             QDomElement elem = node.toElement();
@@ -70,7 +81,9 @@ bool Corpus::load(string filename)
         }
 
         mSize = nbPointsSet;
-        cout <<"Loaded "<<mSize<< " points." << endl;
+
+        if(verbose)
+            cout <<"Loaded "<<mSize<< " points." << endl;
     }
     else
     {
@@ -90,15 +103,17 @@ void Corpus::write(string fileName)
 
     // Create the document
     QDomDocument doc;
-    QDomNode rootNode = doc.createElement("corpus");
+    QDomElement rootNode = doc.createElement("corpus");
+    rootNode.setAttribute("dimension", mDimension);
+    //rootNode.appendChild(attr);
 
-    for(int iPoint = 0; iPoint != mSize; ++iPoint)
+    for(int iPoint = 0; iPoint < mSize; ++iPoint)
     {
         QDomElement pointNode = doc.createElement("point");
 
         pointNode.setAttribute("goal", mPool[iPoint][0]);
 
-        for(int iCoord = 0; iCoord != mDimension; ++iCoord)
+        for(int iCoord = 0; iCoord < mDimension; ++iCoord)
         {
             QDomElement coordNode = doc.createElement("coord");
 
@@ -116,41 +131,82 @@ void Corpus::write(string fileName)
     file.close();
 }
 
-int Corpus::train(NNetwork &network, float learningRate, int maxPasses)
+int* randomPermutation(int n)
+{
+    int* result = new int[n];
+    for(int i = 0; i < n; ++i)
+        result[i] = -1;
+
+    int remaining = n, currentIndex = 0;
+    while(remaining)
+    {
+        currentIndex = rand() % n;
+        while(result[currentIndex] != -1)
+            currentIndex = (currentIndex+1) % n;
+
+        result[currentIndex] = --remaining;
+    }
+    return result;
+}
+
+int Corpus::train(NNetwork &network, float learningRate, int maxPasses, float **history, bool random)
 {
     bool errorFound = false;
     vector<neural_value> inputVec;
     inputVec.resize(mDimension);
+
+    // Initialize the history
+    if(history != 0)
+        *history = new float[maxPasses*mSize];
+
+    // Choose a showing order (the way examples are submitted to the network)
+    int *order = 0;
+    if(random)
+        order = randomPermutation(mSize);
 
     int i;
     for(i = 0; i != maxPasses*mSize && ((i+1)%mSize || errorFound); ++i)
     {
         // Restart a new pass
         if((i+1)%mSize == 0)
+        {
             errorFound = false;
+
+            // Choose another permutation
+            if(random)
+                order = randomPermutation(mSize);
+        }
 
         // Clean the network
         network.clean();
 
         // Set up input vector
+        neural_value *sample = mPool[i%mSize];
+        if(random)
+            sample = mPool[order[i%mSize]];
+
         for(int coord = 0; coord != mDimension; ++coord)
-            inputVec[coord] = mPool[i%mSize][coord+1];
+            inputVec[coord] = sample[coord+1];
 
         // Check the correctness of the answer
         neural_value answer = network.compute(inputVec);
 
+        // Log the error
+        if(history != 0)
+            (*history)[i] = ((sample[0])*answer <= 0) ? fabs(sample[0] - answer) : 0;
+
         // Train
-        if((mPool[i%mSize][0])*answer <= 0)
+        if((sample[0])*answer <= 0)
         {
             //cout <<"["<<inputVec[0]<<"]["<<inputVec[1]<<"] Goal = " << mPool[i%mSize][0] << ", result = "<< answer << endl;
             errorFound = true;
-            network.train(inputVec, mPool[i%mSize][0], learningRate);
+            network.train(inputVec, sample[0], learningRate);
         }
     }
     return i;
 }
 
-float Corpus::accuracy(NNetwork &network)
+float Corpus::accuracy(NNetwork &network, bool verbose)
 {
     int errorsFound = 0;
     vector<neural_value> inputVec;
@@ -162,19 +218,14 @@ float Corpus::accuracy(NNetwork &network)
         network.clean();
 
         // Set up input vector
-        cout << "Testing ";
         for(int coord = 0; coord != mDimension; ++coord)
-        {
             inputVec[coord] = mPool[i][coord+1];
-            cout << "["<< inputVec[coord] << "]";
-        }
-        cout << " : Result : " << network.compute(inputVec)*mPool[i][0] << endl;
 
         // Compute
         if(network.compute(inputVec)*mPool[i][0] <= 0)
             errorsFound++;
     }
-    return ((float)errorsFound)/mSize;
+    return (mSize - (float)errorsFound)/mSize;
 }
 
 void Corpus::display()
@@ -183,7 +234,7 @@ void Corpus::display()
     {
         cout << "[" << i << "] : ";
 
-        for(int j = 0; j != mDimension; ++j)
+        for(int j = 0; j < mDimension+1; ++j)
         {
             cout << mPool[i][j] << "  ";
         }
@@ -191,16 +242,34 @@ void Corpus::display()
     }
 }
 
-void Corpus::erase()
+vector<float> Corpus::bounds()
+{
+    vector<float> result(mDimension*2,0);
+
+    for(int i = 0; i != mSize; ++i)
+        for(int j = 0; j != mDimension; ++j)
+        {
+            if(i == 0 || mPool[i][j+1] < result[2*j])
+                result[2*j] = mPool[i][j+1];
+            if(i == 0 || mPool[i][j+1] > result[2*j +1])
+                result[2*j +1] = mPool[i][j+1];
+        }
+
+    return result;
+}
+
+void Corpus::erase(int dimension)
 {
     if(mPool)
     {
         for(int i = 0; i != mSize; ++i)
             delete mPool[i];
         delete mPool;
-        mSize = 0;
-        mDimension = 0;
+        mPool = 0;
+        mPoolSize = 0;
     }
+    mSize = 0;
+    mDimension = dimension;
 }
 
 unsigned int Corpus::size()
@@ -213,3 +282,26 @@ unsigned int Corpus::dimension()
     return mDimension;
 }
 
+void Corpus::addElem(neural_value* elem)
+{
+    if(mSize >= mPoolSize)
+    {
+        if(mPoolSize > 0)
+        {
+            mPoolSize *= 2;
+            neural_value** newPool = new neural_value*[mPoolSize];
+            for(int i = 0; i < mPoolSize/2; ++i)
+                newPool[i] = mPool[i];
+            delete mPool;
+            mPool = newPool;
+        }
+        else
+        {
+            mPoolSize = 1;
+            mPool = new neural_value*[mPoolSize];
+        }
+    }
+
+    mPool[mSize] = elem;
+    mSize++;
+}

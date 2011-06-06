@@ -50,7 +50,7 @@
         </node>
     </layer>
     <output>
-        <link parent="Inter_5" weight="1" />
-        <link parent="Inter_6" weight="2" />
+        <link parent="Inter_3" weight="1" />
+        <link parent="Inter_4" weight="2" />
     </output>
 </nnetwork>

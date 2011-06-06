@@ -2,7 +2,7 @@
 #include <cmath>
 #include <cstdlib>
 
-neural_value sigmoid(neural_value x)
+neural_value sigmoid(neural_value x) // This is actually the hyperbolic tangent
 {
     return (2.0 / (1.0 + exp(-x))) - 1.0;
 }
@@ -53,28 +53,29 @@ void Neuron::load(QDomElement element, const NNetwork* network)
     else cout << "Warning : wrong neuron definition : " << element.tagName().toStdString() << endl;
 }
 
-void Neuron::write(QDomElement elem)
+bool Neuron::write(QDomElement elem)
 {
     if(!elem.isNull())
     {
-        elem.setTagName("node");
         elem.setAttribute("bias", mWeights[0]);
 
-        for(unsigned int i = 0; i != mParents.size(); ++i)
+        for(unsigned int i = 1; i != mParents.size(); ++i)
         {
             QDomElement linkElem = elem.ownerDocument().createElement("link");
             linkElem.setAttribute("parent", mParents[i]->name().c_str());
-            linkElem.setAttribute("weight", mWeights[i+1]);
+            linkElem.setAttribute("weight", mWeights[i]);
             elem.appendChild(linkElem);
         }
     }
+    return !elem.isNull();
 }
 
 // This method will be called only for the output neuron
 void Neuron::train(neural_value goal, neural_value rate)
 {
     // Get the current value (cached)
-    //cout << "G_ERR " << goal - value() << endl;
+    if(value()*goal > EPSILON)
+        return;
     mError = goal - value();
     mErrorCached = true;
 
@@ -112,14 +113,13 @@ void Neuron::computeWeights(neural_value rate)
     if(!mErrorCached or !mValueCached)
         return;
 
-
     mWeights[0] += d_sigmoid(mValue)* rate * mError;
 
     // For each weight
     for(unsigned int i = 1; i != mWeights.size(); ++i)
     {
         //cout << "   " << i << " : from "<<mWeights[i]<<" offset " << d_sigmoid(mValue) * mParents[i]->value() * rate * mError << " (" << mParents[i]->name() << " says " << mParents[i]->value() << ")" << endl;
-        mWeights[i] += d_sigmoid(mValue) * mParents[i]->value() * rate * mError;
+        mWeights[i] += mParents[i]->value() * rate * mError * d_sigmoid(mValue);
         mParents[i]->computeWeights(rate);
     }
 }

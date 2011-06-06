@@ -12,6 +12,12 @@
 
 using namespace std;
 
+NNetwork::NNetwork(string fileName)
+{
+    if(fileName.size())
+        load(fileName);
+}
+
 bool NNetwork::load(string fileName)
 {
     QDomDocument doc;
@@ -92,20 +98,35 @@ void NNetwork::write(string filename)
     QDomElement layerElem = doc.createElement("layer");
     for(QHash<QString, AbstractNeuron*>::iterator i = mNeurons.begin(); i != mNeurons.end(); ++i)
     {
-        QDomElement elem = doc.createElement("node");
-        //(*i)->write(elem);
-        layerElem.appendChild(elem);
+        if(*i != mLastNeuron)
+        {
+            QDomElement elem = doc.createElement("node");
+            elem.setAttribute("name", (*i)->name().c_str());
+            if((*i)->write(elem))
+                layerElem.appendChild(elem);
+        }
     }
     rootElem.appendChild(layerElem);
 
+    // Append output
+    QDomElement outputElem = doc.createElement("output");
+    mLastNeuron->write(outputElem);
+    rootElem.appendChild(outputElem);
+
     doc.appendChild(rootElem);
+
+    QFile file(filename.c_str());
+    if(!file.open(QFile::WriteOnly))
+        return;
+    file.write(doc.toString(4).toAscii());
+    file.close();
 }
 
 void NNetwork::randomize()
 {
     if(mLastNeuron)
     {
-        //srand(time(NULL));
+        srand(time(NULL));
         mLastNeuron->randomize(true);
     }
 }

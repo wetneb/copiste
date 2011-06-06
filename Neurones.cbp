@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Neurones" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Linear">
+				<Option output="Neurones" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-teg --net networks/MLP.xml --corpus corpus/linear-discrimination.xml --verbose" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Nonlinear">
+				<Option output="Neurones" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-tep --net networks/MLP.xml --corpus corpus/bilinear-discrimination.xml --verbose -m 10000 -r 0.001" />
+			</Target>
+			<Target title="Features">
+				<Option output="Features" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Option parameters="rtl-inter/target.xml" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="/usr/local/share/qt4/include/QtCore" />
+					<Add directory="/usr/local/share/qt4/include" />
+					<Add directory="/usr/local/include/vlc" />
+				</Compiler>
+				<Linker>
+					<Add library="QtCore" />
+					<Add library="vlc" />
+					<Add directory="/usr/local/share/qt4/lib" />
+					<Add directory="/usr/local/lib/vlc" />
+				</Linker>
+			</Target>
+			<Target title="Spectrum">
+				<Option output="Spectrum" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Option parameters="test/suhov-crop.wav" />
+			</Target>
+			<Target title="Graph">
+				<Option output="Graph" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option parameters="test/suhov-crop.wav" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="/usr/local/share/qt4/include" />
+			<Add directory="/usr/local/share/qt4/include/QtGui" />
+			<Add directory="/usr/local/share/qt4/include/QtCore" />
+			<Add directory="/usr/local/share/qt4/include/QtXml" />
+			<Add directory="/usr/local/share/qt4/include/QtXmlPatterns" />
+			<Add directory="/usr/include/boost" />
+			<Add directory="/home/berthe/Programmation/Neurones/src" />
+		</Compiler>
+		<Linker>
+			<Add library="QtCore" />
+			<Add library="QtGui" />
+			<Add library="vlc" />
+			<Add library="QtXml" />
+			<Add library="QtXmlPatterns" />
+			<Add library="boost_program_options" />
+			<Add library="boost_thread" />
+			<Add library="boost_filesystem" />
+			<Add directory="/usr/local/share/qt4/lib" />
+		</Linker>
+		<Unit filename="src/algo/abstractneuron.h">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+		</Unit>
+		<Unit filename="src/algo/analysis.h">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+		</Unit>
+		<Unit filename="src/algo/corpus.cpp">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+			<Option target="Features" />
+		</Unit>
+		<Unit filename="src/algo/corpus.h">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+			<Option target="Features" />
+		</Unit>
+		<Unit filename="src/algo/inputneuron.h">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+			<Option target="Features" />
+		</Unit>
+		<Unit filename="src/algo/neuron.cpp">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+			<Option target="Features" />
+		</Unit>
+		<Unit filename="src/algo/neuron.h">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+			<Option target="Features" />
+		</Unit>
+		<Unit filename="src/algo/nnetwork.cpp">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+			<Option target="Features" />
+		</Unit>
+		<Unit filename="src/algo/nnetwork.h">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+			<Option target="Features" />
+		</Unit>
+		<Unit filename="src/core/audiochunk.h">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+			<Option target="Features" />
+		</Unit>
+		<Unit filename="src/core/corpusbuilder.cpp">
+			<Option target="Features" />
+		</Unit>
+		<Unit filename="src/core/corpusbuilder.h">
+			<Option target="Features" />
+		</Unit>
+		<Unit filename="src/core/featuredrawer.cpp">
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/core/featuredrawer.h">
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/core/mainFeatures.cpp">
+			<Option target="Features" />
+		</Unit>
+		<Unit filename="src/core/mainGraph.cpp">
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/core/mainNeurones.cpp">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+		</Unit>
+		<Unit filename="src/core/mainSpectrum.cpp">
+			<Option target="Spectrum" />
+		</Unit>
+		<Unit filename="src/core/soundanalyser.cpp">
+			<Option target="Features" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/core/soundanalyser.h">
+			<Option target="Features" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/core/spectrumRecorder.cpp">
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/core/spectrumRecorder.h">
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/core/streamplayer.cpp">
+			<Option target="Features" />
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/core/streamplayer.h">
+			<Option target="Features" />
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/features/extractor.h">
+			<Option target="Features" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/features/hzcrr.cpp">
+			<Option target="Features" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/features/hzcrr.h">
+			<Option target="Features" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/features/lster.cpp">
+			<Option target="Features" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/features/lster.h">
+			<Option target="Features" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/features/spectrum.cpp">
+			<Option target="Features" />
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/features/spectrum.h">
+			<Option target="Features" />
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/features/ste.cpp">
+			<Option target="Features" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/features/ste.h">
+			<Option target="Features" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/features/zcr.cpp">
+			<Option target="Features" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/features/zcr.h">
+			<Option target="Features" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/filters/average.cpp">
+			<Option target="Features" />
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/filters/average.h">
+			<Option target="Features" />
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/filters/filter.h">
+			<Option target="Features" />
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/gui/editor.cpp">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+		</Unit>
+		<Unit filename="src/gui/editor.h">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+		</Unit>
+		<Unit filename="src/gui/moc_editor.cpp">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+		</Unit>
+		<Unit filename="src/gui/moc_view2D.cpp">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+		</Unit>
+		<Unit filename="src/gui/view2D.cpp">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+		</Unit>
+		<Unit filename="src/gui/view2D.h">
+			<Option target="Linear" />
+			<Option target="Nonlinear" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
