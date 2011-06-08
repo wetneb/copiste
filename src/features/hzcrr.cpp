@@ -10,12 +10,13 @@ HZCRRExtr::HZCRRExtr(int chunkSize)
     mCurrentFrame = 0;
 
     // Fill the history with dummy data at first
-    mHistory = new float[mChunksNumber];
+    mHistory = new float[mChunksNumber]; // deleted in the destructor
     for(int i = 0; i < mChunksNumber; i++)
         mHistory[i] = i%2;
     mHZCRR = 0.5;
 }
 
+//! Set the ZCR extractor that should be used by this extractor
 ZCRExtr* HZCRRExtr::setZCRExtractor(ZCRExtr* extr)
 {
     ZCRExtr* old = mZcrExtr;
@@ -42,16 +43,6 @@ bool HZCRRExtr::extract(uint16_t* data, int size)
 
     if(size)
     {
-        /*
-        mHZCRR -= ((mHistory[mCurrentFrame] > mBound) ? 1.0 : 0)/mChunksNumber;
-
-        // If this extraction has already been executed, the ZCR extractor
-        // will detect it and use the previous computation
-        mZcrExtr->extract(data, size);
-        mHistory[mCurrentFrame] = mZcrExtr->value()*21;
-
-        mHZCRR += ((mHistory[mCurrentFrame] > mBound) ? 1.0 : 0)/mChunksNumber; */
-
         mZcrExtr->extract(data, size);
         mHistory[mCurrentFrame] = mZcrExtr->value();
 
@@ -112,4 +103,11 @@ int HZCRRExtr::getInt(string key)
         ret = mChunksNumber;
     return ret;
 }
+
+//! Destructor.
+HZCRRExtr::~HZCRRExtr()
+{
+    delete mHistory;
+}
+
 

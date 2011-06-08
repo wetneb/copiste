@@ -191,8 +191,5 @@ void NNetwork::clean()
 
 void NNetwork::display()
 {
-    //for(QHash<QString, AbstractNeuron*>::iterator iter = mNeurons.begin(); iter != mNeurons.end(); ++iter)
-    //    cout << (*iter)->str() << endl;
-
     cout << mLastNeuron->str() << endl;
 }

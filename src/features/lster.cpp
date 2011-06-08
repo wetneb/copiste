@@ -9,7 +9,7 @@ LSTERExtr::LSTERExtr(int chunkSize)
     mSteExtr = 0;
 
     // Fill the history with dummy data at first
-    mHistory = new float[mChunkSize];
+    mHistory = new float[mChunkSize]; // deleted in the destructor
     for(int i = 0; i < mChunkSize; i++)
         mHistory[i] = i%2;
     mLSTER = 0.5;
@@ -86,4 +86,7 @@ STEExtr* LSTERExtr::setSTEExtractor(STEExtr* extr)
     return old;
 }
 
-
+LSTERExtr::~LSTERExtr()
+{
+    delete mHistory;
+}

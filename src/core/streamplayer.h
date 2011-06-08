@@ -73,9 +73,15 @@ class StreamPlayer
 
         // Handling functions
 
-        //! Converts an array of uint8_t to another array of uint16_t (assuming the values are coded on two bytes)
+        /**
+         * \brief Converts an array of uint8_t to another array of uint16_t (assuming the values are coded on two bytes)
+         * The returned pointer has to be deleted by the user.
+         */
         static uint16_t* convert8to16(const uint8_t* source, int size);
-        //! Computes the average value of the stream, on a given frequency
+        /**
+         * \brief Computes the average value of the stream, on a given frequency
+         * The returned pointer has to be deleted by the user.
+         */
         static uint16_t* average(uint16_t* source, int size, int passes, int scale= 1);
         //! Reduces the stream, keeping only the extreme values
         static void reduce(uint16_t* source, uint16_t* dest, int size, int passes, int scale=1);

@@ -38,7 +38,10 @@ class Corpus
 
         /// Computing
 
-        //! Trains a given network to match the corpus (writing error rates in **history)
+        /**
+         * \brief Trains a given network to match the corpus (writing error rates in **history)
+         * The history field must be a pointer to a pointer, which has to be deleted then by the user.
+         */
         int train(NNetwork &network, float learningRate, int maxPasses, float **history = 0, bool random = true);
         //! Displays the corpus accuracy
         float accuracy(NNetwork &network, bool verbose = false);

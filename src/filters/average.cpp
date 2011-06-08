@@ -5,10 +5,10 @@ void AverageFilter::transform(vector<float> data)
 {
     if(mHistory == 0)
     {
-        mHistory = new float*[mSize];
+        mHistory = new float*[mSize]; //! TODO : missing delete
         for(int i = 0; i < mSize; i++)
         {
-            mHistory[i] = new float[mDimension];
+            mHistory[i] = new float[mDimension]; //! TODO : missing delete
             for(int j = 0; j < mDimension; j++)
                 mHistory[i][j] = 0;
         }

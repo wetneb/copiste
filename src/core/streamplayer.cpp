@@ -37,6 +37,8 @@ StreamPlayer::~StreamPlayer()
     libvlc_media_player_release(mMp);
 
     libvlc_release(mVlcInstance);
+
+    delete mAudioData;
 }
 
 // Start "playing" a stream (actually, start reading it and send it to the algorithms)
@@ -87,7 +89,7 @@ void prepareRender( void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int s
     {
         if(sp->mAudioData != 0)
             delete sp->mAudioData;
-        sp->mAudioData = new char[size];
+        sp->mAudioData = new char[size]; // Deleted in the destructor
     }
     *pp_pcm_buffer = (uint8_t*)(sp->mAudioData);
 }
@@ -187,7 +189,7 @@ void StreamPlayer::addOffset(uint16_t* source, uint16_t* dest, int size, int off
 uint16_t* StreamPlayer::average(uint16_t* source, int size, int passes, int scale)
 {
     int factor = pow2(passes) * scale;
-    uint16_t* dest = new uint16_t[(int)(size/factor)];
+    uint16_t* dest = new uint16_t[(int)(size/factor)]; // Has to be deleted by the user
 
     for(int i = 0; i != size/factor; i++)
     {

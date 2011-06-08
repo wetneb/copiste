@@ -171,7 +171,7 @@ void View2D::mouseReleaseEvent(QMouseEvent *event)
     }
     else if(event->button() == Qt::RightButton)
     {
-        neural_value *sampleVec = new neural_value[3];
+        neural_value *sampleVec = new neural_value[3]; // deleted by mCorpus->erase()
         sampleVec[0] = 1;
         sampleVec[1] = x*mViewport.scaleX + mViewport.x;
         sampleVec[2] = y*mViewport.scaleY + mViewport.y;
