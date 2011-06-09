@@ -4,53 +4,53 @@
 	<File name="src/algo/abstractneuron.h" open="0" top="0" tabpos="14">
 		<Cursor position="1374" topLine="23" />
 	</File>
-	<File name="src/algo/corpus.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="6363" topLine="25" />
+	<File name="src/algo/corpus.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="3985" topLine="192" />
 	</File>
 	<File name="src/algo/corpus.h" open="0" top="0" tabpos="8">
-		<Cursor position="1963" topLine="30" />
+		<Cursor position="1180" topLine="30" />
 	</File>
 	<File name="src/algo/inputneuron.h" open="0" top="0" tabpos="17">
 		<Cursor position="1443" topLine="0" />
 	</File>
 	<File name="src/algo/neuron.cpp" open="0" top="0" tabpos="18">
-		<Cursor position="1648" topLine="0" />
+		<Cursor position="1648" topLine="173" />
 	</File>
 	<File name="src/algo/neuron.h" open="0" top="0" tabpos="15">
 		<Cursor position="793" topLine="15" />
 	</File>
-	<File name="src/algo/nnetwork.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="3376" topLine="19" />
+	<File name="src/algo/nnetwork.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="4939" topLine="160" />
 	</File>
 	<File name="src/algo/nnetwork.h" open="0" top="0" tabpos="16">
 		<Cursor position="213" topLine="26" />
 	</File>
-	<File name="src/core/corpusbuilder.cpp" open="1" top="1" tabpos="6">
-		<Cursor position="4396" topLine="135" />
+	<File name="src/core/corpusbuilder.cpp" open="0" top="0" tabpos="6">
+		<Cursor position="4674" topLine="135" />
 	</File>
-	<File name="src/core/corpusbuilder.h" open="1" top="0" tabpos="7">
+	<File name="src/core/corpusbuilder.h" open="0" top="0" tabpos="7">
 		<Cursor position="769" topLine="1" />
 	</File>
 	<File name="src/core/featuredrawer.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="665" topLine="3" />
+		<Cursor position="591" topLine="9" />
 	</File>
 	<File name="src/core/featuredrawer.h" open="0" top="0" tabpos="5">
 		<Cursor position="539" topLine="0" />
 	</File>
-	<File name="src/core/mainFeatures.cpp" open="1" top="0" tabpos="2">
+	<File name="src/core/mainFeatures.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="1972" topLine="35" />
 	</File>
 	<File name="src/core/mainGraph.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="940" topLine="8" />
 	</File>
 	<File name="src/core/mainNeurones.cpp" open="0" top="0" tabpos="12">
-		<Cursor position="3191" topLine="80" />
+		<Cursor position="3191" topLine="101" />
 	</File>
 	<File name="src/core/mainSpectrum.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="246" topLine="4" />
 	</File>
 	<File name="src/core/soundanalyser.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="1607" topLine="18" />
+		<Cursor position="3568" topLine="99" />
 	</File>
 	<File name="src/core/soundanalyser.h" open="0" top="0" tabpos="14">
 		<Cursor position="2038" topLine="69" />
@@ -62,31 +62,31 @@
 		<Cursor position="349" topLine="15" />
 	</File>
 	<File name="src/core/streamplayer.cpp" open="0" top="0" tabpos="16">
-		<Cursor position="952" topLine="6" />
+		<Cursor position="5713" topLine="191" />
 	</File>
 	<File name="src/core/streamplayer.h" open="0" top="0" tabpos="5">
-		<Cursor position="3266" topLine="25" />
+		<Cursor position="3657" topLine="70" />
 	</File>
-	<File name="src/features/extractor.h" open="0" top="0" tabpos="11">
-		<Cursor position="368" topLine="7" />
+	<File name="src/features/extractor.h" open="1" top="1" tabpos="4">
+		<Cursor position="1350" topLine="0" />
 	</File>
 	<File name="src/features/hzcrr.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="974" topLine="36" />
+		<Cursor position="503" topLine="0" />
 	</File>
 	<File name="src/features/hzcrr.h" open="0" top="0" tabpos="2">
-		<Cursor position="531" topLine="6" />
+		<Cursor position="401" topLine="0" />
 	</File>
 	<File name="src/features/lster.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="1251" topLine="0" />
+		<Cursor position="2009" topLine="0" />
 	</File>
 	<File name="src/features/lster.h" open="0" top="0" tabpos="3">
-		<Cursor position="187" topLine="0" />
+		<Cursor position="396" topLine="0" />
 	</File>
 	<File name="src/features/spectrum.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="156" topLine="0" />
 	</File>
 	<File name="src/features/spectrum.h" open="0" top="0" tabpos="6">
-		<Cursor position="177" topLine="4" />
+		<Cursor position="1628" topLine="61" />
 	</File>
 	<File name="src/features/ste.cpp" open="0" top="0" tabpos="7">
 		<Cursor position="792" topLine="0" />
@@ -98,19 +98,19 @@
 		<Cursor position="118" topLine="0" />
 	</File>
 	<File name="src/features/zcr.h" open="0" top="0" tabpos="1">
-		<Cursor position="613" topLine="1" />
+		<Cursor position="613" topLine="10" />
 	</File>
-	<File name="src/filters/average.cpp" open="0" top="0" tabpos="7">
-		<Cursor position="820" topLine="0" />
+	<File name="src/filters/average.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="1157" topLine="35" />
 	</File>
-	<File name="src/filters/average.h" open="0" top="0" tabpos="6">
-		<Cursor position="421" topLine="1" />
+	<File name="src/filters/average.h" open="1" top="0" tabpos="2">
+		<Cursor position="810" topLine="4" />
 	</File>
-	<File name="src/filters/filter.h" open="0" top="0" tabpos="8">
-		<Cursor position="1108" topLine="10" />
+	<File name="src/filters/filter.h" open="1" top="0" tabpos="1">
+		<Cursor position="170" topLine="12" />
 	</File>
-	<File name="src/gui/editor.cpp" open="1" top="0" tabpos="5">
-		<Cursor position="1176" topLine="32" />
+	<File name="src/gui/editor.cpp" open="0" top="0" tabpos="5">
+		<Cursor position="1176" topLine="0" />
 	</File>
 	<File name="src/gui/editor.h" open="0" top="0" tabpos="6">
 		<Cursor position="135" topLine="0" />
@@ -121,8 +121,8 @@
 	<File name="src/gui/moc_view2D.cpp" open="0" top="0" tabpos="10">
 		<Cursor position="0" topLine="58" />
 	</File>
-	<File name="src/gui/view2D.cpp" open="1" top="0" tabpos="4">
-		<Cursor position="2891" topLine="17" />
+	<File name="src/gui/view2D.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="4903" topLine="206" />
 	</File>
 	<File name="src/gui/view2D.h" open="0" top="0" tabpos="1">
 		<Cursor position="213" topLine="0" />

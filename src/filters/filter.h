@@ -14,28 +14,16 @@ class Filter : public FeatureExtractor
         Filter() : mExtr(0) { ; }
 
         //! Binds the filter to the output of an extractor (or another filter). Returns the old one.
-        FeatureExtractor* bind(FeatureExtractor* extr)
-        {
-            FeatureExtractor* old = mExtr;
-            mExtr = extr;
-            return old;
-        }
+        FeatureExtractor* bind(FeatureExtractor* extr);
 
-        //! Extract data
-        bool extract(uint16_t* data = 0, int size = 0)
-        {
-            if(mExtr)
-            {
-                vector<float> data;
-                data.resize(mExtr->size());
-                for(unsigned int i = 0; i < data.size(); i++)
-                    data[i] = mExtr->value(i);
-                transform(data);
-            }
+        /** \brief Extract data
+         * This method should not be reimplemented by the user.
+         * The given parameters are ignored : the data is drawn from the upstream extractor without
+         * taking care of the raw data.
+         */
+        bool extract(uint16_t* data = 0, int size = 0);
 
-            return true;
-        }
-
+        //! Do the actual computation on the features
         virtual void transform(vector<float> data) = 0;
 
     protected:

@@ -44,24 +44,11 @@ int AverageFilter::size()
     return mDimension;
 }
 
-//! Set a float parameter
-void AverageFilter::setFloat(string key, float value)
-{
-    ;
-}
-
 //! Set a int parameter (available : size)
 void AverageFilter::setInt(string key, int value)
 {
     if(key == "size")
         mSize = value;
-}
-
-//! Get a float parameter
-float AverageFilter::getFloat(string key)
-{
-    float result = 0;
-    return result;
 }
 
 //! Get a int parameter (available : size)

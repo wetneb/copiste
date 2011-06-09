@@ -29,16 +29,16 @@ class FeatureExtractor
         virtual int size() = 0;
 
         //! Set a float parameter
-        virtual void setFloat(string key, float value) = 0;
+        virtual void setFloat(string key, float value) { ; }
 
         //! Set a int parameter
-        virtual void setInt(string key, int value) = 0;
+        virtual void setInt(string key, int value) { ; }
 
         //! Get a float parameter
-        virtual float getFloat(string key) = 0;
+        virtual float getFloat(string key) { return 0; }
 
         //! Get a int parameter
-        virtual int getInt(string key) = 0;
+        virtual int getInt(string key) { return 0; }
 };
 
 
