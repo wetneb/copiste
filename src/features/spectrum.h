@@ -39,14 +39,14 @@ class SpectrumExtr : public FeatureExtractor
         /// Windows
         // The windows are intended to minimize the lack of precision of the actual computation
         // of the Fourier Transform. That's a well-known phenomon : when you try to compute
-        // the spectrum of a perfect sinus wave, you don't get a pefect dirac as expected, but
-        // a large wave with some noise.
+        // the spectrum of a perfect sinus wave on a finite window, you don't get a pefect dirac
+        // as expected, but a large wave with some noise.
 
-        ///! Rectangular
+        //! Rectangular
         static float rectangularWin(int i, int maxSize);
-        ///! Linear
+        //! Linear
         static float triangularWin(int i, int maxSize);
-        ///! Hamming
+        //! Hamming
         static float hammingWin(int i, int maxSize);
         //! Blackman - Harris
         static float blackmanHarrisWin(int i, int maxSize);

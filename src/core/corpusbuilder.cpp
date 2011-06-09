@@ -147,7 +147,7 @@ bool CorpusBuilder::write(Corpus *corpus)
     for(unsigned int i = 0; i < mResults.size(); ++i)
     {
         // Declare a new sample
-        float* sample = new float[realDimension()+1];
+        float* sample = new float[realDimension()+1]; // deleted by corpus->erase()
         sample[0] = 0; // Default value
 
         // Bind the file to a class (to be changed)

@@ -9,6 +9,9 @@ SoundAnalyser::SoundAnalyser() : mDimension(0),
                                 mVerbose(false),
                                 mComputed(false)
 {
+    // All the registered extractors are deleted in the destructor
+    //! TODO : dynamic extractor handling
+
     //registerExtractor("Spectrum", new SpectrumExtr(AUDIO_CHUNK_SIZE));
     ZCRExtr *zcr =  new ZCRExtr(AUDIO_CHUNK_SIZE);
     registerExtractor("ZCR", zcr, false);
@@ -116,9 +119,9 @@ void SoundAnalyser::useBuffer()
             mLastUpdateTime = playingTime();
         }
 
-        float **featureArray = new float*[mExtr.size()];
+        float **featureArray = new float*[mExtr.size()]; // deleted in clearFeatures()
         for(unsigned int i = 0; i < mExtr.size(); ++i)
-            featureArray[i] = new float[mExtr[i].second->size()];
+            featureArray[i] = new float[mExtr[i].second->size()]; // deleted in clearFeatures()
 
         // For each feature
         for(unsigned int i = 0; i < mExtr.size(); ++i)

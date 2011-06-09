@@ -11,6 +11,8 @@ class HZCRRExtr;
 #define DEFAULT_ZCR_BOUND 2.0
 #define DEFAULT_HZCRR_CHUNKS_NUMBER (44100 / AUDIO_CHUNK_SIZE)
 
+//! TODO : HZCRR and LSTER should be computed by a special filter since the algos are the same
+
 /**
  * \brief Extracts the High ZCR Ratio (ZCR stands for Zero Crossing Rate)
  *
@@ -22,6 +24,9 @@ class HZCRRExtr : public FeatureExtractor
     public:
         //! Default constructor
         HZCRRExtr(int chunkSize = 0);
+
+        //! Destructor
+        ~HZCRRExtr();
 
         //! Set the ZCR extractor (the previous one is returned)
         ZCRExtr* setZCRExtractor(ZCRExtr* extr);

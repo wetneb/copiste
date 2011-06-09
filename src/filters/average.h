@@ -22,14 +22,8 @@ class AverageFilter : public Filter
         //! Get the number of available values
         int size();
 
-        //! Set a float parameter
-        void setFloat(string key, float value);
-
         //! Set a int parameter (available : size)
         void setInt(string key, int value);
-
-        //! Get a float parameter
-        float getFloat(string key);
 
         //! Get a int parameter  (available : size)
         int getInt(string key);

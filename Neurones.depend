@@ -80,10 +80,10 @@
 
 1302603754 /usr/local/share/qt4/include/vlc/deprecated.h
 
-1307043260 source:/home/berthe/Programmation/Neurones/src/algo/corpus.cpp
+1307555509 source:/home/berthe/Programmation/Neurones/src/algo/corpus.cpp
 	"corpus.h"
 
-1305980300 /home/berthe/Programmation/Neurones/src/algo/corpus.h
+1307555509 /home/berthe/Programmation/Neurones/src/algo/corpus.h
 	<string>
 	<cmath>
 	<QFile>
@@ -571,7 +571,7 @@
 	<cmath>
 	<cstdlib>
 
-1307040925 source:/home/berthe/Programmation/Neurones/src/algo/nnetwork.cpp
+1307555592 source:/home/berthe/Programmation/Neurones/src/algo/nnetwork.cpp
 	"algo/nnetwork.h"
 	<iostream>
 	<QDomDocument>
@@ -2901,7 +2901,7 @@
 	<iostream>
 	"features/streamplayer.h"
 
-1306998063 /home/berthe/Programmation/Neurones/src/features/extractor.h
+1307634097 /home/berthe/Programmation/Neurones/src/features/extractor.h
 	<vlc/vlc.h>
 	<iostream>
 
@@ -2930,13 +2930,13 @@
 	"features/spectrum.h"
 	<cmath>
 
-1305980300 /home/berthe/Programmation/Neurones/src/features/spectrum.h
+1307556701 /home/berthe/Programmation/Neurones/src/features/spectrum.h
 	"features/extractor.h"
 
-1306954294 source:/home/berthe/Programmation/Neurones/src/features/hzcrr.cpp
+1307556511 source:/home/berthe/Programmation/Neurones/src/features/hzcrr.cpp
 	"features/hzcrr.h"
 
-1306956459 /home/berthe/Programmation/Neurones/src/features/hzcrr.h
+1307556611 /home/berthe/Programmation/Neurones/src/features/hzcrr.h
 	"features/extractor.h"
 	"features/zcr.h"
 	"core/streamplayer.h"
@@ -2947,10 +2947,10 @@
 1306081094 source:/home/berthe/Programmation/Neurones/src/features/zcr.cpp
 	"features/zcr.h"
 
-1306955771 source:/home/berthe/Programmation/Neurones/src/features/lster.cpp
+1307556556 source:/home/berthe/Programmation/Neurones/src/features/lster.cpp
 	"features/lster.h"
 
-1306955849 /home/berthe/Programmation/Neurones/src/features/lster.h
+1307556633 /home/berthe/Programmation/Neurones/src/features/lster.h
 	"features/extractor.h"
 	"features/ste.h"
 
@@ -2971,7 +2971,7 @@
 	<iostream>
 	"core/corpusbuilder.h"
 
-1307010206 /home/berthe/Programmation/Neurones/src/core/streamplayer.h
+1307556302 /home/berthe/Programmation/Neurones/src/core/streamplayer.h
 	<vlc/vlc.h>
 	<QFile>
 	<QMutex>
@@ -2983,7 +2983,7 @@
 	<string>
 	"features/spectrum.h"
 
-1307016369 source:/home/berthe/Programmation/Neurones/src/core/streamplayer.cpp
+1307556211 source:/home/berthe/Programmation/Neurones/src/core/streamplayer.cpp
 	"core/streamplayer.h"
 	<iostream>
 
@@ -5820,7 +5820,7 @@
 	<boost/date_time/time_zone_base.hpp>
 	<boost/date_time/time_parsing.hpp>
 
-1307038949 source:/home/berthe/Programmation/Neurones/src/core/soundanalyser.cpp
+1307556027 source:/home/berthe/Programmation/Neurones/src/core/soundanalyser.cpp
 	"core/soundanalyser.h"
 
 1307015333 /home/berthe/Programmation/Neurones/src/core/soundanalyser.h
@@ -6048,7 +6048,7 @@
 1306081347 source:/home/berthe/Programmation/Neurones/src/core/spectrumRecorder.cpp
 	"core/spectrumRecorder.h"
 
-1307017612 source:/home/berthe/Programmation/Neurones/src/core/corpusbuilder.cpp
+1307555645 source:/home/berthe/Programmation/Neurones/src/core/corpusbuilder.cpp
 	"core/corpusbuilder.h"
 
 1305980300 /home/berthe/Programmation/Neurones/src/core/corpusbuilder.h
@@ -6085,13 +6085,23 @@
 	<boost/filesystem/v3/operations.hpp>
 	<boost/filesystem/v3/convenience.hpp>
 
-1307013938 source:/home/berthe/Programmation/Neurones/src/filters/average.cpp
+1307562278 source:/home/berthe/Programmation/Neurones/src/filters/average.cpp
 	"filters/average.h"
 
-1307013770 /home/berthe/Programmation/Neurones/src/filters/average.h
+1307562278 /home/berthe/Programmation/Neurones/src/filters/average.h
 	"filters/filter.h"
 
-1307013797 /home/berthe/Programmation/Neurones/src/filters/filter.h
+1307634881 /home/berthe/Programmation/Neurones/src/filters/filter.h
 	"features/extractor.h"
 	<vector>
+
+1307635944 source:/home/berthe/Programmation/Neurones/src/filters/filter.cpp
+	"filter.h"
+
+1307634208 source:/home/berthe/Programmation/Neurones/src/filters/flux.cpp
+	"filters/flux.h"
+	<cmath>
+
+1307634097 /home/berthe/Programmation/Neurones/src/filters/flux.h
+	"filters/filter.h"
 

@@ -16,6 +16,9 @@ class LSTERExtr : public FeatureExtractor
         //! Default constructor
         LSTERExtr(int chunkSize = 0);
 
+        //! Destructor
+        ~LSTERExtr();
+
         //! Set the STE extractor (the previous one is returned)
         STEExtr* setSTEExtractor(STEExtr* extr);
 

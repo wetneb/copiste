@@ -5,10 +5,10 @@ void AverageFilter::transform(vector<float> data)
 {
     if(mHistory == 0)
     {
-        mHistory = new float*[mSize];
+        mHistory = new float*[mSize]; //! TODO : missing delete
         for(int i = 0; i < mSize; i++)
         {
-            mHistory[i] = new float[mDimension];
+            mHistory[i] = new float[mDimension]; //! TODO : missing delete
             for(int j = 0; j < mDimension; j++)
                 mHistory[i][j] = 0;
         }
@@ -44,24 +44,11 @@ int AverageFilter::size()
     return mDimension;
 }
 
-//! Set a float parameter
-void AverageFilter::setFloat(string key, float value)
-{
-    ;
-}
-
 //! Set a int parameter (available : size)
 void AverageFilter::setInt(string key, int value)
 {
     if(key == "size")
         mSize = value;
-}
-
-//! Get a float parameter
-float AverageFilter::getFloat(string key)
-{
-    float result = 0;
-    return result;
 }
 
 //! Get a int parameter (available : size)

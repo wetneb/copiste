@@ -240,6 +240,16 @@
 			<Option target="Spectrum" />
 			<Option target="Graph" />
 		</Unit>
+		<Unit filename="src/filters/flux.h">
+			<Option target="Features" />
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
+		<Unit filename="src/filters/flux.cpp">
+			<Option target="Features" />
+			<Option target="Spectrum" />
+			<Option target="Graph" />
+		</Unit>
 		<Unit filename="src/gui/editor.cpp">
 			<Option target="Linear" />
 			<Option target="Nonlinear" />

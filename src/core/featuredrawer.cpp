@@ -21,8 +21,8 @@ void FeatureDrawer::draw()
        delete mMin;
     if(mMax)
        delete mMax;
-    mMin = new float[dimension()];
-    mMax = new float[dimension()];
+    mMin = new float[dimension()]; // deleted in the destructor
+    mMax = new float[dimension()]; // deleted in the destructor
 
     int offset = 0;
     for(unsigned int f = 0;  f < nbFeatures(); f++)
@@ -93,7 +93,6 @@ void FeatureDrawer::draw()
             offset++;
         }
     }
-
 }
 
 //! Save the drawn image to a file

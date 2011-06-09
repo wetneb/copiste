@@ -50,7 +50,7 @@ bool Corpus::load(string filename, bool verbose)
         mDimension = node.toElement().attribute("dimension", "1").toInt();
         mSize = node.toElement().attribute("size", "100").toInt();
 
-        mPool = new neural_value*[mSize];
+        mPool = new neural_value*[mSize]; // deleted in erase()
         mPoolSize = mSize;
 
         node = node.firstChild();
@@ -61,7 +61,7 @@ bool Corpus::load(string filename, bool verbose)
 
             if(elem.tagName() == "point")
             {
-                mPool[nbPointsSet] = new neural_value[mDimension+1];
+                mPool[nbPointsSet] = new neural_value[mDimension+1]; // deleted in erase()
                 mPool[nbPointsSet][0] = node.toElement().attribute("goal", "1").toFloat();
 
                 nbCoordsSet = 0;
@@ -157,7 +157,7 @@ int Corpus::train(NNetwork &network, float learningRate, int maxPasses, float **
 
     // Initialize the history
     if(history != 0)
-        *history = new float[maxPasses*mSize];
+        *history = new float[maxPasses*mSize]; // to be deleted by the user
 
     // Choose a showing order (the way examples are submitted to the network)
     int *order = 0;
