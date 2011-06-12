@@ -45,7 +45,7 @@ class SoundAnalyser : private StreamPlayer
         FeatureExtractor* getExtractor(string name);
 
         //! Set up the extractors from an XML file
-        bool setup(string filename);
+        bool setupPipeline(string filename);
 
         //! Compute the features of a given file
         bool compute(string url);

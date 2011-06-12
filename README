@@ -1,0 +1,33 @@
+Copiste project
+Antonin Delpeuch
+
+This project provides a small set of tools around audio classification.
+
+What can be done currently :
+
+### nnat : Neural Network Analysis Tool ###
+This tool takes a neural network described in an XML format
+(see the networks directory for examples) and trains it to
+fit a given corpus, described in another XML format (see the
+corpus directory for examples). It can also evaluate how good
+a network fits a corpus, and provides a small graphical interface
+that can be used to visualize 2D networks.
+
+### featdraw : Feature Drawer ###
+This tool takes an audio file and draws the variations of some
+features in this file. The features are described by a pipeline
+(XML file, see the pipeline directory), allowing the user to
+change on the fly how features are computed.
+
+### mkcorpus : Make Corpus ###
+This tool uses a pipeline and a set of audio files to create
+a corpus (as in nnat) where the features are written.
+It uses another XML file, which defines the different audio
+classes.
+
+### specdraw : Draw Spectrum ###
+This tool just takes as input an audio file and draws the
+variations of the frequency spectrum during the time.
+
+
+See help pages of all these tools for specific usage instructions.

@@ -6,12 +6,6 @@ SoundAnalyser::SoundAnalyser() : mDimension(0),
                                 mUsedExtractors(0),
                                 mComputed(false)
 {
-    // All the registered extractors are deleted in the destructor
-    setup("pipeline/spectrum.xml");
-
-    //ZCRExtr *zcr =  new ZCRExtr(AUDIO_CHUNK_SIZE);
-    //registerExtractor("ZCR", zcr, true);
-    //registerExtractor("ZCR2", zcr, true);
 
 /*
     SpectrumExtr *spec = new SpectrumExtr(AUDIO_CHUNK_SIZE);
@@ -77,7 +71,7 @@ SoundAnalyser::SoundAnalyser() : mDimension(0),
 }
 
 //! Set up from an XML file
-bool SoundAnalyser::setup(string filename)
+bool SoundAnalyser::setupPipeline(string filename)
 {
     resetExtractors();
 
@@ -114,6 +108,10 @@ bool SoundAnalyser::setup(string filename)
                     extr = new STEExtr(AUDIO_CHUNK_SIZE);
                 else if(type == "Spectrum")
                     extr = new SpectrumExtr(AUDIO_CHUNK_SIZE);
+                else if(type == "HZCRR")
+                    extr = new HZCRRExtr(AUDIO_CHUNK_SIZE);
+                else if(type == "LSTER")
+                    extr = new LSTERExtr(AUDIO_CHUNK_SIZE);
             }
             else if(elem.tagName() == "filter" && type != "unknown")
             {
@@ -169,8 +167,7 @@ bool SoundAnalyser::setup(string filename)
                     }
                 }
 
-                registerExtractor(name, extr, true);
-                cout << "Registered "<<name<<" : reald : "<<realDimension()<<".\n";
+                registerExtractor(name, extr, elem.attribute("used", "yes") == "yes");
             }
 
             node = node.nextSibling();

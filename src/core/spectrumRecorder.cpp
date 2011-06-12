@@ -13,6 +13,11 @@ SpectrumRecorder::SpectrumRecorder(int windowSize, int sampleFrequency, int maxH
     mComputed = true;
 }
 
+SpectrumRecorder::~SpectrumRecorder()
+{
+    ;
+}
+
 //! Computes the spectrum
 bool SpectrumRecorder::compute(string file)
 {

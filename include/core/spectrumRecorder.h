@@ -18,6 +18,9 @@ class SpectrumRecorder : public StreamPlayer
         //! Default constructor. Sets up the computation.
         SpectrumRecorder(int windowSize = 1024, int sampleFrequency = -1, int maxHeight = 1024, int scale = 1);
 
+        //! Destructor
+        ~SpectrumRecorder();
+
         //! Sets up the processing
         void setup(int windowSize = 1024, int sampleFrequency = -1, int maxHeight = 1024, int scale = 1);
 

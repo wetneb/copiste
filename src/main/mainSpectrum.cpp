@@ -35,15 +35,15 @@ int main(int argc, char **argv)
         return 0;
     }
 
+    SpectrumRecorder sr;
+
     if(vm.count("input-file"))
     {
-        SpectrumRecorder sr;
         string filename = vm["input-file"].as< string >();
         string output = "output/spectrum.png"; // TODO : change this
         cout << "File to read : " << filename << endl;
         sr.compute(filename);
         sr.writeToFile(output);
     }
-
     return 0;
 }

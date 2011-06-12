@@ -24,6 +24,9 @@ class CorpusBuilder : private SoundAnalyser
         //! Sets verbosity
         void setVerbose(bool verbose) { mVerbose = verbose; }
 
+        //! Mirror from SoundAnalyser
+        bool setupPipeline(string filename) { return ((SoundAnalyser*)this)->setupPipeline(filename); }
+
     private:
         string mBasePath;
         vector<string> mFiles;
