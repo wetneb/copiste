@@ -11,8 +11,6 @@
  * \class SpectrumRecorder
  * \brief A class which creates an image of the spectrum of a given file
  * This is not used to compute features, that's just a tool.
- *
- * TODO : Finish refactoring
  */
 class SpectrumRecorder : public StreamPlayer
 {

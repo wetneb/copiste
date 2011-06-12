@@ -4,15 +4,49 @@
 SoundAnalyser::SoundAnalyser() : mDimension(0),
                                 mRealDimension(0),
                                 mUsedExtractors(0),
-                                mBasePath("."),
-                                mCurrentFile(-1),
-                                mVerbose(false),
                                 mComputed(false)
 {
     // All the registered extractors are deleted in the destructor
-    //! TODO : dynamic extractor handling
+    setup("pipeline/spectrum.xml");
 
-    //registerExtractor("Spectrum", new SpectrumExtr(AUDIO_CHUNK_SIZE));
+    //ZCRExtr *zcr =  new ZCRExtr(AUDIO_CHUNK_SIZE);
+    //registerExtractor("ZCR", zcr, true);
+    //registerExtractor("ZCR2", zcr, true);
+
+/*
+    SpectrumExtr *spec = new SpectrumExtr(AUDIO_CHUNK_SIZE);
+    registerExtractor("Spectrum", spec, false); */
+
+
+    /* FluxFilter *flux = new FluxFilter;
+    flux->bind(spec);
+    registerExtractor("Spectrum flux", flux, false);
+
+    AverageFilter *av = new AverageFilter;
+    av->bind(flux);
+    registerExtractor("Av. spec. flux", av, true); */
+
+     /*
+    RangeFilter *rg1 = new RangeFilter;
+    rg1->bind(spec);
+    rg1->setInt("start",0);
+    rg1->setInt("end", 100);
+    registerExtractor("RangeFilter1", rg1);
+
+    RangeFilter *rg2 = new RangeFilter;
+    rg2->bind(spec);
+    rg2->setInt("start", 100);
+    rg2->setInt("end", 800);
+    registerExtractor("RangeFilter2", rg2); */
+
+    /*
+    AverageFilter *av = new AverageFilter;
+    av->bind(spec);
+    registerExtractor("av", av); */
+    // */
+
+    // ZCR et LSTER
+    /*
     ZCRExtr *zcr =  new ZCRExtr(AUDIO_CHUNK_SIZE);
     registerExtractor("ZCR", zcr, false);
     HZCRRExtr *hzcrr = new HZCRRExtr(AUDIO_CHUNK_SIZE);
@@ -20,20 +54,6 @@ SoundAnalyser::SoundAnalyser() : mDimension(0),
     hzcrr->setFloat("bound", 2.0);
     hzcrr->setInt("chunksNumber", 80);
     registerExtractor("HZCRR", hzcrr, false);
-
-/*
-    HZCRRExtr *hzcrr1 = new HZCRRExtr(AUDIO_CHUNK_SIZE);
-    hzcrr1->setInt("chunksNumber", 80);
-    hzcrr1->setZCRExtractor(zcr);
-    hzcrr1->setFloat("bound", 2.0);
-    registerExtractor("HZCRR-1", hzcrr1);
-
-    HZCRRExtr *hzcrr2 = new HZCRRExtr(AUDIO_CHUNK_SIZE);
-    hzcrr2->setInt("chunksNumber", 80);
-    hzcrr1->setZCRExtractor(zcr);
-    hzcrr2->setFloat("bound", 2.2);
-    registerExtractor("HZCRR-2", hzcrr2); */
-
 
     STEExtr *ste = new STEExtr(AUDIO_CHUNK_SIZE);
     registerExtractor("STE", ste, false);
@@ -51,16 +71,132 @@ SoundAnalyser::SoundAnalyser() : mDimension(0),
     AverageFilter* average = new AverageFilter();
     average->bind(hzcrr);
     average->setInt("size", 100);
-    registerExtractor("Average HZCRR", average);
+    registerExtractor("Average HZCRR", average); */
 
     mLastUpdateTime = 0;
+}
+
+//! Set up from an XML file
+bool SoundAnalyser::setup(string filename)
+{
+    resetExtractors();
+
+    // Load the file and parse it
+    QDomDocument doc;
+    QFile file(filename.c_str());
+    if(!file.open(QIODevice::ReadOnly))
+    {
+        cerr << "Unable to open file : " << filename << endl;
+        return false;
+    }
+    doc.setContent(&file);
+    file.close();
+
+    // Read the contents
+    QDomNode node = doc.documentElement();
+
+    if(node.toElement().tagName() == "pipeline")
+    {
+        node = node.firstChild();
+
+        while(!node.isNull())
+        {
+            QDomElement elem = node.toElement();
+            FeatureExtractor *extr = 0;
+
+            string name = elem.attribute("name", "unknown").toStdString();
+            string type = elem.attribute("type", "unknown").toStdString();
+            if(elem.tagName() == "feature" && type != "unknown")
+            {
+                if(type == "ZCR")
+                    extr = new ZCRExtr(AUDIO_CHUNK_SIZE);
+                else if(type == "STE")
+                    extr = new STEExtr(AUDIO_CHUNK_SIZE);
+                else if(type == "Spectrum")
+                    extr = new SpectrumExtr(AUDIO_CHUNK_SIZE);
+            }
+            else if(elem.tagName() == "filter" && type != "unknown")
+            {
+                Filter *flt = 0;
+
+                if(type == "Average")
+                    flt = new AverageFilter;
+                else if(type == "Range")
+                    flt = new RangeFilter;
+                else if(type == "Flux")
+                    flt = new FluxFilter;
+
+                if(flt != 0)
+                {
+                    QDomElement child = node.firstChildElement();
+                    if(!child.isNull() && child.tagName() == "ref")
+                    {
+                        FeatureExtractor *parent = getExtractor(child.attribute("name", "_").toStdString());
+                        if(parent != 0)
+                            flt->bind(parent);
+                        else
+                        {
+                            cout << filename << " : Invalid reference : " << child.attribute("name", "_").toStdString() << endl;
+                            delete flt;
+                            flt = 0;
+                        }
+                    }
+                    else
+                        cout << filename << " : Missing <ref> for "<<name <<".\n";
+                }
+
+                if(flt == 0)
+                {
+                    cout << filename << " : Unable to load filter "<<name<<" of type "<<type<<"."<<endl;
+                }
+
+                extr = flt;
+            }
+            else if(elem.tagName() == "filter" || elem.tagName() == "feature")
+                cout << filename << " : Warning : type of "<<name<<" is missing, it will be ignored." << endl;
+
+            if(extr != 0)
+            {
+                QDomNamedNodeMap attributes = elem.attributes();
+
+                for(int i = 0; i < attributes.size(); i++)
+                {
+                    QDomAttr attr = attributes.item(i).toAttr();
+                    if(attr.name() != "type" && attr.name() != "name")
+                    {
+                        extr->setInt(attr.name().toStdString(), attr.value().toInt());
+                        extr->setFloat(attr.name().toStdString(), attr.value().toFloat());
+                    }
+                }
+
+                registerExtractor(name, extr, true);
+                cout << "Registered "<<name<<" : reald : "<<realDimension()<<".\n";
+            }
+
+            node = node.nextSibling();
+        }
+    }
+    else
+    {
+        cout << filename << " : Invalid root markup : has to be <pipeline>." << endl;
+        return false;
+    }
+
+    return true;
+}
+
+//! Unregisters all the extractors
+void SoundAnalyser::resetExtractors()
+{
+    for(unsigned int i = 0; i < mExtr.size(); i++)
+        delete mExtr[i].second;
+    mExtr.clear();
 }
 
 //! Destructor.
 SoundAnalyser::~SoundAnalyser()
 {
-    for(unsigned int i = 0; i < mExtr.size(); i++)
-        delete mExtr[i].second;
+    resetExtractors();
     clearFeatures();
 }
 
@@ -118,7 +254,6 @@ void SoundAnalyser::useBuffer()
             cout << "Computing... " << 100 * playingTime() / totalTime() << "%" << endl;
             mLastUpdateTime = playingTime();
         }
-
         float **featureArray = new float*[mExtr.size()]; // deleted in clearFeatures()
         for(unsigned int i = 0; i < mExtr.size(); ++i)
             featureArray[i] = new float[mExtr[i].second->size()]; // deleted in clearFeatures()
@@ -202,8 +337,11 @@ string SoundAnalyser::name(unsigned int n)
     return "Empty";
 }
 
-/*
-        vector<pair<string, FeatureExtractor* > > mFeatures;
-        vector<string> mFiles;
-        vector<float*> mFeatures;
-*/
+FeatureExtractor* SoundAnalyser::getExtractor(string name)
+{
+    FeatureExtractor *res = 0;
+    for(unsigned int i = 0; i < mExtr.size() && res == 0; i++)
+        if(mExtr[i].first == name)
+            res = mExtr[i].second;
+    return res;
+}

@@ -14,7 +14,7 @@ class Filter : public FeatureExtractor
         Filter() : mExtr(0) { ; }
 
         //! Binds the filter to the output of an extractor (or another filter). Returns the old one.
-        FeatureExtractor* bind(FeatureExtractor* extr);
+        virtual FeatureExtractor* bind(FeatureExtractor* extr);
 
         /** \brief Extract data
          * This method should not be reimplemented by the user.

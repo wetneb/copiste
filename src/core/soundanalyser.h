@@ -25,12 +25,10 @@ class SoundAnalyser;
 
 // Filters
 #include "filters/average.h"
+#include "filters/flux.h"
+#include "filters/range.h"
 
 using namespace std;
-
-/**
- * TODO : Register ALL the features and create a tab saying what should be used
- */
 
 class SoundAnalyser : private StreamPlayer
 {
@@ -39,8 +37,15 @@ class SoundAnalyser : private StreamPlayer
         SoundAnalyser();
         //! Destructor.
         ~SoundAnalyser();
+        //! Unregisters all the extractors
+        void resetExtractors();
         //! Adds a new extractor
         void registerExtractor(string name, FeatureExtractor* extr, bool used = true);
+        //! Find an extractor
+        FeatureExtractor* getExtractor(string name);
+
+        //! Set up the extractors from an XML file
+        bool setup(string filename);
 
         //! Compute the features of a given file
         bool compute(string url);
@@ -79,8 +84,7 @@ class SoundAnalyser : private StreamPlayer
         unsigned int samplingFrequency() { return mFrequency; }
 
     private:
-        // To be kept
-        vector<pair<string, FeatureExtractor* > > mExtr;
+        vector<pair<string, FeatureExtractor* > > mExtr; // TODO : it could be an hashtable
         vector<bool> mUsed;
         vector<float**> mFeatures;
 
@@ -88,14 +92,6 @@ class SoundAnalyser : private StreamPlayer
         int mRealDimension;
         int mUsedExtractors;
 
-        // To be moved
-        string mBasePath;
-        vector<string> mFiles;
-        vector<bool> mGoals;
-        int mCurrentFile;
-        bool mVerbose;
-
-        // To be kept
         boost::mutex mSwitchLock;
         bool mComputed;
         libvlc_time_t mLastUpdateTime;
