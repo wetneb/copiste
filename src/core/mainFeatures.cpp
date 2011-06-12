@@ -38,33 +38,51 @@ int main(int argc, char **argv)
 {
     po::options_description desc("Usage");
     desc.add_options()
-        ("input-file", "The file. The one.");
+        ("pipeline", "The pipeline that should be used (it will be loaded from pipeline/$PIPELINE.xml)")
+        ("input-file", "The target file defining the corpus.")
+        ("output-file,o", po::value<string>()->default_value("corpus/output.xml"), "The file where the XML corpus will be written.")
+        ("help,h", "Display this message");
 
     po::positional_options_description p;
-    p.add("input-file", -1);
+    p.add("pipeline", 1).add("input-file", 1);
 
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).
               options(desc).positional(p).run(), vm);
     po::notify(vm);
 
+    if(vm.count("help"))
+    {
+        std::cout << "Corpus building tool.\n\nExample:" << std::endl;
+        std::cout << "Create a corpus from a set of audio files :\n   mkcorpus hzcrr-lster Rick_Astley's_greatest_hits/target.xml -o my_corpus.xml\n" << std::endl;
+        std::cout << desc << std::endl;
+        return 0;
+    }
+
     CorpusBuilder cb;
 
     if(vm.count("input-file"))
     {
         string corpusPath = vm["input-file"].as< string >();
-        cout << "Corpus path : " << corpusPath << endl;
-        cb.setVerbose(true);
-        cb.setup(corpusPath);
-        cb.compute();
-        Corpus corpus;
-        cb.write(&corpus);
+        string pipeline = "pipeline/" + (vm["pipeline"].as< string >()) + ".xml";
+        string output = vm["output-file"].as< string >();
 
-        corpus.write("/tmp/output.xml");
-        corpus.display();
+        if(cb.setupPipeline(pipeline))
+        {
+            cout << "Processing " << corpusPath << endl;
+            cb.setVerbose(true);
+            cb.setup(corpusPath);
+            cb.compute();
+            Corpus corpus;
+            cb.write(&corpus);
 
-        cout << "Computed." << endl;
+            corpus.write(output);
+        }
+        else
+            cout << "Failed to load the pipeline." << endl;
     }
+    else
+        cout << "No target has been set. See --help." << endl;
     return 0;
 }
 
