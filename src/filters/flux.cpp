@@ -3,7 +3,7 @@
 #include <cmath>
 
 //! Compute the transformation : compute the "flux"
-void Flux::transform(vector<float> data)
+void FluxFilter::transform(vector<float> data)
 {
     if(data.size() == mLastVect.size())
     {
@@ -17,7 +17,7 @@ void Flux::transform(vector<float> data)
 }
 
 //! Get the number of available values (the same as in the original feature)
-int Flux::size()
+int FluxFilter::size()
 {
     int result = 0;
     if(mExtr)
@@ -26,7 +26,7 @@ int Flux::size()
 }
 
 //! Return the asked value (indices are the same as in the original feature)
-float Flux::value(int index)
+float FluxFilter::value(int index)
 {
     float result = 0;
     if((unsigned int)index < mResult.size())

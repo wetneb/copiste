@@ -4,7 +4,7 @@
 #include "filters/filter.h"
 
 //! A class for computing the average between a set of features (usually for the spectrum)
-class Range : public Filter
+class RangeFilter : public Filter
 {
     public:
         //! Do the actual computation on the features

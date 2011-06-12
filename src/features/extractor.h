@@ -6,9 +6,6 @@
 
 using namespace std;
 
-//! TODO : ideally, this class could implement parameter handling (hash table, or whatever)
-//! TODO : I'm not sure it is a good idea. The current system allows the extractor to do what it wants of the new data, e.g. to change the size of an array
-
 /**
  * \class FeatureExtractor
  * \brief An abstract class, used as an interface between the processing unit and the features algorithms

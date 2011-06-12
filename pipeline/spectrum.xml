@@ -1,0 +1,7 @@
+<pipeline>
+	<feature type="STE" name="mySTE" />
+	<feature type="ZCR" name="myZCR" />
+	<filter type="Average" name="avZCR" size="1000">
+		<ref name="myZCR" />
+	</filter> 
+</pipeline>

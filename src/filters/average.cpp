@@ -41,6 +41,7 @@ float AverageFilter::value(int index)
 //! Get the number of available values
 int AverageFilter::size()
 {
+    //if(mExtr != 0 && mExtr->size() != mDimension)
     return mDimension;
 }
 

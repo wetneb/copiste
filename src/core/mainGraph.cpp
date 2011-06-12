@@ -17,7 +17,9 @@ int main(int argc, char **argv)
 {
     po::options_description desc("Usage");
     desc.add_options()
-        ("input-file", "The file. The one.");
+        ("input-file", "The file. The one.")
+        ("output-file,o", "The path to the output file (default: output/$ORIGINAL_FILENAME-features.png).")
+        ("help,h", "Display this message");
 
     po::positional_options_description p;
     p.add("input-file", -1);
@@ -27,6 +29,13 @@ int main(int argc, char **argv)
               options(desc).positional(p).run(), vm);
     po::notify(vm);
 
+    if(vm.count("help"))
+    {
+        std::cout << "Features drawing tool.\n\nExample:" << std::endl;
+        std::cout << "Draw the features of a file :\n   featdraw rickroll.ogg -o features.png\n" << std::endl;
+        std::cout << desc << std::endl;
+        return 0;
+    }
 
     if(vm.count("input-file"))
     {

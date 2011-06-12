@@ -179,8 +179,10 @@ void SpectrumExtr::normalize(int bound)
 float SpectrumExtr::value(int index)
 {
     // Normalize the value (in [-1; 1])
-    if(index < mSize)
+    if(index < mSize && mBound < (1 << 31))
         return (2.0 *mResults[index] / mBound - 1.0);
+    else if(index < mSize)
+        return mResults[index];
     return 0;
 }
 

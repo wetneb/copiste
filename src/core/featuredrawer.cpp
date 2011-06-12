@@ -21,26 +21,29 @@ void FeatureDrawer::draw()
        delete mMin;
     if(mMax)
        delete mMax;
-    mMin = new float[dimension()]; // deleted in the destructor
-    mMax = new float[dimension()]; // deleted in the destructor
+    mMin = new float[realDimension()]; // deleted in the destructor
+    mMax = new float[realDimension()]; // deleted in the destructor
 
     int offset = 0;
     for(unsigned int f = 0;  f < nbFeatures(); f++)
     {
-        for(unsigned int e = 0; e < nbElems(f); e++)
+        if(isUsed(f))
         {
-            mMin[offset] = features(0)[f][e];
-            mMax[offset] = features(0)[f][e];
-
-            for(unsigned int i = 1; i < nbSamples(); i++)
+            for(unsigned int e = 0; e < nbElems(f); e++)
             {
-                if(features(i)[f][e] < mMin[offset])
-                    mMin[offset] = features(i)[f][e];
-                if(features(i)[f][e] > mMax[offset])
-                    mMax[offset] = features(i)[f][e];
-            }
+                mMin[offset] = features(0)[f][e];
+                mMax[offset] = features(0)[f][e];
 
-            offset++;
+                for(unsigned int i = 1; i < nbSamples(); i++)
+                {
+                    if(features(i)[f][e] < mMin[offset])
+                        mMin[offset] = features(i)[f][e];
+                    if(features(i)[f][e] > mMax[offset])
+                        mMax[offset] = features(i)[f][e];
+                }
+
+                offset++;
+            }
         }
     }
 
@@ -57,7 +60,7 @@ void FeatureDrawer::draw()
 
     // Features
     painter.setPen(QColor(60,60,60));
-    offset = mOut.height() / dimension();
+    offset = mOut.height() / realDimension();
     for(int i = mOut.height()-1; i >= 0; i -= offset)
         painter.drawLine(0, i, mOut.width(), i);
 
@@ -71,26 +74,32 @@ void FeatureDrawer::draw()
                         Qt::gray,
                         Qt::black };
 
+
     offset = 0;
     for(unsigned int f = 0; f < nbFeatures(); f++)
     {
-        for(unsigned int e = 0; e < nbElems(f); e++)
+        if(isUsed(f))
         {
-            float chunk = mOut.height() / dimension();
-            float scale = (mMax[offset] - mMin[offset]) / chunk;
-
-            painter.setPen(colors[offset%8]);
-
-            QPoint lastPoint(0,0);
-            for(int i = 0; i < mOut.width() && i < (int)nbSamples(); ++i)
+            for(unsigned int e = 0; e < nbElems(f); e++)
             {
-                painter.drawLine(lastPoint, QPoint(i, mOut.height() - chunk*offset - (features(i)[f][e] - mMin[offset])/scale));
-                lastPoint = QPoint(i, mOut.height() - chunk*offset - (features(i)[f][e] - mMin[offset])/scale);
-                //int y = ;
-                //mOut.setPixel(i, ((y < mOut.height()) ? y : mOut.height()-1), (colors[offset%8]).rgb());
-            }
+                float chunk = mOut.height() / realDimension();
+                float scale = (mMax[offset] - mMin[offset]) / chunk;
+                painter.setPen(colors[offset%8]);
 
-            offset++;
+                if(mMin[offset] < mMax[offset])
+                {
+                    QPoint lastPoint(0,0);
+                    for(int i = 0; i < mOut.width() && i < (int)nbSamples(); ++i)
+                    {
+                        painter.drawLine(lastPoint, QPoint(i, mOut.height() - chunk*offset - (features(i)[f][e] - mMin[offset])/scale));
+                        lastPoint = QPoint(i, mOut.height() - chunk*offset - (features(i)[f][e] - mMin[offset])/scale);
+                        //int y = ;
+                        //mOut.setPixel(i, ((y < mOut.height()) ? y : mOut.height()-1), (colors[offset%8]).rgb());
+                    }
+                }
+
+                offset++;
+            }
         }
     }
 }
