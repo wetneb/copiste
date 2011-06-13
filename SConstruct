@@ -63,7 +63,7 @@ featdraw_files = neurones_files + audio_analysis_files + ['src/main/featdraw.cpp
 specdraw_files = audio_analysis_files + [ 'src/core/spectrumRecorder.cpp',
 		  'src/main/specdraw.cpp']
 
-
+live_files = neurones_files + audio_analysis_files + ['src/main/live.cpp', 'src/core/liveplayer.cpp', 'src/core/featuredrawer.cpp' ]
 
 
 env.Program('nnat', nnat_files)
@@ -71,4 +71,4 @@ env.Program('mkcorpus', mkcorpus_files)
 env.Program('featdraw', featdraw_files)
 env.Program('specdraw', specdraw_files)
 env.Program('classify', classify_files)
-
+env.Program('live', live_files)
