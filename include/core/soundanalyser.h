@@ -39,6 +39,8 @@ class SoundAnalyser : private StreamPlayer
         ~SoundAnalyser();
         //! Unregisters all the extractors
         void resetExtractors();
+        //! Clean the data in the extractors
+        void cleanExtractors();
         //! Adds a new extractor
         void registerExtractor(string name, FeatureExtractor* extr, bool used = true);
         //! Find an extractor

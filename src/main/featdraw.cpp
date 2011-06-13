@@ -1,6 +1,7 @@
-
 #include <program_options.hpp>
 #include <filesystem.hpp>
+
+#include <QApplication>
 
 namespace po = boost::program_options;
 
@@ -15,10 +16,13 @@ using namespace std; // A supprimer (ou pas)
  */
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv, false);
+
     po::options_description desc("Usage");
     desc.add_options()
         ("input-file", "The file. The one.")
         ("pipeline,p", "The pipeline that should be used (it will be loaded from pipeline/$PIPELINE.xml)")
+        ("network,n", po::value<string>(), "A network used for classification (optionnal) (it will be loaded from networks/$NETWORK.xml)")
         ("output-file,o", "The path to the output file (default: output/$ORIGINAL_FILENAME-features.png).")
         ("help,h", "Display this message");
 
@@ -41,6 +45,17 @@ int main(int argc, char **argv)
     if(vm.count("input-file"))
     {
         FeatureDrawer fd;
+        NNetwork net;
+
+        if(vm.count("network"))
+        {
+            string network = "networks/" + (vm["network"].as< string >()) + ".xml";
+            if(net.load(network))
+                fd.setNetwork(&net);
+            else
+                cout << "Warning : Unable to load the network, disabling classification." << endl;
+        }
+
         string pipeline = "pipeline/" + (vm["pipeline"].as< string >()) + ".xml";
         if(fd.setupPipeline(pipeline))
         {
@@ -52,7 +67,7 @@ int main(int argc, char **argv)
             cout << "File to read : " << filename << endl;
             fd.compute(filename);
             fd.waitComputed();
-            fd.draw();
+            fd.draw(boost::filesystem::path(filename).stem().string());
             fd.writeToFile(output);
         }
         else

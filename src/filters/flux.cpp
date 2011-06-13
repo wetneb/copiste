@@ -22,6 +22,8 @@ int FluxFilter::size()
     int result = 0;
     if(mExtr)
         result = mExtr->size();
+    if(result != (int)mResult.size())
+        mResult.resize(result);
     return result;
 }
 

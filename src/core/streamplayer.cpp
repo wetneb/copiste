@@ -16,8 +16,8 @@ StreamPlayer::StreamPlayer() : mMp(0),
     const char * const vlc_args[] = {
          //     "--extraintf=logger", //log anything
         //    "--verbose=2", //be much more verbose then normal for debugging purpose
-             "--no-sout-smem-time-sync",
-              "--sout", smem_options //smem_options // Stream to memory
+            "--no-sout-smem-time-sync",
+            "--sout", smem_options //smem_options // Stream to memory
                };
 
     mVlcInstance = libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
@@ -44,8 +44,11 @@ StreamPlayer::~StreamPlayer()
 // Start "playing" a stream (actually, start reading it and send it to the algorithms)
 void StreamPlayer::play()
 {
-    if(!mMedia)
-        mMedia = libvlc_media_new_path (mVlcInstance, mUrl.c_str());
+    if(mMedia)
+        libvlc_media_release(mMedia);
+    mMedia = libvlc_media_new_path (mVlcInstance, mUrl.c_str());
+
+    mBufferSize = 0;
 
     libvlc_media_player_set_media (mMp, mMedia);
 

@@ -1,0 +1,15 @@
+<nnetwork>
+    <inputs>
+        <node name="LSTER"/>
+        <node name="HZCRR"/>
+    </inputs>
+    <layer>
+        <node bias="-0.489336" name="Hidden_1">
+            <link weight="-0.710951" parent="LSTER"/>
+            <link weight="-0.0309645" parent="HZCRR"/>
+        </node>
+    </layer>
+    <output bias="-0.171747">
+        <link weight="-0.61459" parent="Hidden_1"/>
+    </output>
+</nnetwork>

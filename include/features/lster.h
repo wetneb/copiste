@@ -42,6 +42,9 @@ class LSTERExtr : public FeatureExtractor
 
         //! Get a int parameter (available : "chunkSize")
         int getInt(string key);
+
+        //! Clear the extractor (forget the previous results)
+        void clear();
     private:
         STEExtr *mSteExtr;
         float* mHistory;

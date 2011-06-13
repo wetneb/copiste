@@ -1,4 +1,4 @@
-#include "corpus.h"
+#include "algo/corpus.h"
 
 Corpus::Corpus(string file)
 {

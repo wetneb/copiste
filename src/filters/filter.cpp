@@ -1,4 +1,4 @@
-#include "filter.h"
+#include "filters/filter.h"
 
 FeatureExtractor* Filter::bind(FeatureExtractor* extr)
 {

@@ -1,130 +1,106 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Features" />
-	<File name="src/algo/abstractneuron.h" open="0" top="0" tabpos="14">
-		<Cursor position="1374" topLine="23" />
+	<ActiveTarget name="classify" />
+	<File name="include/algo/abstractneuron.h" open="0" top="0" tabpos="6">
+		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="src/algo/corpus.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="3985" topLine="192" />
+	<File name="include/algo/nnetwork.h" open="1" top="0" tabpos="8">
+		<Cursor position="0" topLine="26" />
 	</File>
-	<File name="src/algo/corpus.h" open="0" top="0" tabpos="8">
-		<Cursor position="1180" topLine="30" />
+	<File name="include/core/classifier.h" open="1" top="0" tabpos="7">
+		<Cursor position="528" topLine="0" />
 	</File>
-	<File name="src/algo/inputneuron.h" open="0" top="0" tabpos="17">
-		<Cursor position="1443" topLine="0" />
+	<File name="include/core/corpusbuilder.h" open="0" top="0" tabpos="3">
+		<Cursor position="863" topLine="4" />
+	</File>
+	<File name="include/core/featuredrawer.h" open="0" top="0" tabpos="0">
+		<Cursor position="282" topLine="10" />
+	</File>
+	<File name="include/core/soundanalyser.h" open="0" top="0" tabpos="4">
+		<Cursor position="1526" topLine="0" />
+	</File>
+	<File name="include/core/streamplayer.h" open="1" top="0" tabpos="2">
+		<Cursor position="2099" topLine="39" />
+	</File>
+	<File name="include/features/extractor.h" open="0" top="0" tabpos="0">
+		<Cursor position="1120" topLine="10" />
+	</File>
+	<File name="include/features/hzcrr.h" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="9" />
+	</File>
+	<File name="include/features/lster.h" open="0" top="0" tabpos="0">
+		<Cursor position="1307" topLine="18" />
+	</File>
+	<File name="src/algo/corpus.cpp" open="0" top="0" tabpos="8">
+		<Cursor position="15" topLine="0" />
 	</File>
 	<File name="src/algo/neuron.cpp" open="0" top="0" tabpos="18">
 		<Cursor position="1648" topLine="173" />
 	</File>
-	<File name="src/algo/neuron.h" open="0" top="0" tabpos="15">
-		<Cursor position="793" topLine="15" />
-	</File>
 	<File name="src/algo/nnetwork.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="4939" topLine="160" />
+		<Cursor position="4939" topLine="27" />
 	</File>
-	<File name="src/algo/nnetwork.h" open="0" top="0" tabpos="16">
-		<Cursor position="213" topLine="26" />
+	<File name="src/core/classifier.cpp" open="1" top="0" tabpos="6">
+		<Cursor position="976" topLine="6" />
 	</File>
-	<File name="src/core/corpusbuilder.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="4674" topLine="135" />
+	<File name="src/core/corpusbuilder.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="3714" topLine="105" />
 	</File>
-	<File name="src/core/corpusbuilder.h" open="0" top="0" tabpos="7">
-		<Cursor position="769" topLine="1" />
+	<File name="src/core/featuredrawer.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="883" topLine="66" />
 	</File>
-	<File name="src/core/featuredrawer.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="591" topLine="9" />
+	<File name="src/core/soundanalyser.cpp" open="1" top="0" tabpos="11">
+		<Cursor position="5281" topLine="162" />
 	</File>
-	<File name="src/core/featuredrawer.h" open="0" top="0" tabpos="5">
-		<Cursor position="539" topLine="0" />
+	<File name="src/core/spectrumRecorder.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="455" topLine="0" />
 	</File>
-	<File name="src/core/mainFeatures.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="1972" topLine="35" />
+	<File name="src/core/streamplayer.cpp" open="0" top="0" tabpos="6">
+		<Cursor position="991" topLine="0" />
 	</File>
-	<File name="src/core/mainGraph.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="940" topLine="8" />
-	</File>
-	<File name="src/core/mainNeurones.cpp" open="0" top="0" tabpos="12">
-		<Cursor position="3191" topLine="101" />
-	</File>
-	<File name="src/core/mainSpectrum.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="246" topLine="4" />
-	</File>
-	<File name="src/core/soundanalyser.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="3568" topLine="99" />
-	</File>
-	<File name="src/core/soundanalyser.h" open="0" top="0" tabpos="14">
-		<Cursor position="2038" topLine="69" />
-	</File>
-	<File name="src/core/spectrumRecorder.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="1284" topLine="37" />
-	</File>
-	<File name="src/core/spectrumRecorder.h" open="0" top="0" tabpos="4">
-		<Cursor position="349" topLine="15" />
-	</File>
-	<File name="src/core/streamplayer.cpp" open="0" top="0" tabpos="16">
-		<Cursor position="5713" topLine="191" />
-	</File>
-	<File name="src/core/streamplayer.h" open="0" top="0" tabpos="5">
-		<Cursor position="3657" topLine="70" />
-	</File>
-	<File name="src/features/extractor.h" open="1" top="1" tabpos="4">
-		<Cursor position="1350" topLine="0" />
-	</File>
-	<File name="src/features/hzcrr.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="503" topLine="0" />
-	</File>
-	<File name="src/features/hzcrr.h" open="0" top="0" tabpos="2">
-		<Cursor position="401" topLine="0" />
-	</File>
-	<File name="src/features/lster.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="2009" topLine="0" />
-	</File>
-	<File name="src/features/lster.h" open="0" top="0" tabpos="3">
-		<Cursor position="396" topLine="0" />
+	<File name="src/features/lster.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="591" topLine="0" />
 	</File>
 	<File name="src/features/spectrum.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="156" topLine="0" />
+		<Cursor position="3880" topLine="18" />
 	</File>
-	<File name="src/features/spectrum.h" open="0" top="0" tabpos="6">
-		<Cursor position="1628" topLine="61" />
+	<File name="src/features/ste.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="326" topLine="0" />
 	</File>
-	<File name="src/features/ste.cpp" open="0" top="0" tabpos="7">
-		<Cursor position="792" topLine="0" />
+	<File name="src/features/zcr.cpp" open="0" top="0" tabpos="8">
+		<Cursor position="465" topLine="0" />
 	</File>
-	<File name="src/features/ste.h" open="0" top="0" tabpos="10">
-		<Cursor position="186" topLine="7" />
+	<File name="src/filters/average.cpp" open="0" top="0" tabpos="6">
+		<Cursor position="1138" topLine="27" />
 	</File>
-	<File name="src/features/zcr.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="118" topLine="0" />
+	<File name="src/filters/filter.cpp" open="0" top="0" tabpos="7">
+		<Cursor position="17" topLine="0" />
 	</File>
-	<File name="src/features/zcr.h" open="0" top="0" tabpos="1">
-		<Cursor position="613" topLine="10" />
+	<File name="src/filters/flux.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="605" topLine="2" />
 	</File>
-	<File name="src/filters/average.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="1157" topLine="35" />
-	</File>
-	<File name="src/filters/average.h" open="1" top="0" tabpos="2">
-		<Cursor position="810" topLine="4" />
-	</File>
-	<File name="src/filters/filter.h" open="1" top="0" tabpos="1">
-		<Cursor position="170" topLine="12" />
+	<File name="src/filters/range.cpp" open="0" top="0" tabpos="6">
+		<Cursor position="346" topLine="0" />
 	</File>
 	<File name="src/gui/editor.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="1176" topLine="0" />
 	</File>
-	<File name="src/gui/editor.h" open="0" top="0" tabpos="6">
-		<Cursor position="135" topLine="0" />
-	</File>
 	<File name="src/gui/moc_editor.cpp" open="0" top="0" tabpos="11">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="386" topLine="0" />
 	</File>
 	<File name="src/gui/moc_view2D.cpp" open="0" top="0" tabpos="10">
-		<Cursor position="0" topLine="58" />
+		<Cursor position="386" topLine="0" />
 	</File>
-	<File name="src/gui/view2D.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="4903" topLine="206" />
+	<File name="src/gui/view2D.cpp" open="0" top="0" tabpos="12">
+		<Cursor position="1365" topLine="0" />
 	</File>
-	<File name="src/gui/view2D.h" open="0" top="0" tabpos="1">
-		<Cursor position="213" topLine="0" />
+	<File name="src/main/classify.cpp" open="1" top="0" tabpos="5">
+		<Cursor position="1723" topLine="0" />
+	</File>
+	<File name="src/main/featdraw.cpp" open="1" top="1" tabpos="9">
+		<Cursor position="1940" topLine="22" />
+	</File>
+	<File name="src/main/nnat.cpp" open="1" top="0" tabpos="10">
+		<Cursor position="2292" topLine="30" />
 	</File>
 </CodeBlocks_layout_file>
