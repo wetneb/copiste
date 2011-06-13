@@ -6,67 +6,6 @@ SoundAnalyser::SoundAnalyser() : mDimension(0),
                                 mUsedExtractors(0),
                                 mComputed(false)
 {
-
-/*
-    SpectrumExtr *spec = new SpectrumExtr(AUDIO_CHUNK_SIZE);
-    registerExtractor("Spectrum", spec, false); */
-
-
-    /* FluxFilter *flux = new FluxFilter;
-    flux->bind(spec);
-    registerExtractor("Spectrum flux", flux, false);
-
-    AverageFilter *av = new AverageFilter;
-    av->bind(flux);
-    registerExtractor("Av. spec. flux", av, true); */
-
-     /*
-    RangeFilter *rg1 = new RangeFilter;
-    rg1->bind(spec);
-    rg1->setInt("start",0);
-    rg1->setInt("end", 100);
-    registerExtractor("RangeFilter1", rg1);
-
-    RangeFilter *rg2 = new RangeFilter;
-    rg2->bind(spec);
-    rg2->setInt("start", 100);
-    rg2->setInt("end", 800);
-    registerExtractor("RangeFilter2", rg2); */
-
-    /*
-    AverageFilter *av = new AverageFilter;
-    av->bind(spec);
-    registerExtractor("av", av); */
-    // */
-
-    // ZCR et LSTER
-    /*
-    ZCRExtr *zcr =  new ZCRExtr(AUDIO_CHUNK_SIZE);
-    registerExtractor("ZCR", zcr, false);
-    HZCRRExtr *hzcrr = new HZCRRExtr(AUDIO_CHUNK_SIZE);
-    hzcrr->setZCRExtractor(zcr);
-    hzcrr->setFloat("bound", 2.0);
-    hzcrr->setInt("chunksNumber", 80);
-    registerExtractor("HZCRR", hzcrr, false);
-
-    STEExtr *ste = new STEExtr(AUDIO_CHUNK_SIZE);
-    registerExtractor("STE", ste, false);
-
-    LSTERExtr *lster = new LSTERExtr(AUDIO_CHUNK_SIZE);
-    registerExtractor("LSTER", lster, false);
-    lster->setSTEExtractor(ste);
-    lster->setFloat("bound", 0.45);
-
-    AverageFilter *averageLSTER = new AverageFilter();
-    averageLSTER->bind(lster);
-    averageLSTER->setInt("size", 100);
-    registerExtractor("Average LSTER", averageLSTER);
-
-    AverageFilter* average = new AverageFilter();
-    average->bind(hzcrr);
-    average->setInt("size", 100);
-    registerExtractor("Average HZCRR", average); */
-
     mLastUpdateTime = 0;
 }
 
@@ -188,6 +127,7 @@ void SoundAnalyser::resetExtractors()
     for(unsigned int i = 0; i < mExtr.size(); i++)
         delete mExtr[i].second;
     mExtr.clear();
+    mUsed.clear();
 }
 
 //! Destructor.
@@ -213,6 +153,13 @@ void SoundAnalyser::clearFeatures()
         }
     }
     mFeatures.clear();
+}
+
+//! Clears the data in the extractors
+void SoundAnalyser::cleanExtractors()
+{
+    for(unsigned int i = 0; i < mExtr.size(); i++)
+        mExtr[i].second->clear();
 }
 
 //! Compute the features of a given file
@@ -289,7 +236,7 @@ void SoundAnalyser::registerExtractor(string name, FeatureExtractor* extr, bool 
 
 void SoundAnalyser::waitComputed()
 {
-    boost::posix_time::seconds waitTime(1);
+    boost::posix_time::millisec waitTime(250);
 
     //mSwitchLock.lock();
     while(!mComputed)

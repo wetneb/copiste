@@ -10,10 +10,7 @@ LSTERExtr::LSTERExtr(int chunkSize)
 
     // Fill the history with dummy data at first
     mHistory = new float[mChunkSize]; // deleted in the destructor
-    for(int i = 0; i < mChunkSize; i++)
-        mHistory[i] = i%2;
-    mLSTER = 0.5;
-    mCurrentFrame = 0;
+    clear();
 }
 
 //! Run the algorithm and store the results
@@ -38,12 +35,19 @@ bool LSTERExtr::extract(uint16_t* data, int size)
             if(mHistory[i] < bound)
                 low++;
 
-
         mCurrentFrame = (mCurrentFrame + 1) % mChunkSize;
 
         mLSTER = (float)low / mChunkSize;
     }
     return size;
+}
+
+void LSTERExtr::clear()
+{
+    for(int i = 0; i < mChunkSize; i++)
+        mHistory[i] = i%2;
+    mLSTER = 0.5;
+    mCurrentFrame = 0;
 }
 
 //! Set a float parameter (available : "bound")

@@ -18,14 +18,9 @@ View2D::View2D(QWidget *parent) : QWidget(parent)
 
 QColor colorFromValue(neural_value value)
 {
-    if(value > 0)
+    if(value < 0)
         return QColor(127*(1.0+value),63,0);
     return QColor(63, 127*(1.0-value), 0);
-
-    //! Old colour management
-    if(value < 0.001 && value > -0.001)
-        return QColor(0,0,255);
-    return QColor(127*(1.0+value),127*(1.0-value),0);
 }
 
 void View2D::renderToImage(string fileName, string format, int w, int h)

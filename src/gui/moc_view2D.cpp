@@ -7,7 +7,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "view2D.h"
+#include "gui/view2D.h"
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'view2D.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 62

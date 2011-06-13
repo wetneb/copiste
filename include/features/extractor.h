@@ -36,6 +36,9 @@ class FeatureExtractor
 
         //! Get a int parameter
         virtual int getInt(string key) { return 0; }
+
+        //! Clear the memory of the extractor (so that the previously computed results don't infer to the next ones)
+        virtual void clear() { ; }
 };
 
 

@@ -75,8 +75,6 @@ bool CorpusBuilder::setup(string fileName)
                     mFiles.push_back(string("file://" + boost::filesystem::absolute(iter->path()).string()));
                     mGoals.push_back((int)(rules[prefixId].second));
                 }
-                else
-                    std::cout << "Ignoring "<< filename << std::endl;
             }
         }
     }
@@ -95,7 +93,11 @@ void CorpusBuilder::compute()
     if(mFiles.size())
     {
         mCurrentFile = 0;
-        mResults.clear(); // TODO : This is not clean : we have to do the deletes
+
+        for(unsigned int i = 0; i < mResults.size(); i++)
+            if(mResults[i])
+                delete mResults[i];
+        mResults.clear();
 
         while((unsigned int)mCurrentFile < mFiles.size())
         {
@@ -106,7 +108,7 @@ void CorpusBuilder::compute()
             // Set up the media player
             if(mVerbose)
             {
-                string filename = boost::filesystem::path(mFiles[mCurrentFile]).filename().string();
+                string filename = boost::filesystem::path(mFiles[mCurrentFile]).stem().string();
                 std::cout << "["<<mCurrentFile + 1<<"/"<<mFiles.size()<<"] : "<<filename<< std::endl;
             }
 
@@ -123,15 +125,17 @@ void CorpusBuilder::compute()
                     {
                         mResults[mCurrentFile][saved + j] = 0;
                         // Compute the average
-                        for(unsigned int k = 0; k < nbSamples(); k++)
+                        for(unsigned int k = nbSamples()*0.1; k < nbSamples(); k++)
                             mResults[mCurrentFile][saved + j] += features(k)[i][j];
-                        mResults[mCurrentFile][saved + j] /= nbSamples();
+                        mResults[mCurrentFile][saved + j] /= nbSamples()*0.9;
 
-                        cout << name(i) << "["<<j+1<<"] :" << mResults[mCurrentFile][saved + j] << endl;
+                        cout << name(i) << " ["<<j+1<<"] :" << mResults[mCurrentFile][saved + j] << endl;
                     }
                     saved += nbElems(i);
                 }
             }
+            clearFeatures();
+            cleanExtractors();
 
             mCurrentFile++;
         }

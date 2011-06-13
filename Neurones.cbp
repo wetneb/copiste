@@ -6,8 +6,8 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Linear">
-				<Option output="Neurones" prefix_auto="1" extension_auto="1" />
+			<Target title="nnat">
+				<Option output="nnat" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -19,15 +19,8 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
-			<Target title="Nonlinear">
-				<Option output="Neurones" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Option parameters="-tep --net networks/MLP.xml --corpus corpus/bilinear-discrimination.xml --verbose -m 10000 -r 0.001" />
-			</Target>
-			<Target title="Features">
-				<Option output="Features" prefix_auto="1" extension_auto="1" />
+			<Target title="mkcorpus">
+				<Option output="mkcorpus" prefix_auto="1" extension_auto="1" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
@@ -45,18 +38,23 @@
 					<Add directory="/usr/local/lib/vlc" />
 				</Linker>
 			</Target>
-			<Target title="Spectrum">
-				<Option output="Spectrum" prefix_auto="1" extension_auto="1" />
+			<Target title="specdraw">
+				<Option output="specdraw" prefix_auto="1" extension_auto="1" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
 				<Option parameters="test/suhov-crop.wav" />
 			</Target>
-			<Target title="Graph">
-				<Option output="Graph" prefix_auto="1" extension_auto="1" />
+			<Target title="featdraw">
+				<Option output="featdraw" prefix_auto="1" extension_auto="1" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option parameters="test/suhov-crop.wav" />
+			</Target>
+			<Target title="classify">
+				<Option output="classify" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="gcc" />
 			</Target>
 		</Build>
 		<Compiler>
@@ -67,7 +65,7 @@
 			<Add directory="/usr/local/share/qt4/include/QtXml" />
 			<Add directory="/usr/local/share/qt4/include/QtXmlPatterns" />
 			<Add directory="/usr/include/boost" />
-			<Add directory="/home/berthe/Programmation/Neurones/src" />
+			<Add directory="/home/berthe/Programmation/Neurones/include" />
 		</Compiler>
 		<Linker>
 			<Add library="QtCore" />
@@ -80,199 +78,238 @@
 			<Add library="boost_filesystem" />
 			<Add directory="/usr/local/share/qt4/lib" />
 		</Linker>
-		<Unit filename="src/algo/abstractneuron.h">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
+		<Unit filename="include/algo/abstractneuron.h">
+			<Option target="nnat" />
+			<Option target="classify" />
 		</Unit>
-		<Unit filename="src/algo/analysis.h">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
+		<Unit filename="include/algo/analysis.h">
+			<Option target="nnat" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/algo/corpus.h">
+			<Option target="nnat" />
+			<Option target="mkcorpus" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/algo/inputneuron.h">
+			<Option target="nnat" />
+			<Option target="mkcorpus" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/algo/neuron.h">
+			<Option target="nnat" />
+			<Option target="mkcorpus" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/algo/nnetwork.h">
+			<Option target="nnat" />
+			<Option target="mkcorpus" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/core/audiochunk.h">
+			<Option target="nnat" />
+			<Option target="mkcorpus" />
+		</Unit>
+		<Unit filename="include/core/classifier.h">
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/core/corpusbuilder.h">
+			<Option target="mkcorpus" />
+		</Unit>
+		<Unit filename="include/core/featuredrawer.h">
+			<Option target="featdraw" />
+		</Unit>
+		<Unit filename="include/core/soundanalyser.h">
+			<Option target="mkcorpus" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/core/spectrumRecorder.h">
+			<Option target="specdraw" />
+			<Option target="featdraw" />
+		</Unit>
+		<Unit filename="include/core/streamplayer.h">
+			<Option target="mkcorpus" />
+			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/features/extractor.h">
+			<Option target="mkcorpus" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/features/hzcrr.h">
+			<Option target="mkcorpus" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/features/lster.h">
+			<Option target="mkcorpus" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/features/spectrum.h">
+			<Option target="mkcorpus" />
+			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/features/ste.h">
+			<Option target="mkcorpus" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/features/zcr.h">
+			<Option target="mkcorpus" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/filters/average.h">
+			<Option target="mkcorpus" />
+			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/filters/filter.h">
+			<Option target="mkcorpus" />
+			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/filters/flux.h">
+			<Option target="mkcorpus" />
+			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/filters/range.h">
+			<Option target="mkcorpus" />
+			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="include/gui/editor.h">
+			<Option target="nnat" />
+		</Unit>
+		<Unit filename="include/gui/view2D.h">
+			<Option target="nnat" />
 		</Unit>
 		<Unit filename="src/algo/corpus.cpp">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
-			<Option target="Features" />
-		</Unit>
-		<Unit filename="src/algo/corpus.h">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
-			<Option target="Features" />
-		</Unit>
-		<Unit filename="src/algo/inputneuron.h">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
-			<Option target="Features" />
+			<Option target="nnat" />
+			<Option target="mkcorpus" />
+			<Option target="classify" />
 		</Unit>
 		<Unit filename="src/algo/neuron.cpp">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
-			<Option target="Features" />
-		</Unit>
-		<Unit filename="src/algo/neuron.h">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
-			<Option target="Features" />
+			<Option target="nnat" />
+			<Option target="mkcorpus" />
+			<Option target="classify" />
 		</Unit>
 		<Unit filename="src/algo/nnetwork.cpp">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
-			<Option target="Features" />
+			<Option target="nnat" />
+			<Option target="mkcorpus" />
+			<Option target="classify" />
 		</Unit>
-		<Unit filename="src/algo/nnetwork.h">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
-			<Option target="Features" />
-		</Unit>
-		<Unit filename="src/core/audiochunk.h">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
-			<Option target="Features" />
+		<Unit filename="src/core/classifier.cpp">
+			<Option target="classify" />
 		</Unit>
 		<Unit filename="src/core/corpusbuilder.cpp">
-			<Option target="Features" />
-		</Unit>
-		<Unit filename="src/core/corpusbuilder.h">
-			<Option target="Features" />
+			<Option target="mkcorpus" />
 		</Unit>
 		<Unit filename="src/core/featuredrawer.cpp">
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/core/featuredrawer.h">
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/core/mainFeatures.cpp">
-			<Option target="Features" />
-		</Unit>
-		<Unit filename="src/core/mainGraph.cpp">
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/core/mainNeurones.cpp">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
-		</Unit>
-		<Unit filename="src/core/mainSpectrum.cpp">
-			<Option target="Spectrum" />
+			<Option target="featdraw" />
 		</Unit>
 		<Unit filename="src/core/soundanalyser.cpp">
-			<Option target="Features" />
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/core/soundanalyser.h">
-			<Option target="Features" />
-			<Option target="Graph" />
+			<Option target="mkcorpus" />
+			<Option target="featdraw" />
+			<Option target="classify" />
 		</Unit>
 		<Unit filename="src/core/spectrumRecorder.cpp">
-			<Option target="Spectrum" />
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/core/spectrumRecorder.h">
-			<Option target="Spectrum" />
-			<Option target="Graph" />
+			<Option target="specdraw" />
+			<Option target="featdraw" />
 		</Unit>
 		<Unit filename="src/core/streamplayer.cpp">
-			<Option target="Features" />
-			<Option target="Spectrum" />
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/core/streamplayer.h">
-			<Option target="Features" />
-			<Option target="Spectrum" />
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/features/extractor.h">
-			<Option target="Features" />
-			<Option target="Graph" />
+			<Option target="mkcorpus" />
+			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
 		</Unit>
 		<Unit filename="src/features/hzcrr.cpp">
-			<Option target="Features" />
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/features/hzcrr.h">
-			<Option target="Features" />
-			<Option target="Graph" />
+			<Option target="mkcorpus" />
+			<Option target="featdraw" />
+			<Option target="classify" />
 		</Unit>
 		<Unit filename="src/features/lster.cpp">
-			<Option target="Features" />
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/features/lster.h">
-			<Option target="Features" />
-			<Option target="Graph" />
+			<Option target="mkcorpus" />
+			<Option target="featdraw" />
+			<Option target="classify" />
 		</Unit>
 		<Unit filename="src/features/spectrum.cpp">
-			<Option target="Features" />
-			<Option target="Spectrum" />
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/features/spectrum.h">
-			<Option target="Features" />
-			<Option target="Spectrum" />
-			<Option target="Graph" />
+			<Option target="mkcorpus" />
+			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
 		</Unit>
 		<Unit filename="src/features/ste.cpp">
-			<Option target="Features" />
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/features/ste.h">
-			<Option target="Features" />
-			<Option target="Graph" />
+			<Option target="mkcorpus" />
+			<Option target="featdraw" />
+			<Option target="classify" />
 		</Unit>
 		<Unit filename="src/features/zcr.cpp">
-			<Option target="Features" />
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/features/zcr.h">
-			<Option target="Features" />
-			<Option target="Graph" />
+			<Option target="mkcorpus" />
+			<Option target="featdraw" />
+			<Option target="classify" />
 		</Unit>
 		<Unit filename="src/filters/average.cpp">
-			<Option target="Features" />
-			<Option target="Spectrum" />
-			<Option target="Graph" />
+			<Option target="mkcorpus" />
+			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
 		</Unit>
-		<Unit filename="src/filters/average.h">
-			<Option target="Features" />
-			<Option target="Spectrum" />
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/filters/filter.h">
-			<Option target="Features" />
-			<Option target="Spectrum" />
-			<Option target="Graph" />
-		</Unit>
-		<Unit filename="src/filters/flux.h">
-			<Option target="Features" />
-			<Option target="Spectrum" />
-			<Option target="Graph" />
+		<Unit filename="src/filters/filter.cpp">
+			<Option target="mkcorpus" />
+			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
 		</Unit>
 		<Unit filename="src/filters/flux.cpp">
-			<Option target="Features" />
-			<Option target="Spectrum" />
-			<Option target="Graph" />
+			<Option target="mkcorpus" />
+			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="src/filters/range.cpp">
+			<Option target="mkcorpus" />
+			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
 		</Unit>
 		<Unit filename="src/gui/editor.cpp">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
-		</Unit>
-		<Unit filename="src/gui/editor.h">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
+			<Option target="nnat" />
 		</Unit>
 		<Unit filename="src/gui/moc_editor.cpp">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
+			<Option target="nnat" />
 		</Unit>
 		<Unit filename="src/gui/moc_view2D.cpp">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
+			<Option target="nnat" />
 		</Unit>
 		<Unit filename="src/gui/view2D.cpp">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
+			<Option target="nnat" />
 		</Unit>
-		<Unit filename="src/gui/view2D.h">
-			<Option target="Linear" />
-			<Option target="Nonlinear" />
+		<Unit filename="src/main/classify.cpp">
+			<Option target="classify" />
+		</Unit>
+		<Unit filename="src/main/featdraw.cpp">
+			<Option target="featdraw" />
+		</Unit>
+		<Unit filename="src/main/mkcorpus.cpp">
+			<Option target="mkcorpus" />
+		</Unit>
+		<Unit filename="src/main/nnat.cpp">
+			<Option target="nnat" />
+		</Unit>
+		<Unit filename="src/main/specdraw.cpp">
+			<Option target="specdraw" />
 		</Unit>
 		<Extensions>
 			<code_completion />
