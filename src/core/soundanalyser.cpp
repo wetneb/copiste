@@ -1,7 +1,8 @@
 #include "core/soundanalyser.h"
 
 //! Sets up a new sound analyser
-SoundAnalyser::SoundAnalyser() : mDimension(0),
+SoundAnalyser::SoundAnalyser(bool live) : StreamPlayer(live),
+                                mDimension(0),
                                 mRealDimension(0),
                                 mUsedExtractors(0),
                                 mComputed(false)
@@ -155,6 +156,15 @@ void SoundAnalyser::clearFeatures()
     mFeatures.clear();
 }
 
+//! Removes the old features so that the newest remain
+void SoundAnalyser::cleanOldFeatures(unsigned int newestCount)
+{
+    if(nbSamples() > newestCount)
+    {
+        mFeatures.erase(mFeatures.begin(), mFeatures.end() - newestCount);
+    }
+}
+
 //! Clears the data in the extractors
 void SoundAnalyser::cleanExtractors()
 {
@@ -195,7 +205,9 @@ void SoundAnalyser::useBuffer()
         {
             if(mLastUpdateTime != 0)
                 cout << "\e[F" << flush; // Magic sequence which flushes the last written line (not so magic, see ANSI spec)
-            cout << "Computing... " << 100 * playingTime() / totalTime() << "%" << endl;
+            if(!isLive())
+                cout << "Computing... " << 100 * playingTime() / totalTime() << "%" << endl;
+            else cout << "Playing... " << playingTime() / 1000 << " seconds"<< endl;
             mLastUpdateTime = playingTime();
         }
         float **featureArray = new float*[mExtr.size()]; // deleted in clearFeatures()
@@ -212,6 +224,8 @@ void SoundAnalyser::useBuffer()
                 featureArray[i][j] = extr->value(j);
         }
         mFeatures.push_back(featureArray);
+
+        useFeatures();
     }
 }
 

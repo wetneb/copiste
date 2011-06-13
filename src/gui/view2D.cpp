@@ -14,6 +14,7 @@ View2D::View2D(QWidget *parent) : QWidget(parent)
     mZooming = false;
     mNet = 0;
     mCorpus = 0;
+    setWindowTitle("Neural network analysis tool");
 }
 
 QColor colorFromValue(neural_value value)

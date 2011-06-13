@@ -34,7 +34,7 @@ class SoundAnalyser : private StreamPlayer
 {
     public:
         //! Sets up a new sound analyser
-        SoundAnalyser();
+        SoundAnalyser(bool live = false);
         //! Destructor.
         ~SoundAnalyser();
         //! Unregisters all the extractors
@@ -66,6 +66,8 @@ class SoundAnalyser : private StreamPlayer
         unsigned int nbSamples() { return mFeatures.size(); }
         //! Clears the features
         void clearFeatures();
+        //! Removes the old features so that the newest remain
+        void cleanOldFeatures(unsigned int newestCount);
         //! Get the dimension : sum of all the nbElems(i)
         unsigned int dimension() { return mDimension; }
         //! Get the real dimension : sum of all the nbElems we care (the values which are actually used for detection)
@@ -80,10 +82,15 @@ class SoundAnalyser : private StreamPlayer
         //! End the computation
         void sequenceEnds();
 
+        //! Callback called when the buffer has been used (the features are ready to be used)
+        virtual void useFeatures() { ; }
+
         //! Mirrors
 
         //! Get the sampling frequency
         unsigned int samplingFrequency() { return mFrequency; }
+        //! Get the playing time
+        unsigned int getPlayingTime() { return playingTime(); }
 
     private:
         vector<pair<string, FeatureExtractor* > > mExtr; // TODO : it could be an hashtable

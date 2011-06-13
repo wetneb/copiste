@@ -3,24 +3,39 @@
 #include <iostream>
 using namespace std;
 
-StreamPlayer::StreamPlayer() : mMp(0),
+StreamPlayer::StreamPlayer(bool live) : mMp(0),
                                mMedia(0)
 {
     // Set up VLC
-    char smem_options[256];
+    mLive = live;
+    char smemOptions[256];
     mAudioData = 0;
     mAudioDataSize = 0;
 
-    sprintf(smem_options, "#transcode{acodec=s16l}:smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}",// "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",
-                           (long long int)(intptr_t)(void*)&handleStream, (long long int)(intptr_t)(void*)&prepareRender, (long long int)(intptr_t)(void*)this); // duplicate{dst=std,dst=smem{audio-postrender-callback=%lld,audio-data=%lld}}
+    if(live)
+    {
+        sprintf(smemOptions, "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",// "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",
+                           (long long int)(intptr_t)(void*)&handleStream, (long long int)(intptr_t)(void*)&prepareRender, (long long int)(intptr_t)(void*)this);
+    }
+    else
+        sprintf(smemOptions, "#transcode{acodec=s16l}:smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}",// "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",
+                           (long long int)(intptr_t)(void*)&handleStream, (long long int)(intptr_t)(void*)&prepareRender, (long long int)(intptr_t)(void*)this);
+
+    const char stringSout[] = "--sout", stringNoSoutSmemTimeSync[] = "--no-sout-smem-time-sync";
+    const char * const vlcArgs[] = {
+        stringSout,
+        smemOptions,
+        stringNoSoutSmemTimeSync };
+    /*
     const char * const vlc_args[] = {
          //     "--extraintf=logger", //log anything
         //    "--verbose=2", //be much more verbose then normal for debugging purpose
-            "--no-sout-smem-time-sync",
+          //  "--no-sout-smem-time-sync",
             "--sout", smem_options //smem_options // Stream to memory
-               };
+               }; */
 
-    mVlcInstance = libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
+    // sizeof(vlc_args) / sizeof(vlc_args[0])
+    mVlcInstance = libvlc_new((live ? 2 : 3), vlcArgs);
 
     mMp = libvlc_media_player_new(mVlcInstance);
     libvlc_audio_set_volume (mMp,80);

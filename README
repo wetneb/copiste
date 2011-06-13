@@ -1,6 +1,11 @@
 Copiste project
 Antonin Delpeuch
 
+Based on :
+- libvlc : see http://videolan.org/
+- Qt : see http://doc.trolltech.com/
+- boost : see http://boost.org/
+
 This project provides a small set of tools around audio classification.
 
 What can be done currently :
@@ -29,5 +34,12 @@ classes.
 This tool just takes as input an audio file and draws the
 variations of the frequency spectrum during the time.
 
+### classify : Classify an audio file ###
+This program takes an audio file, a pipeline and a network, and
+says what class the file belongs to.
+
+### live : Live stream classification ###
+This program reads a live stream (e.g. a radio), and shows the
+variations of the features and the classification of the stream.
 
 See help pages of all these tools for specific usage instructions.
