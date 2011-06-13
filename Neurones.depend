@@ -2983,7 +2983,7 @@
 	<string>
 	"features/spectrum.h"
 
-1307942799 source:/home/berthe/Programmation/Neurones/src/core/streamplayer.cpp
+1307976261 source:/home/berthe/Programmation/Neurones/src/core/streamplayer.cpp
 	"core/streamplayer.h"
 	<iostream>
 
@@ -5820,7 +5820,7 @@
 	<boost/date_time/time_zone_base.hpp>
 	<boost/date_time/time_parsing.hpp>
 
-1307953187 source:/home/berthe/Programmation/Neurones/src/core/soundanalyser.cpp
+1307977170 source:/home/berthe/Programmation/Neurones/src/core/soundanalyser.cpp
 	"core/soundanalyser.h"
 
 1307882351 /home/berthe/Programmation/Neurones/src/core/soundanalyser.h
@@ -6057,7 +6057,7 @@
 	<boost/filesystem.hpp>
 	"soundanalyser.h"
 
-1307954987 source:/home/berthe/Programmation/Neurones/src/core/featuredrawer.cpp
+1307978998 source:/home/berthe/Programmation/Neurones/src/core/featuredrawer.cpp
 	"core/featuredrawer.h"
 
 1306524390 /home/berthe/Programmation/Neurones/src/core/featuredrawer.h
@@ -6113,7 +6113,7 @@
 1307821671 /home/berthe/Programmation/Neurones/src/filters/range.h
 	"filters/filter.h"
 
-1307953774 /home/berthe/Programmation/Neurones/include/core/featuredrawer.h
+1307972618 /home/berthe/Programmation/Neurones/include/core/featuredrawer.h
 	<iostream>
 	<QImage>
 	<QColor>
@@ -6121,7 +6121,7 @@
 	"core/soundanalyser.h"
 	"algo/nnetwork.h"
 
-1307904129 /home/berthe/Programmation/Neurones/include/core/soundanalyser.h
+1307980245 /home/berthe/Programmation/Neurones/include/core/soundanalyser.h
 	<vector>
 	<utility>
 	<string>
@@ -6137,7 +6137,7 @@
 	"filters/flux.h"
 	"filters/range.h"
 
-1307905241 /home/berthe/Programmation/Neurones/include/core/streamplayer.h
+1307976360 /home/berthe/Programmation/Neurones/include/core/streamplayer.h
 	<vlc/vlc.h>
 	<QFile>
 	<QMutex>
@@ -6247,7 +6247,7 @@
 	"gui/view2D.h"
 	"gui/editor.h"
 
-1307954812 source:/home/berthe/Programmation/Neurones/src/main/featdraw.cpp
+1307955298 source:/home/berthe/Programmation/Neurones/src/main/featdraw.cpp
 	<program_options.hpp>
 	<filesystem.hpp>
 	<QApplication>
@@ -6275,4 +6275,21 @@
 	<program_options.hpp>
 	<iostream>
 	"core/classifier.h"
+
+1307978444 source:/home/berthe/Programmation/Neurones/src/core/liveplayer.cpp
+	"core/liveplayer.h"
+
+1307978529 source:/home/berthe/Programmation/Neurones/src/main/live.cpp
+	<iostream>
+	<QApplication>
+	<program_options.hpp>
+	"core/liveplayer.h"
+	"algo/nnetwork.h"
+
+1307974969 /home/berthe/Programmation/Neurones/include/core/liveplayer.h
+	<QWidget>
+	<QImage>
+	<boost/thread.hpp>
+	"core/featuredrawer.h"
+	"algo/nnetwork.h"
 

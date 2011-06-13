@@ -18,7 +18,7 @@ class FeatureDrawer : public SoundAnalyser
 {
     public:
         //! Constructor
-        FeatureDrawer();
+        FeatureDrawer(bool live = false);
 
         //! Destructor
         ~FeatureDrawer();
@@ -27,22 +27,29 @@ class FeatureDrawer : public SoundAnalyser
         void setNetwork(NNetwork *net);
 
         //! Changes the size of the output. Redraws if needed.
-        void setSize(int width, int height);
+        void setImageSize(int width, int height);
 
         //! Draws the features to an image
-        void draw(string name = "");
+        void draw(string name = "", bool liveMode = false);
 
         //! Save the drawn image to a file
         void writeToFile(string file);
 
+        //! Write the drawn image to a paint device
+        void writeToDevice(QPaintDevice *device);
+
     private:
+        //! Compute the min and the max of the features
+        void computeMinMax();
+
         QImage mOut;
-        QImage mLegende;
+        QImage mCaption;
         bool mDrawn;
         NNetwork *mNet;
 
         float* mMin;
         float* mMax;
+        unsigned int mMinMaxSize;
 };
 
 #endif

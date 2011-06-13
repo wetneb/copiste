@@ -45,7 +45,7 @@ class StreamPlayer
         // Set up functions
 
         //! Default constructor. Starts VLC instance.
-        StreamPlayer();
+        StreamPlayer(bool live = false);
         //! Default destructor. Frees memory and closes VLC.
         ~StreamPlayer();
         //! Returns URL of the currently playing stream
@@ -61,6 +61,8 @@ class StreamPlayer
         libvlc_time_t totalTime();
         //! Stops playing
         void stop();
+        //! Are we playing a live stream ?
+        bool isLive() { return mLive; }
 
         // Computing functions : designed to be overloaded by the user
 
@@ -107,6 +109,7 @@ class StreamPlayer
         // Paramètres
         string mUrl;
         bool mPlaying;
+        bool mLive;
 
         // VLC
         libvlc_instance_t *mVlcInstance;
