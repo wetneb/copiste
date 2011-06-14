@@ -1,0 +1,22 @@
+<pipeline>
+	<feature name="HZCRR"
+		type="HZCRR"
+		bound="2.0"
+		chunksNumber="80"
+		used="no" />
+	<feature name="LSTER"
+		type="LSTER"
+		bound="0.45"
+		size="100"
+		used="no" />
+	<filter name="Average HZCRR"
+		type="Average"
+		size="100">
+		<ref name="HZCRR" />
+	</filter>
+	<filter name="Average LSTER"
+		type="Average"
+		size="100">
+		<ref name="LSTER" />
+	</filter>
+</pipeline>
