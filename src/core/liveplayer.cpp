@@ -9,6 +9,13 @@ LivePlayer::LivePlayer(QWidget *parent) : QWidget(parent),
     setFixedSize(LIVE_PLAYER_WIDTH, LIVE_PLAYER_HEIGHT);
     setImageSize(LIVE_PLAYER_WIDTH, LIVE_PLAYER_HEIGHT);
     setWindowTitle("Live stream classification - Copiste");
+
+    QPainter painter(&mLastImage);
+    painter.fillRect(0,0, width(), height(), QColor(0,0,0));
+    painter.setFont(QFont("Arial", 25));
+    painter.drawText(0,0, width(), height(), Qt::AlignCenter, "Loading...");
+
+    update();
 }
 
 void LivePlayer::useFeatures()

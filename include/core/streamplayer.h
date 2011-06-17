@@ -36,7 +36,6 @@ void prepareRender(void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int si
  *
  * TODO : add parameters : enable to set verbosity (display progress or not)
  * TODO                    enable to compute directly or not
- * TODO                    enable to send the stream to speakers or not
  * TODO                    enable to…
  */
 class StreamPlayer
@@ -119,5 +118,53 @@ class StreamPlayer
         boost::thread mWatchThread;
         boost::mutex mPlayingLock;
 };
+
+/**
+ * \mainpage
+ *
+ * \section Summary
+ * Copiste may become (one day) a radio ripper featuring metadata extraction
+ * and audio recognition using learning algorithms. Currently, it allows
+ * music / speech detection on audio files as well as live radio streams.
+ * The core software relies on a large number of XML files and is therefore
+ * easy to hack on the fly.
+ *
+ * The computing part of the project relies on libvlc, which provides a large
+ * set of decoders and a powerful streaming pipeline. The other dependencies
+ * are Qt and boost. The project can be built either with SCons or with CodeBlocks.
+ *
+ * \section Tools
+ * \subsection nnat nnat : Neural Network Analysis Tool
+ * This tool takes a neural network described in an XML format
+ * (see the networks directory for examples) and trains it to
+ * fit a given corpus, described in another XML format (see the
+ * corpus directory for examples). It can also evaluate how good
+ * a network fits a corpus, and provides a small graphical interface
+ * that can be used to visualize 2D networks.
+ *
+ * \subsection featdraw featdraw : Feature Drawer
+ * This tool takes an audio file and draws the variations of some
+ * features in this file. The features are described by a pipeline
+ * (XML file, see the pipeline directory), allowing the user to
+ * change on the fly how features are computed.
+ *
+ * \subsection mkcorpus mkcorpus : Make Corpus
+ * This tool uses a pipeline and a set of audio files to create
+ * a corpus (as in nnat) where the features are written.
+ * It uses another XML file, which defines the different audio
+ * classes.
+ *
+ * \subsection specdraw specdraw : Draw Spectrum
+ * This tool just takes as input an audio file and draws the
+ * variations of the frequency spectrum during the time.
+ *
+ * \subsection classify classify : Classify an audio file
+ * This program takes an audio file, a pipeline and a network, and
+ * says what class the file belongs to.
+ *
+ * \subsection live live : Live stream classification
+ * This program reads a live stream (e.g. a radio), and shows the
+ * variations of the features and the classification of the stream.
+ */
 
 #endif

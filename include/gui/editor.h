@@ -12,6 +12,7 @@ class Editor;
 #include "algo/nnetwork.h"
 #include "algo/corpus.h"
 
+//! The main class for the graphical network trainer
 class Editor : public QMainWindow
 {
     Q_OBJECT

@@ -7,12 +7,12 @@
 
 using namespace std;
 
-//! Stores a set of training examples for a neural net
 class Corpus;
 
 #include "abstractneuron.h"
 #include "nnetwork.h"
 
+//! Stores a set of training examples for a neural net
 class Corpus
 {
     public:

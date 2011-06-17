@@ -43,7 +43,7 @@ class SpectrumRecorder : public StreamPlayer
         int mMaxHeight;
         int mScale;
 
-        boost::mutex mSwitchLock;
+        //boost::mutex mSwitchLock;
         int mCurrentRow;
         bool mComputed;
 };

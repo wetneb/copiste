@@ -1,13 +1,13 @@
 #ifndef INCLUDED_STEH
 #define INCLUDED_STEH
 
-//! Computes the Short Time Energy
 class STEExtr;
 
 #include "features/extractor.h"
 
 #include <cmath>
 
+//! Computes the Short Time Energy
 class STEExtr : public FeatureExtractor
 {
     public:

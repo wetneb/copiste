@@ -30,6 +30,11 @@ class SoundAnalyser;
 
 using namespace std;
 
+
+/**
+ * \class SoundAnalyser
+ * \brief Main class that sets up and runs a pipeline
+ */
 class SoundAnalyser : private StreamPlayer
 {
     public:

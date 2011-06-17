@@ -1,11 +1,11 @@
 #ifndef INCLUDED_ZCRH
 #define INCLUDED_ZCRH
 
-//! Computes the Zero Crossing Rate
 class ZCRExtr;
 
 #include "features/extractor.h"
 
+//! Computes the Zero Crossing Rate
 class ZCRExtr : public FeatureExtractor
 {
     public:

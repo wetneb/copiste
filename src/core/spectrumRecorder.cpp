@@ -29,14 +29,14 @@ bool SpectrumRecorder::compute(string file)
 
     boost::posix_time::seconds waitTime(1);
 
-    mSwitchLock.lock();
+    //mSwitchLock.lock();
     while(!mComputed)
     {
-        mSwitchLock.unlock();
+        //mSwitchLock.unlock();
         boost::this_thread::sleep(waitTime);
-        mSwitchLock.lock();
+        //mSwitchLock.lock();
     }
-    mSwitchLock.unlock();
+    //mSwitchLock.unlock();
 
     return true;
 }
@@ -63,9 +63,9 @@ void SpectrumRecorder::sequenceEnds()
 {
     cout << "\e[F\e[KDone." << endl;
 
-    mSwitchLock.lock();
+    //mSwitchLock.lock();
     mComputed = true;
-    mSwitchLock.unlock();
+    //mSwitchLock.unlock();
 
     stop();
 }

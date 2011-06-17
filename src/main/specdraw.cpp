@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     po::options_description desc("Usage");
     desc.add_options()
         ("input-file", "The audio file to be read.")
-        ("output-file,o", "The path to the output file (default: output/spectrum.png).")
+        ("output-file,o", po::value<std::string>()->default_value("output/spectrum.xml"), "The path to the output file.")
         ("help,h", "Display this message");
 
     po::positional_options_description p;
@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     if(vm.count("input-file"))
     {
         string filename = vm["input-file"].as< string >();
-        string output = "output/spectrum.png"; // TODO : change this
+        string output = vm["output-file"].as< string >();
         cout << "File to read : " << filename << endl;
         sr.compute(filename);
         sr.writeToFile(output);

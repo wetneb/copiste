@@ -11,7 +11,7 @@
 #define LIVE_PLAYER_WIDTH 800
 
 
-
+//! Main class for live stream classification and visualisation
 class LivePlayer : public QWidget, public FeatureDrawer
 {
     public:

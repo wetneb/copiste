@@ -130,7 +130,7 @@ void FeatureDrawer::draw(string filename, bool live)
                 painter.fillRect(lastChange, 0, i - plotStart - lastChange, top, fillColor);
 
                 painter.setPen(QColor(200,200,200));
-                painter.drawLine(i-1 - plotStart, top, i-1 - plotStart, mOut.height()-bottom);
+                //painter.drawLine(i-1 - plotStart, top, i-1 - plotStart, mOut.height()-bottom);
 
                 lastChange = i - plotStart;
             }

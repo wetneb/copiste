@@ -1,7 +1,6 @@
 #ifndef INCLUDED_LSTERH
 #define INCLUDED_LSTERH
 
-//! Computes the High ZCR Ratio
 class LSTERExtr;
 
 #include "features/extractor.h"
@@ -10,6 +9,10 @@ class LSTERExtr;
 #define DEFAULT_STE_BOUND 0.5
 #define DEFAULT_LSTER_CHUNK_SIZE 40
 
+/**
+ * \class LSTERExtr
+ * \brief Extracts the Low STE Ratio (STE stands for Short Time Energy)
+ */
 class LSTERExtr : public FeatureExtractor
 {
     public:

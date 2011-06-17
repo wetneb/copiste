@@ -48,7 +48,7 @@ StreamPlayer::StreamPlayer(bool live) : mMp(0),
 // Cleans up everything
 StreamPlayer::~StreamPlayer()
 {
-    libvlc_media_player_stop(mMp);
+    //libvlc_media_player_stop(mMp);
     libvlc_media_player_release(mMp);
 
     libvlc_release(mVlcInstance);

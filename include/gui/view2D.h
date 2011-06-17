@@ -13,6 +13,7 @@ class View2D;
 #define POINT_0_PATH "img/point-0.png"
 #define POINT_1_PATH "img/point-1.png"
 
+//! Internal struture used by View2D to keep in memory old views of a same network
 struct Viewport
 {
     float x;
