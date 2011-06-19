@@ -6,6 +6,6 @@
     <class prefix="TSF_Musique_" goal="0" />
     <class prefix="TSF_Texte_" goal="1" />
     <class prefix="TSF_Musique_" goal="0" />
-    <class prefix="NOVA_Musique_" goal="0" />
+    <class prefix="NOVA_Musique_" goal="0" /> 
     <!-- <class prefix="RTL_Pub" goal="1" /> -->
 </target>

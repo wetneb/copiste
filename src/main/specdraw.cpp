@@ -42,6 +42,7 @@ int main(int argc, char **argv)
         string filename = vm["input-file"].as< string >();
         string output = vm["output-file"].as< string >();
         cout << "File to read : " << filename << endl;
+        cout << "Target : "<<output<<endl;
         sr.compute(filename);
         sr.writeToFile(output);
     }

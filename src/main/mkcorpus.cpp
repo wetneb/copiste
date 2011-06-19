@@ -41,6 +41,8 @@ int main(int argc, char **argv)
         ("pipeline", "The pipeline that should be used (it will be loaded from pipeline/$PIPELINE.xml)")
         ("input-file", "The target file defining the corpus.")
         ("output-file,o", po::value<string>()->default_value("corpus/output.xml"), "The file where the XML corpus will be written.")
+        ("element-length,l", po::value<int>()->default_value(0), "The length (in seconds) of each element which will be written in the corpus (0 : the whole file)")
+        ("computing-offset", po::value<int>()->default_value(0), "The time (in seconds) that should be considered as the starting point of the computation (to remove the first values)")
         ("help,h", "Display this message");
 
     po::positional_options_description p;
@@ -60,6 +62,8 @@ int main(int argc, char **argv)
     }
 
     CorpusBuilder cb;
+    cb.setElementLength(vm["element-length"].as< int >());
+    cb.setComputingOffset(vm["computing-offset"].as< int >());
 
     if(vm.count("input-file"))
     {
@@ -69,6 +73,7 @@ int main(int argc, char **argv)
 
         if(cb.setupPipeline(pipeline))
         {
+            /** \todo Use the parameters **/
             cout << "Processing " << corpusPath << endl;
             cb.setVerbose(true);
             cb.setup(corpusPath);

@@ -48,13 +48,12 @@ bool Corpus::load(string filename, bool verbose)
     if(node.toElement().tagName() == "corpus")
     {
         mDimension = node.toElement().attribute("dimension", "1").toInt();
-        mSize = node.toElement().attribute("size", "100").toInt();
+        mSize = node.childNodes().size();
 
         mPool = new neural_value*[mSize]; // deleted in erase()
         mPoolSize = mSize;
 
         node = node.firstChild();
-        /** TODO : redesign this so that the "size" parameter can be removed safely **/
         while(!node.isNull() && nbPointsSet < mSize)
         {
             QDomElement elem = node.toElement();

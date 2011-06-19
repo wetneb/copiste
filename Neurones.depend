@@ -5839,7 +5839,7 @@
 	"filters/flux.h"
 	"filters/range.h"
 
-1300196015 /usr/local/share/qt4/include/boost/filesystem.hpp
+1307383415 /usr/local/share/qt4/include/boost/filesystem.hpp
 	<boost/config.hpp>
 	<boost/filesystem/v2/config.hpp>
 	<boost/filesystem/v2/path.hpp>
@@ -5850,15 +5850,15 @@
 	<boost/filesystem/v3/operations.hpp>
 	<boost/filesystem/v3/convenience.hpp>
 
-1300196015 /usr/local/share/qt4/include/boost/filesystem/v2/config.hpp
+1307383415 /usr/local/share/qt4/include/boost/filesystem/v2/config.hpp
 	<boost/config.hpp>
 	<boost/system/api_config.hpp>
 	<boost/detail/workaround.hpp>
 	<boost/config/auto_link.hpp>
 
-1300196016 /usr/local/share/qt4/include/boost/system/api_config.hpp
+1307383416 /usr/local/share/qt4/include/boost/system/api_config.hpp
 
-1300196015 /usr/local/share/qt4/include/boost/filesystem/v2/path.hpp
+1307383415 /usr/local/share/qt4/include/boost/filesystem/v2/path.hpp
 	<boost/filesystem/v2/config.hpp>
 	<boost/system/system_error.hpp>
 	<boost/iterator/iterator_facade.hpp>
@@ -5874,13 +5874,13 @@
 	<boost/config/abi_prefix.hpp>
 	<boost/config/abi_suffix.hpp>
 
-1300196016 /usr/local/share/qt4/include/boost/system/system_error.hpp
+1307383416 /usr/local/share/qt4/include/boost/system/system_error.hpp
 	<string>
 	<stdexcept>
 	<cassert>
 	<boost/system/error_code.hpp>
 
-1300196016 /usr/local/share/qt4/include/boost/system/error_code.hpp
+1307383416 /usr/local/share/qt4/include/boost/system/error_code.hpp
 	<boost/system/config.hpp>
 	<boost/cstdint.hpp>
 	<boost/assert.hpp>
@@ -5896,15 +5896,15 @@
 	<boost/config/abi_suffix.hpp>
 	<boost/../libs/system/src/error_code.cpp>
 
-1300196016 /usr/local/share/qt4/include/boost/system/config.hpp
+1307383416 /usr/local/share/qt4/include/boost/system/config.hpp
 	<boost/config.hpp>
 	<boost/system/api_config.hpp>
 	<boost/config/auto_link.hpp>
 
-1300196015 /usr/local/share/qt4/include/boost/cerrno.hpp
+1307383415 /usr/local/share/qt4/include/boost/cerrno.hpp
 	<cerrno>
 
-1300196015 /usr/local/share/qt4/include/boost/filesystem/v2/operations.hpp
+1307383415 /usr/local/share/qt4/include/boost/filesystem/v2/operations.hpp
 	<boost/filesystem/v2/config.hpp>
 	<boost/filesystem/v2/path.hpp>
 	<boost/detail/scoped_enum_emulation.hpp>
@@ -5921,10 +5921,10 @@
 	<boost/config/abi_prefix.hpp>
 	<boost/config/abi_suffix.hpp>
 
-1300196015 /usr/local/share/qt4/include/boost/detail/scoped_enum_emulation.hpp
+1307383415 /usr/local/share/qt4/include/boost/detail/scoped_enum_emulation.hpp
 	<boost/config.hpp>
 
-1300196015 /usr/local/share/qt4/include/boost/filesystem/v2/convenience.hpp
+1307383415 /usr/local/share/qt4/include/boost/filesystem/v2/convenience.hpp
 	<boost/filesystem/v2/config.hpp>
 	<boost/filesystem/v2/operations.hpp>
 	<boost/system/error_code.hpp>
@@ -5933,13 +5933,13 @@
 	<boost/config/abi_prefix.hpp>
 	<boost/config/abi_suffix.hpp>
 
-1300196015 /usr/local/share/qt4/include/boost/filesystem/v3/config.hpp
+1307383415 /usr/local/share/qt4/include/boost/filesystem/v3/config.hpp
 	<boost/config.hpp>
 	<boost/system/api_config.hpp>
 	<boost/detail/workaround.hpp>
 	<boost/config/auto_link.hpp>
 
-1300196015 /usr/local/share/qt4/include/boost/filesystem/v3/path.hpp
+1307383415 /usr/local/share/qt4/include/boost/filesystem/v3/path.hpp
 	<boost/config.hpp>
 	<boost/filesystem/v3/config.hpp>
 	<boost/filesystem/v3/path_traits.hpp>
@@ -5960,7 +5960,7 @@
 	<boost/config/abi_prefix.hpp>
 	<boost/config/abi_suffix.hpp>
 
-1300196015 /usr/local/share/qt4/include/boost/filesystem/v3/path_traits.hpp
+1307383415 /usr/local/share/qt4/include/boost/filesystem/v3/path_traits.hpp
 	<boost/config.hpp>
 	<boost/filesystem/v3/config.hpp>
 	<boost/utility/enable_if.hpp>
@@ -5977,7 +5977,7 @@
 	<boost/config/abi_prefix.hpp>
 	<boost/config/abi_suffix.hpp>
 
-1300196016 /usr/local/share/qt4/include/boost/type_traits/decay.hpp
+1307383416 /usr/local/share/qt4/include/boost/type_traits/decay.hpp
 	<boost/type_traits/config.hpp>
 	<boost/type_traits/is_array.hpp>
 	<boost/type_traits/is_function.hpp>
@@ -5987,14 +5987,14 @@
 	<boost/mpl/eval_if.hpp>
 	<boost/mpl/identity.hpp>
 
-1300196015 /usr/local/share/qt4/include/boost/io/detail/quoted_manip.hpp
+1307383415 /usr/local/share/qt4/include/boost/io/detail/quoted_manip.hpp
 	<iosfwd>
 	<ios>
 	<string>
 	<iterator>
 	<boost/io/ios_state.hpp>
 
-1300196015 /usr/local/share/qt4/include/boost/filesystem/v3/operations.hpp
+1307383415 /usr/local/share/qt4/include/boost/filesystem/v3/operations.hpp
 	<boost/config.hpp>
 	<boost/filesystem/v3/config.hpp>
 	<boost/filesystem/v3/path.hpp>
@@ -6017,10 +6017,10 @@
 	<boost/config/abi_prefix.hpp>
 	<boost/config/abi_suffix.hpp>
 
-1300196015 /usr/local/share/qt4/include/boost/detail/bitmask.hpp
+1307383415 /usr/local/share/qt4/include/boost/detail/bitmask.hpp
 	<boost/cstdint.hpp>
 
-1300196015 /usr/local/share/qt4/include/boost/filesystem/v3/convenience.hpp
+1307383415 /usr/local/share/qt4/include/boost/filesystem/v3/convenience.hpp
 	<boost/config.hpp>
 	<boost/filesystem/v3/operations.hpp>
 	<boost/system/error_code.hpp>
@@ -6388,8 +6388,132 @@
 1308256503 source:/home/berthe/Programmation/NowPlaying/src/core/spectrumRecorder.cpp
 	"core/spectrumRecorder.h"
 
-1308256553 source:/home/berthe/Programmation/NowPlaying/src/main/specdraw.cpp
+1308257934 source:/home/berthe/Programmation/NowPlaying/src/main/specdraw.cpp
 	<program_options.hpp>
 	<iostream>
 	"core/spectrumRecorder.h"
+
+1308084501 /home/berthe/Programmation/NowPlaying/include/algo/corpus.h
+	<string>
+	<cmath>
+	<QFile>
+	"abstractneuron.h"
+	"nnetwork.h"
+
+1307890449 /home/berthe/Programmation/NowPlaying/include/algo/abstractneuron.h
+	<QDomNode>
+	<iostream>
+
+1307955872 /home/berthe/Programmation/NowPlaying/include/algo/nnetwork.h
+	<vector>
+	<QHash>
+	<cstdlib>
+	"algo/abstractneuron.h"
+	"algo/neuron.h"
+	"algo/inputneuron.h"
+
+1307890449 /home/berthe/Programmation/NowPlaying/include/algo/neuron.h
+	<string>
+	<sstream>
+	<vector>
+	<algorithm>
+	<QDomNode>
+	"algo/abstractneuron.h"
+	"algo/nnetwork.h"
+
+1307890449 /home/berthe/Programmation/NowPlaying/include/algo/inputneuron.h
+	<string>
+	"algo/abstractneuron.h"
+
+1308084810 /home/berthe/Programmation/NowPlaying/include/core/soundanalyser.h
+	<vector>
+	<utility>
+	<string>
+	"core/streamplayer.h"
+	"features/extractor.h"
+	"features/spectrum.h"
+	"features/zcr.h"
+	"features/hzcrr.h"
+	"features/ste.h"
+	"features/lster.h"
+	"algo/corpus.h"
+	"filters/average.h"
+	"filters/flux.h"
+	"filters/range.h"
+
+1308136602 /home/berthe/Programmation/NowPlaying/include/core/streamplayer.h
+	<vlc/vlc.h>
+	<QFile>
+	<QMutex>
+	<boost/thread.hpp>
+	<boost/date_time.hpp>
+	<cstdio>
+	<cstdlib>
+	<sstream>
+	<string>
+	"features/spectrum.h"
+
+1307890449 /home/berthe/Programmation/NowPlaying/include/features/spectrum.h
+	"features/extractor.h"
+
+1307955872 /home/berthe/Programmation/NowPlaying/include/features/extractor.h
+	<vlc/vlc.h>
+	<iostream>
+
+1308084895 /home/berthe/Programmation/NowPlaying/include/features/zcr.h
+	"features/extractor.h"
+
+1308084422 /home/berthe/Programmation/NowPlaying/include/features/hzcrr.h
+	"features/extractor.h"
+	"features/zcr.h"
+	"core/streamplayer.h"
+
+1308084829 /home/berthe/Programmation/NowPlaying/include/features/ste.h
+	"features/extractor.h"
+	<cmath>
+
+1308084473 /home/berthe/Programmation/NowPlaying/include/features/lster.h
+	"features/extractor.h"
+	"features/ste.h"
+
+1307890449 /home/berthe/Programmation/NowPlaying/include/filters/average.h
+	"filters/filter.h"
+
+1307890449 /home/berthe/Programmation/NowPlaying/include/filters/filter.h
+	"features/extractor.h"
+	<vector>
+
+1307890449 /home/berthe/Programmation/NowPlaying/include/filters/flux.h
+	"filters/filter.h"
+
+1307890449 /home/berthe/Programmation/NowPlaying/include/filters/range.h
+	"filters/filter.h"
+
+1308469325 source:/home/berthe/Programmation/NowPlaying/src/main/mkcorpus.cpp
+	"features/extractor.h"
+	<program_options.hpp>
+	<iostream>
+	"core/corpusbuilder.h"
+
+1308475210 /home/berthe/Programmation/NowPlaying/include/core/corpusbuilder.h
+	<boost/filesystem.hpp>
+	"core/soundanalyser.h"
+
+1308476784 source:/home/berthe/Programmation/NowPlaying/src/core/corpusbuilder.cpp
+	"core/corpusbuilder.h"
+
+1308084560 /home/berthe/Programmation/NowPlaying/include/gui/editor.h
+	<QMainWindow>
+	<QStatusBar>
+	<QMenuBar>
+	<QToolBar>
+	"gui/view2D.h"
+	"algo/nnetwork.h"
+	"algo/corpus.h"
+
+1308478882 /home/berthe/Programmation/NowPlaying/include/gui/view2D.h
+	<QWidget>
+	<stack>
+	"algo/nnetwork.h"
+	"algo/corpus.h"
 

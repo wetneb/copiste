@@ -122,6 +122,13 @@ void View2D::paintEvent(QPaintEvent *event)
     QPainter painter;
     painter.begin(this);
     painter.drawPixmap(0,0,mViewport.img);
+
+    if(mZooming)
+    {
+        painter.setPen(QColor(0,0,0));
+        painter.drawRect(min(mCurrentX, mStartX), min(mCurrentY, mStartY), max(mCurrentX, mStartX) - min(mCurrentX, mStartX), max(mCurrentY, mStartY) - min(mCurrentY, mStartY));
+    }
+
     painter.end();
 }
 
@@ -129,9 +136,9 @@ void View2D::mouseMoveEvent(QMouseEvent *event)
 {
     if(mZooming)
     {
-        int x = event->x(), y = event->y();
-        QRect rect(min(x, mStartX), min(y, mStartY), max(x, mStartX), max(y, mStartY));
-
+        mCurrentX = event->x();
+        mCurrentY = event->y();
+        repaint();
     }
 }
 
@@ -139,6 +146,8 @@ void View2D::mousePressEvent(QMouseEvent *event)
 {
     mStartX = event->x();
     mStartY = event->y();
+    mCurrentX = mStartX;
+    mCurrentY = mStartY;
     mZooming = true;
 }
 
@@ -178,7 +187,21 @@ void View2D::mouseReleaseEvent(QMouseEvent *event)
 
 void View2D::handleKeyReleaseEvent(QKeyEvent *event)
 {
-    keyReleaseEvent(event);
+    if(event->key() == Qt::Key_Minus)
+    {
+        Viewport newViewport = mViewport;
+        newViewport.x -= mViewport.scaleX*width();
+        newViewport.y -= mViewport.scaleY*height();
+        newViewport.scaleX *= 3;
+        newViewport.scaleY *= 3;
+
+        mViewport = newViewport;
+
+        renderScene();
+        repaint();
+    }
+    else
+        keyReleaseEvent(event);
 }
 
 void View2D::keyReleaseEvent(QKeyEvent *event)

@@ -84,6 +84,8 @@ class View2D : public QWidget
         bool mZooming;
         int mStartX;
         int mStartY;
+        int mCurrentX;
+        int mCurrentY;
 
         // Zoom history
         std::stack<Viewport> mZoomHistory;
