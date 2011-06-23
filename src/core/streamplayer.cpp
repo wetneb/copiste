@@ -156,7 +156,7 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
 // Wait for the computation to end
 void StreamPlayer::watch()
 {
-    boost::posix_time::millisec waitTime(500);
+    boost::posix_time::millisec waitTime(100);
     bool seenPlaying = false;
 
     mPlayingLock.lock();

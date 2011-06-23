@@ -112,7 +112,7 @@ void CorpusBuilder::compute()
             if(mVerbose)
             {
                 string filename = boost::filesystem::path(mFiles[mCurrentFile]).stem().string();
-                std::cout << "["<<mCurrentFile + 1<<"/"<<mFiles.size()<<"] : "<<filename<< std::endl;
+                cout << "["<<mCurrentFile+1<<"/"<<mFiles.size()<<"] : "<<filename<<endl;
             }
 
             // Do the computation

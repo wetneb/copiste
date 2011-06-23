@@ -205,7 +205,7 @@ int Corpus::train(NNetwork &network, float learningRate, int maxPasses, float **
     return i;
 }
 
-float Corpus::accuracy(NNetwork &network, bool verbose)
+float Corpus::accuracy(NNetwork &network, bool verbose) const
 {
     int errorsFound = 0;
     vector<neural_value> inputVec;
@@ -227,7 +227,7 @@ float Corpus::accuracy(NNetwork &network, bool verbose)
     return (mSize - (float)errorsFound)/mSize;
 }
 
-void Corpus::display()
+void Corpus::display() const
 {
     for(int i = 0; i != mSize; ++i)
     {
@@ -241,7 +241,7 @@ void Corpus::display()
     }
 }
 
-vector<float> Corpus::bounds()
+vector<float> Corpus::bounds() const
 {
     vector<float> result(mDimension*2,0);
 
@@ -271,12 +271,12 @@ void Corpus::erase(int dimension)
     mDimension = dimension;
 }
 
-unsigned int Corpus::size()
+unsigned int Corpus::size() const
 {
     return mSize;
 }
 
-unsigned int Corpus::dimension()
+unsigned int Corpus::dimension() const
 {
     return mDimension;
 }

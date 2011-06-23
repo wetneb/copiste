@@ -75,6 +75,10 @@ void FeatureDrawer::draw(string filename, bool live)
         {
             for(unsigned int e = 0; e < nbElems(f); e++)
             {
+                // To be changed
+                mMax[offset] = ((offset == 1) ? max((float)0.5, mMax[offset]) : mMax[offset]);
+                mMin[offset] = 0;
+
                 float scale = (mMax[offset] - mMin[offset]) / chunk;
                 float orig = mOut.height() - bottom - chunk*offset;
 
@@ -130,7 +134,7 @@ void FeatureDrawer::draw(string filename, bool live)
                 painter.fillRect(lastChange, 0, i - plotStart - lastChange, top, fillColor);
 
                 painter.setPen(QColor(200,200,200));
-                //painter.drawLine(i-1 - plotStart, top, i-1 - plotStart, mOut.height()-bottom);
+                painter.drawLine(i-1 - plotStart, top, i-1 - plotStart, mOut.height()-bottom);
 
                 lastChange = i - plotStart;
             }

@@ -1,0 +1,618 @@
+<corpus dimension="2">
+    <point goal="1">
+        <coord value="0.15306"/>
+        <coord value="0.293836"/>
+    </point>
+    <point goal="1">
+        <coord value="0.172556"/>
+        <coord value="0.349372"/>
+    </point>
+    <point goal="1">
+        <coord value="0.167824"/>
+        <coord value="0.359907"/>
+    </point>
+    <point goal="1">
+        <coord value="0.319453"/>
+        <coord value="0.698625"/>
+    </point>
+    <point goal="1">
+        <coord value="0.169987"/>
+        <coord value="0.447549"/>
+    </point>
+    <point goal="1">
+        <coord value="0.161076"/>
+        <coord value="0.487125"/>
+    </point>
+    <point goal="1">
+        <coord value="0.17035"/>
+        <coord value="0.46065"/>
+    </point>
+    <point goal="1">
+        <coord value="0.159201"/>
+        <coord value="0.437638"/>
+    </point>
+    <point goal="1">
+        <coord value="0.192696"/>
+        <coord value="0.545303"/>
+    </point>
+    <point goal="1">
+        <coord value="0.15745"/>
+        <coord value="0.419745"/>
+    </point>
+    <point goal="1">
+        <coord value="0.123968"/>
+        <coord value="0.447367"/>
+    </point>
+    <point goal="1">
+        <coord value="0.133415"/>
+        <coord value="0.441195"/>
+    </point>
+    <point goal="1">
+        <coord value="0.121974"/>
+        <coord value="0.408531"/>
+    </point>
+    <point goal="1">
+        <coord value="0.158181"/>
+        <coord value="0.42027"/>
+    </point>
+    <point goal="1">
+        <coord value="0.166606"/>
+        <coord value="0.398938"/>
+    </point>
+    <point goal="1">
+        <coord value="0.173627"/>
+        <coord value="0.422734"/>
+    </point>
+    <point goal="1">
+        <coord value="0.156091"/>
+        <coord value="0.355794"/>
+    </point>
+    <point goal="1">
+        <coord value="0.151081"/>
+        <coord value="0.389421"/>
+    </point>
+    <point goal="1">
+        <coord value="0.173944"/>
+        <coord value="0.318091"/>
+    </point>
+    <point goal="1">
+        <coord value="0.139207"/>
+        <coord value="0.437384"/>
+    </point>
+    <point goal="1">
+        <coord value="0.105593"/>
+        <coord value="0.455725"/>
+    </point>
+    <point goal="1">
+        <coord value="0.12627"/>
+        <coord value="0.391981"/>
+    </point>
+    <point goal="1">
+        <coord value="0.133524"/>
+        <coord value="0.441468"/>
+    </point>
+    <point goal="1">
+        <coord value="0.173025"/>
+        <coord value="0.526269"/>
+    </point>
+    <point goal="1">
+        <coord value="0.179339"/>
+        <coord value="0.312352"/>
+    </point>
+    <point goal="1">
+        <coord value="0.180861"/>
+        <coord value="0.320833"/>
+    </point>
+    <point goal="1">
+        <coord value="0.194467"/>
+        <coord value="0.358678"/>
+    </point>
+    <point goal="1">
+        <coord value="0.15853"/>
+        <coord value="0.333201"/>
+    </point>
+    <point goal="1">
+        <coord value="0.212448"/>
+        <coord value="0.27154"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0561594"/>
+        <coord value="0.189721"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0138913"/>
+        <coord value="0.149297"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.00960064"/>
+        <coord value="0.181096"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0391268"/>
+        <coord value="0.239092"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0143528"/>
+        <coord value="0.130408"/>
+    </point>
+    <point goal="1">
+        <coord value="0.120048"/>
+        <coord value="0.368052"/>
+    </point>
+    <point goal="1">
+        <coord value="0.127525"/>
+        <coord value="0.418143"/>
+    </point>
+    <point goal="1">
+        <coord value="0.146941"/>
+        <coord value="0.391606"/>
+    </point>
+    <point goal="1">
+        <coord value="0.155075"/>
+        <coord value="0.414966"/>
+    </point>
+    <point goal="1">
+        <coord value="0.145066"/>
+        <coord value="0.377119"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.034547"/>
+        <coord value="0.127041"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0460232"/>
+        <coord value="0.119105"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0663998"/>
+        <coord value="0.0945919"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0616284"/>
+        <coord value="0.136113"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0540541"/>
+        <coord value="0.102934"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0882063"/>
+        <coord value="0.332843"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0672069"/>
+        <coord value="0.425666"/>
+    </point>
+    <point goal="1">
+        <coord value="0.056497"/>
+        <coord value="0.406117"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0614877"/>
+        <coord value="0.425781"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0532598"/>
+        <coord value="0.356558"/>
+    </point>
+    <point goal="1">
+        <coord value="0.137722"/>
+        <coord value="0.382133"/>
+    </point>
+    <point goal="1">
+        <coord value="0.153604"/>
+        <coord value="0.363625"/>
+    </point>
+    <point goal="1">
+        <coord value="0.118901"/>
+        <coord value="0.350798"/>
+    </point>
+    <point goal="1">
+        <coord value="0.1306"/>
+        <coord value="0.341764"/>
+    </point>
+    <point goal="1">
+        <coord value="0.133411"/>
+        <coord value="0.4331"/>
+    </point>
+    <point goal="1">
+        <coord value="0.174487"/>
+        <coord value="0.475877"/>
+    </point>
+    <point goal="1">
+        <coord value="0.171154"/>
+        <coord value="0.46079"/>
+    </point>
+    <point goal="1">
+        <coord value="0.165772"/>
+        <coord value="0.44983"/>
+    </point>
+    <point goal="1">
+        <coord value="0.155254"/>
+        <coord value="0.478512"/>
+    </point>
+    <point goal="1">
+        <coord value="0.16808"/>
+        <coord value="0.501561"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0957417"/>
+        <coord value="0.144487"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.119837"/>
+        <coord value="0.159418"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0797155"/>
+        <coord value="0.0954655"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0750928"/>
+        <coord value="0.0895004"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0980905"/>
+        <coord value="0.202506"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0806041"/>
+        <coord value="0.0636587"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0998176"/>
+        <coord value="0.144426"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.105215"/>
+        <coord value="0.194017"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0960991"/>
+        <coord value="0.179443"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.10819"/>
+        <coord value="0.0492874"/>
+    </point>
+    <point goal="1">
+        <coord value="0.158178"/>
+        <coord value="0.296927"/>
+    </point>
+    <point goal="1">
+        <coord value="0.122692"/>
+        <coord value="0.253607"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0969965"/>
+        <coord value="0.21456"/>
+    </point>
+    <point goal="1">
+        <coord value="0.136379"/>
+        <coord value="0.263606"/>
+    </point>
+    <point goal="1">
+        <coord value="0.124143"/>
+        <coord value="0.25712"/>
+    </point>
+    <point goal="1">
+        <coord value="0.125795"/>
+        <coord value="0.4278"/>
+    </point>
+    <point goal="1">
+        <coord value="0.141286"/>
+        <coord value="0.437365"/>
+    </point>
+    <point goal="1">
+        <coord value="0.155709"/>
+        <coord value="0.486223"/>
+    </point>
+    <point goal="1">
+        <coord value="0.163304"/>
+        <coord value="0.417762"/>
+    </point>
+    <point goal="1">
+        <coord value="0.161727"/>
+        <coord value="0.47622"/>
+    </point>
+    <point goal="1">
+        <coord value="0.12572"/>
+        <coord value="0.373703"/>
+    </point>
+    <point goal="1">
+        <coord value="0.127544"/>
+        <coord value="0.406445"/>
+    </point>
+    <point goal="1">
+        <coord value="0.103369"/>
+        <coord value="0.363557"/>
+    </point>
+    <point goal="1">
+        <coord value="0.123613"/>
+        <coord value="0.369972"/>
+    </point>
+    <point goal="1">
+        <coord value="0.168839"/>
+        <coord value="0.394201"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.010884"/>
+        <coord value="0.014018"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0278899"/>
+        <coord value="0.0195599"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0307073"/>
+        <coord value="0.0422215"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0324015"/>
+        <coord value="0.0761331"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0615768"/>
+        <coord value="0.105971"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0865501"/>
+        <coord value="0.34509"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0687082"/>
+        <coord value="0.390347"/>
+    </point>
+    <point goal="1">
+        <coord value="0.11195"/>
+        <coord value="0.334069"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0891391"/>
+        <coord value="0.388671"/>
+    </point>
+    <point goal="1">
+        <coord value="0.139202"/>
+        <coord value="0.22416"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0168496"/>
+        <coord value="0.164807"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0120769"/>
+        <coord value="0.174296"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.00662571"/>
+        <coord value="0.136329"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.00904492"/>
+        <coord value="0.231994"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0002406"/>
+        <coord value="0.297646"/>
+    </point>
+    <point goal="1">
+        <coord value="0.19443"/>
+        <coord value="0.403841"/>
+    </point>
+    <point goal="1">
+        <coord value="0.131923"/>
+        <coord value="0.426129"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0454326"/>
+        <coord value="0.530612"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0464257"/>
+        <coord value="0.459005"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0510125"/>
+        <coord value="0.489841"/>
+    </point>
+    <point goal="1">
+        <coord value="0.159049"/>
+        <coord value="0.293726"/>
+    </point>
+    <point goal="1">
+        <coord value="0.147192"/>
+        <coord value="0.376137"/>
+    </point>
+    <point goal="1">
+        <coord value="0.170329"/>
+        <coord value="0.310847"/>
+    </point>
+    <point goal="1">
+        <coord value="0.169894"/>
+        <coord value="0.248269"/>
+    </point>
+    <point goal="1">
+        <coord value="0.162877"/>
+        <coord value="0.260601"/>
+    </point>
+    <point goal="1">
+        <coord value="0.158316"/>
+        <coord value="0.362048"/>
+    </point>
+    <point goal="1">
+        <coord value="0.145127"/>
+        <coord value="0.319417"/>
+    </point>
+    <point goal="1">
+        <coord value="0.168275"/>
+        <coord value="0.302622"/>
+    </point>
+    <point goal="1">
+        <coord value="0.162825"/>
+        <coord value="0.310919"/>
+    </point>
+    <point goal="1">
+        <coord value="0.146605"/>
+        <coord value="0.301739"/>
+    </point>
+    <point goal="1">
+        <coord value="0.107293"/>
+        <coord value="0.299831"/>
+    </point>
+    <point goal="1">
+        <coord value="0.146381"/>
+        <coord value="0.277333"/>
+    </point>
+    <point goal="1">
+        <coord value="0.161743"/>
+        <coord value="0.303876"/>
+    </point>
+    <point goal="1">
+        <coord value="0.141781"/>
+        <coord value="0.278607"/>
+    </point>
+    <point goal="1">
+        <coord value="0.306153"/>
+        <coord value="0.561888"/>
+    </point>
+    <point goal="1">
+        <coord value="0.153713"/>
+        <coord value="0.274899"/>
+    </point>
+    <point goal="1">
+        <coord value="0.149462"/>
+        <coord value="0.293582"/>
+    </point>
+    <point goal="1">
+        <coord value="0.164498"/>
+        <coord value="0.288619"/>
+    </point>
+    <point goal="1">
+        <coord value="0.116983"/>
+        <coord value="0.240345"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0979774"/>
+        <coord value="0.419042"/>
+    </point>
+    <point goal="1">
+        <coord value="0.131291"/>
+        <coord value="0.356044"/>
+    </point>
+    <point goal="1">
+        <coord value="0.160354"/>
+        <coord value="0.32392"/>
+    </point>
+    <point goal="1">
+        <coord value="0.175073"/>
+        <coord value="0.356625"/>
+    </point>
+    <point goal="1">
+        <coord value="0.185185"/>
+        <coord value="0.354492"/>
+    </point>
+    <point goal="1">
+        <coord value="0.162599"/>
+        <coord value="0.372889"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0628735"/>
+        <coord value="0.102178"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0248166"/>
+        <coord value="0.0405536"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0102021"/>
+        <coord value="0.0183315"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0278637"/>
+        <coord value="0.0291198"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.00406231"/>
+        <coord value="0.0197095"/>
+    </point>
+    <point goal="1">
+        <coord value="0.127415"/>
+        <coord value="0.28478"/>
+    </point>
+    <point goal="1">
+        <coord value="0.13208"/>
+        <coord value="0.27857"/>
+    </point>
+    <point goal="1">
+        <coord value="0.140988"/>
+        <coord value="0.309245"/>
+    </point>
+    <point goal="1">
+        <coord value="0.14429"/>
+        <coord value="0.301112"/>
+    </point>
+    <point goal="1">
+        <coord value="0.162331"/>
+        <coord value="0.355048"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0613345"/>
+        <coord value="0.381588"/>
+    </point>
+    <point goal="1">
+        <coord value="0.074124"/>
+        <coord value="0.470017"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0649572"/>
+        <coord value="0.411835"/>
+    </point>
+    <point goal="1">
+        <coord value="0.0809572"/>
+        <coord value="0.430087"/>
+    </point>
+    <point goal="1">
+        <coord value="0.10986"/>
+        <coord value="0.407839"/>
+    </point>
+    <point goal="1">
+        <coord value="0.164198"/>
+        <coord value="0.438158"/>
+    </point>
+    <point goal="1">
+        <coord value="0.16222"/>
+        <coord value="0.518763"/>
+    </point>
+    <point goal="1">
+        <coord value="0.165189"/>
+        <coord value="0.491493"/>
+    </point>
+    <point goal="1">
+        <coord value="0.161729"/>
+        <coord value="0.464478"/>
+    </point>
+    <point goal="1">
+        <coord value="0.16365"/>
+        <coord value="0.453035"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.081733"/>
+        <coord value="0.371871"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.114083"/>
+        <coord value="0.32713"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.099768"/>
+        <coord value="0.338872"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0977233"/>
+        <coord value="0.336625"/>
+    </point>
+    <point goal="-1">
+        <coord value="0.0955736"/>
+        <coord value="0.334725"/>
+    </point>
+</corpus>
