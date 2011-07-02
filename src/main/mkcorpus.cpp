@@ -73,7 +73,6 @@ int main(int argc, char **argv)
 
         if(cb.setupPipeline(pipeline))
         {
-            /** \todo Use the parameters **/
             cout << "Processing " << corpusPath << endl;
             cb.setVerbose(true);
             cb.setup(corpusPath);

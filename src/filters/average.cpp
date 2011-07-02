@@ -5,10 +5,10 @@ void AverageFilter::transform(vector<float> data)
 {
     if(mHistory == 0)
     {
-        mHistory = new float*[mSize]; //! TODO : missing delete
+        mHistory = new float*[mSize];
         for(int i = 0; i < mSize; i++)
         {
-            mHistory[i] = new float[mDimension]; //! TODO : missing delete
+            mHistory[i] = new float[mDimension];
             for(int j = 0; j < mDimension; j++)
                 mHistory[i][j] = 0;
         }
@@ -28,6 +28,20 @@ void AverageFilter::transform(vector<float> data)
     }
 
     mCurrentIndex = (mCurrentIndex+1) % mSize;
+}
+
+AverageFilter::~AverageFilter()
+{
+    if(mHistory != 0)
+    {
+        for(int i = 0; i < mSize; i++)
+            delete mHistory[i];
+
+        delete mHistory;
+    }
+
+    if(mAverage != 0)
+        delete mAverage;
 }
 
 //! Retrive the results (from the index). The values are usually between -1 and 1

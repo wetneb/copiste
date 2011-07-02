@@ -22,6 +22,8 @@ class Corpus
         Corpus(string file = "");
         //! Constructor, creating an empty corpus of dimension dim
         Corpus(int dim);
+        //! Copy constructor
+        Corpus(const Corpus &c, unsigned int keepOnly = -1);
         //! Frees the memory
         ~Corpus();
         //! Erases the corpus and start a new one with the given dimension

@@ -2,8 +2,6 @@
 #define INCLUDED_SPECTRUMH
 
 #include "features/extractor.h"
-/** TODO : compute the window when reallocating. Create functions to change the window **/
-
 
 /**
  * \class SpectrumExtr
@@ -51,7 +49,17 @@ class SpectrumExtr : public FeatureExtractor
         //! Blackman - Harris
         static float blackmanHarrisWin(int i, int maxSize);
 
+        //! Updates the window cache
+        void createWindowCache();
+
     public:
+        enum FTWindow
+        { WINDOW_RECTANGULAR,
+          WINDOW_TRIANGULAR,
+          WINDOW_HAMMING,
+          WINDOW_BH };
+        typedef enum FTWindow FTWindow;
+
         /// Accessors
         // These functions can be used to retrive the result of the computation.
 
@@ -69,6 +77,8 @@ class SpectrumExtr : public FeatureExtractor
         float getFloat(string key) { return 0; }
         //! Get a int parameter (available : "bound")
         int getInt(string key);
+        //! Change the window (the default is WINDOW_RECTANGULAR)
+        void setWindow(FTWindow win);
 
     private:
         /// Utilities
@@ -88,7 +98,8 @@ class SpectrumExtr : public FeatureExtractor
     private:
         uint16_t* mResults;
         int* mButterfly;
-        float* mWindow;
+        float* mWindowCache;
+        FTWindow mCurrentWindow;
         int mSize;
         int mBound;
 };

@@ -121,6 +121,7 @@ int main(int argc, char **argv)
 
         if(corpusFile != "")
             view.setCorpus(&corpus);
+        else view.setCorpus(new Corpus(2));
         if(netFile != "")
             view.setNet(&net);
         cout << "Set." << endl;

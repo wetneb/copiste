@@ -13,6 +13,9 @@ class Filter : public FeatureExtractor
         //! Default constructor : does nothing yet.
         Filter() : mExtr(0) { ; }
 
+        //! Still a virtual destructor (inherited from FeatureExtractor)
+        ~Filter() { ; }
+
         //! Binds the filter to the output of an extractor (or another filter). Returns the old one.
         virtual FeatureExtractor* bind(FeatureExtractor* extr);
 

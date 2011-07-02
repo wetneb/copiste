@@ -12,6 +12,7 @@ class View2D;
 #define VIEW_OUTPUT_HEIGHT 500
 #define POINT_0_PATH "img/point-0.png"
 #define POINT_1_PATH "img/point-1.png"
+#define CORPUS_EPSILON 0.0001
 
 //! Internal struture used by View2D to keep in memory old views of a same network
 struct Viewport
@@ -53,6 +54,9 @@ class View2D : public QWidget
         //! Sends key events from parent widgets
         void handleKeyReleaseEvent(QKeyEvent *event);
 
+        //! Change the type of point
+        void setCurrentPoint(bool point);
+
     signals:
         void rendering();
         void rendered();
@@ -86,6 +90,9 @@ class View2D : public QWidget
         int mStartY;
         int mCurrentX;
         int mCurrentY;
+
+        // Corpus editing
+        bool mCurrentPoint;
 
         // Zoom history
         std::stack<Viewport> mZoomHistory;

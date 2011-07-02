@@ -5,6 +5,7 @@
 #include <QStatusBar>
 #include <QMenuBar>
 #include <QToolBar>
+#include <QFileDialog>
 
 class Editor;
 

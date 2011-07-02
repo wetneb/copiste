@@ -10,6 +10,9 @@ class AverageFilter : public Filter
         //! Default constructor : does nothing
         AverageFilter() : Filter(), mHistory(0), mAverage(0), mSize(0), mDimension(0), mCurrentIndex(0) { ; }
 
+        //! Destructor : cleans the memory
+        ~AverageFilter();
+
         //! Set the input
         FeatureExtractor* bind(FeatureExtractor* extr);
 

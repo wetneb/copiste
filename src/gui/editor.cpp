@@ -7,6 +7,8 @@ Editor::Editor(QWidget *parent) : QMainWindow(parent)
     menuBar()->addAction("Redraw");
     menuBar()->addAction("Train");
     menuBar()->addAction("Reset");
+    menuBar()->addAction("Save network");
+    menuBar()->addAction("Save corpus");
 
     mToolbar = addToolBar("Corpus Tools");
     mToolbar->setAllowedAreas(Qt::LeftToolBarArea);
@@ -16,6 +18,7 @@ Editor::Editor(QWidget *parent) : QMainWindow(parent)
     connect(&mView, SIGNAL(rendering()), this, SLOT(dispRendering()));
     connect(&mView, SIGNAL(rendered()), this, SLOT(dispRendered()));
     connect(menuBar(), SIGNAL(triggered(QAction*)), this, SLOT(handleAction(QAction*)));
+    connect(mToolbar, SIGNAL(actionTriggered(QAction*)), this, SLOT(handleAction(QAction*)));
 }
 
 void Editor::setNet(NNetwork *net)
@@ -37,17 +40,50 @@ void Editor::handleAction(QAction *action)
     }
     else if(action->text() == "Reset")
     {
-        mView.net()->randomize();
+        if(mView.net())
+            mView.net()->randomize();
     }
     else if(action->text() == "Train")
     {
-        mView.corpus()->train(*mView.net(), 0.001, 10000);
-        mView.renderScene();
-        mView.repaint();
+        if(mView.corpus() && mView.net())
+        {
+            mView.corpus()->train(*mView.net(), 0.001, 10000);
+            mView.renderScene();
+            mView.repaint();
+        }
+        else if(mView.corpus() == 0)
+            statusBar()->showMessage("There's no suitable corpus to train the network.");
+        else statusBar()->showMessage("There's no suitable network to be trained.");
     }
     else if(action->text() == "Focus")
     {
         mView.setFocus(Qt::OtherFocusReason);
+    }
+    else if(action->text() == "Black point")
+    {
+        mView.setCurrentPoint(false);
+    }
+    else if(action->text() == "White point")
+    {
+        mView.setCurrentPoint(true);
+    }
+    else if(action->text() == "Save corpus")
+    {
+        if(mView.corpus())
+        {
+            mView.corpus()->write(
+            QFileDialog::getOpenFileName(this,
+                "Save corpus", "~", tr("XML files (*.xml)")).toStdString());
+        }
+    }
+    else if(action->text() == "Save network")
+    {
+        if(mView.net())
+        {
+            mView.net()->write(
+            QFileDialog::getOpenFileName(this,
+                "Save network", "~", tr("XML files (*.xml)")).toStdString());
+        }
     }
 }
 

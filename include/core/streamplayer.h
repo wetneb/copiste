@@ -35,8 +35,6 @@ void prepareRender(void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int si
  * the using of the data.
  *
  * TODO : add parameters : enable to set verbosity (display progress or not)
- * TODO                    enable to compute directly or not
- * TODO                    enable to…
  */
 class StreamPlayer
 {

@@ -81,6 +81,9 @@ bool NNetwork::load(string fileName)
 
 void NNetwork::write(string filename)
 {
+    if(filename == "")
+        return;
+
     QDomDocument doc;
     QDomElement rootElem = doc.createElement("nnetwork");
 

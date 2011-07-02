@@ -11,6 +11,20 @@ Corpus::Corpus(string file)
         load(file);
 }
 
+Corpus::Corpus(const Corpus &c, unsigned int keepOnly)
+{
+    mDimension = min(c.dimension(), keepOnly);
+    mSize = c.size();
+    mPoolSize = c.mPoolSize;
+    mPool = new float*[mPoolSize];
+    for(int i = 0; i < mSize; i++)
+    {
+        mPool[i] = new float[mDimension+1];
+        for(int j = 0; j < mDimension+1; j++)
+            mPool[i][j] = c.elem(i)[j];
+    }
+}
+
 Corpus::Corpus(int dim)
 {
     mPool = 0;
@@ -95,6 +109,9 @@ bool Corpus::load(string filename, bool verbose)
 
 void Corpus::write(string fileName)
 {
+    if(fileName == "")
+        return;
+
     // Open the file
     QFile file(fileName.c_str());
     if(!file.open(QFile::WriteOnly))

@@ -4,7 +4,7 @@
 #include <QPaintEvent>
 #include <QPainter>
 
-View2D::View2D(QWidget *parent) : QWidget(parent)
+View2D::View2D(QWidget *parent) : QWidget(parent), mCurrentPoint(false)
 {
     mViewport.x = 0;
     mViewport.y = 0;
@@ -15,6 +15,7 @@ View2D::View2D(QWidget *parent) : QWidget(parent)
     mNet = 0;
     mCorpus = 0;
     setWindowTitle("Neural network analysis tool");
+    setMouseTracking(true);
 }
 
 QColor colorFromValue(neural_value value)
@@ -73,20 +74,8 @@ void View2D::renderScene()
             }
         }
     }
-
-    // And then draw the corpus
-    if(mCorpus)
-    {
-        for(unsigned int index = 0; index != mCorpus->size(); ++index)
-        {
-            QPixmap *img = &mPoint0;
-            if(mCorpus->elem(index)[0] == 1)
-                img = &mPoint1;
-
-            //painter.drawPoint((mCorpus->elem(index)[1] - mViewport.x)/mViewport.scaleX, (mCorpus->elem(index)[2]- mViewport.y)/mViewport.scaleY);
-            painter.drawPixmap((mCorpus->elem(index)[1] - mViewport.x)/mViewport.scaleX - 5, (mCorpus->elem(index)[2]- mViewport.y)/mViewport.scaleY - 5, *img);
-        }
-    }
+    else
+        painter.fillRect(0, 0, width(), height(), QColor(127,127,127));
 
     painter.end();
 
@@ -101,14 +90,20 @@ void View2D::renderScene()
 
 void View2D::setCorpus(Corpus *corpus)
 {
-    if(corpus->dimension() == 2)
+    if(corpus->dimension() == 2 || corpus->size() != 0)
     {
         mCorpus = corpus;
         vector<float> bounds = corpus->bounds();
-        mViewport.scaleX = 1.8*(bounds[1] - bounds[0])/height();
-        mViewport.scaleY = 1.8*(bounds[3] - bounds[2])/width();
-        mViewport.x = bounds[0] - 0.1*(bounds[1] - bounds[0]);
-        mViewport.y = bounds[2] - 0.1*(bounds[3] - bounds[2]);
+        float sizeX = (bounds[1] - bounds[0]), sizeY = (bounds[3] - bounds[2]);
+        if(sizeX < CORPUS_EPSILON)
+            sizeX = 1;
+        if(sizeY < CORPUS_EPSILON)
+            sizeY = 1;
+
+        mViewport.scaleX = 1.2*sizeX/width();
+        mViewport.scaleY = 1.2*sizeY/height();
+        mViewport.x = bounds[0] - 0.1*sizeX;
+        mViewport.y = bounds[2] - 0.1*sizeY;
 
         renderScene();
         repaint();
@@ -126,7 +121,28 @@ void View2D::paintEvent(QPaintEvent *event)
     if(mZooming)
     {
         painter.setPen(QColor(0,0,0));
-        painter.drawRect(min(mCurrentX, mStartX), min(mCurrentY, mStartY), max(mCurrentX, mStartX) - min(mCurrentX, mStartX), max(mCurrentY, mStartY) - min(mCurrentY, mStartY));
+        int minX = min(mCurrentX, mStartX), minY = min(mCurrentY, mStartY), maxX = max(mCurrentX, mStartX), maxY = max(mCurrentY, mStartY);
+        painter.drawRect(minX, minY, maxX - minX, maxY - minY);
+    }
+
+    QPixmap *img = &mPoint0;
+    if(mCurrentPoint)
+        img = &mPoint1;
+
+    if(!mZooming && mCorpus)
+        painter.drawPixmap(mCurrentX - img->width() / 2, mCurrentY - img->height() / 2, *img);
+
+    // And then draw the corpus
+    if(mCorpus)
+    {
+        for(unsigned int index = 0; index != mCorpus->size(); ++index)
+        {
+            QPixmap *img = &mPoint0;
+            if(mCorpus->elem(index)[0] == 1)
+                img = &mPoint1;
+
+            painter.drawPixmap((mCorpus->elem(index)[1] - mViewport.x)/mViewport.scaleX - 5, (mCorpus->elem(index)[2]- mViewport.y)/mViewport.scaleY - 5, *img);
+        }
     }
 
     painter.end();
@@ -134,21 +150,21 @@ void View2D::paintEvent(QPaintEvent *event)
 
 void View2D::mouseMoveEvent(QMouseEvent *event)
 {
-    if(mZooming)
-    {
-        mCurrentX = event->x();
-        mCurrentY = event->y();
-        repaint();
-    }
+    mCurrentX = event->x();
+    mCurrentY = event->y();
+    repaint();
 }
 
 void View2D::mousePressEvent(QMouseEvent *event)
 {
-    mStartX = event->x();
-    mStartY = event->y();
-    mCurrentX = mStartX;
-    mCurrentY = mStartY;
-    mZooming = true;
+    if(event->button() == Qt::LeftButton)
+    {
+        mStartX = event->x();
+        mStartY = event->y();
+        mCurrentX = mStartX;
+        mCurrentY = mStartY;
+        mZooming = true;
+    }
 }
 
 void View2D::mouseReleaseEvent(QMouseEvent *event)
@@ -177,7 +193,7 @@ void View2D::mouseReleaseEvent(QMouseEvent *event)
     else if(event->button() == Qt::RightButton)
     {
         neural_value *sampleVec = new neural_value[3]; // deleted by mCorpus->erase()
-        sampleVec[0] = 1;
+        sampleVec[0] = mCurrentPoint;
         sampleVec[1] = x*mViewport.scaleX + mViewport.x;
         sampleVec[2] = y*mViewport.scaleY + mViewport.y;
         mCorpus->addElem(sampleVec);
@@ -257,4 +273,9 @@ Corpus* View2D::corpus()
 NNetwork* View2D::net()
 {
     return mNet;
+}
+
+void View2D::setCurrentPoint(bool point)
+{
+    mCurrentPoint = point;
 }

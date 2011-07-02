@@ -186,7 +186,7 @@ void SoundAnalyser::sequenceEnds()
 {
     if(mLastUpdateTime != 0)
     {
-        cout << "\e[F\e[KDone." << endl;
+        cout << "\e[F\e[K" << flush;
          mLastUpdateTime = 0;
     }
 

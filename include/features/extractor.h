@@ -16,6 +16,9 @@ class FeatureExtractor
         //! Constructor. Can set the typical chunk size.
         FeatureExtractor(int chunkSize = 0) { ; }
 
+        //! Virtual destructor : enables each extractor to delete arrays
+        virtual ~FeatureExtractor() { ; }
+
         //! Run the algorithm and store the results
         virtual bool extract(uint16_t* data, int size) = 0;
 

@@ -21,8 +21,7 @@ bool SpectrumExtr::extract(uint16_t* data, int size)
     for(int i = 0; i < mSize; i++)
     {
         int j = mButterfly[i];
-        float window = blackmanHarrisWin(j, mSize);
-        re[i] = window*data[j];
+        re[i] = mWindowCache[j]*data[j];
         im[i] = 0;
     }
 
@@ -121,7 +120,7 @@ inline float SpectrumExtr::blackmanHarrisWin(int i, int maxSize)
     return 0.35875  - 0.48829*cos(2*M_PI*i/(maxSize - 1)) + 0.14128*cos(4*M_PI*i/(maxSize - 1)) + 0.0106411*cos(6*M_PI*i/(maxSize-1));
 }
 
-SpectrumExtr::SpectrumExtr(int size) : mResults(0), mButterfly(0), mSize(size), mBound((1 << 31))
+SpectrumExtr::SpectrumExtr(int size) : mResults(0), mButterfly(0), mWindowCache(0), mCurrentWindow(WINDOW_RECTANGULAR), mSize(size), mBound((1 << 31))
 {
     reallocate();
 }
@@ -153,6 +152,28 @@ void SpectrumExtr::reallocate()
             res = (res >> 1); // res = res / 2
         }
         mButterfly[pos] = i;
+    }
+
+    //! Create a new window cache
+    createWindowCache();
+}
+
+void SpectrumExtr::createWindowCache()
+{
+    if(mWindowCache != 0)
+        delete mWindowCache;
+    mWindowCache = new float[mSize];
+
+    for(int i = 0; i < mSize; i++)
+    {
+        if(mCurrentWindow == WINDOW_RECTANGULAR)
+            mWindowCache[i] = rectangularWin(i, mSize);
+        else if(mCurrentWindow == WINDOW_TRIANGULAR)
+            mWindowCache[i] = triangularWin(i, mSize);
+        else if(mCurrentWindow == WINDOW_HAMMING)
+            mWindowCache[i] = hammingWin(i, mSize);
+        else if(mCurrentWindow == WINDOW_BH)
+            mWindowCache[i] = blackmanHarrisWin(i, mSize);
     }
 }
 
@@ -239,6 +260,12 @@ SpectrumExtr::~SpectrumExtr()
         delete mResults;
     if(mButterfly)
         delete mButterfly;
+}
+
+void SpectrumExtr::setWindow(FTWindow win)
+{
+    mCurrentWindow = win;
+    createWindowCache();
 }
 
 
