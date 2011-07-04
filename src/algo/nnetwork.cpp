@@ -18,6 +18,17 @@ NNetwork::NNetwork(string fileName)
         load(fileName);
 }
 
+NNetwork::~NNetwork()
+{
+    clear();
+}
+
+void NNetwork::clear()
+{
+    // \todo delete the neurons !
+    // Look at ~Neuron
+}
+
 bool NNetwork::load(string fileName)
 {
     QDomDocument doc;
@@ -45,7 +56,10 @@ bool NNetwork::load(string fileName)
                 QDomNode subNode = node.firstChild();
                 while(!subNode.isNull())
                 {
-                    InputNeuron *neuron = new InputNeuron(subNode.toElement().attribute("name", QString("elem"+mNeurons.size())).toStdString());
+                    InputNeuron *neuron = new InputNeuron(subNode.toElement()
+                            .attribute("name", QString("elem"+mNeurons.size())).toStdString());
+                            // Deleted in ~NNetwork
+
                     mInputs.push_back(neuron);
                     mNeurons[QString(neuron->name().c_str())] = neuron;
                     subNode = subNode.nextSibling();
@@ -56,7 +70,7 @@ bool NNetwork::load(string fileName)
                 QDomNode subNode = node.firstChild();
                 while(!subNode.isNull() && subNode.toElement().tagName() == "node")
                 {
-                    Neuron *neuron = new Neuron;
+                    Neuron *neuron = new Neuron; // Deleted in ~NNetwork
                     neuron->load(subNode.toElement(), this);
                     mNeurons[QString(neuron->name().c_str())] = neuron;
                     subNode = subNode.nextSibling();
@@ -64,7 +78,7 @@ bool NNetwork::load(string fileName)
             }
             else if(elem.tagName() == "output")
             {
-                Neuron *neuron = new Neuron;
+                Neuron *neuron = new Neuron; // Deleted in ~NNetwork
                 neuron->load(node.toElement(), this);
                 mLastNeuron = neuron;
             }
@@ -132,6 +146,55 @@ void NNetwork::randomize()
         srand(time(NULL));
         mLastNeuron->randomize(true);
     }
+}
+
+void NNetwork::generate(unsigned int dimension, unsigned int depth)
+{
+    // Clear everything
+    clear();
+
+    vector<AbstractNeuron*> lastLayer;
+
+    // Set up inputs
+    for(unsigned int i = 0; i < dimension; i++)
+    {
+        ostringstream buf;
+        buf << "Input "<< i+1;
+        mInputs.push_back(new InputNeuron(buf.str())); // deleted in clear()
+        lastLayer.push_back(mInputs[mInputs.size() - 1]);
+    }
+
+    cout << "Generated inputs."<<endl;
+
+    // Set up layers
+    for(unsigned int i = 0; i < depth; i++)
+    {
+        vector<AbstractNeuron*> newLayer;
+        for(unsigned int j = 0; j < dimension; j++)
+        {
+            ostringstream buf;
+            buf << "Neuron "<< mNeurons.size() + 1;
+            Neuron* n = new Neuron(buf.str());
+
+            for(unsigned int k = 0; k < lastLayer.size(); k++)
+                n->addParent(lastLayer[k], 0);
+
+            newLayer.push_back(n);
+            mNeurons.insert(buf.str().c_str(), n);
+        }
+
+        lastLayer = newLayer;
+    }
+
+    cout << "Generated layers."<<endl;
+
+    // Set up output neuron
+    Neuron* lastNeuron = new Neuron("Output");
+    for(unsigned int j = 0; j < lastLayer.size(); j++)
+        lastNeuron->addParent(lastLayer[j], 0);
+    mLastNeuron = lastNeuron;
+
+    cout << "Generated output." <<endl;
 }
 
 AbstractNeuron* NNetwork::getNeuronByName(string name) const

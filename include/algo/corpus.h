@@ -2,6 +2,7 @@
 #define INCLUDEDCORPUSH
 
 #include <string>
+#include <vector>
 #include <cmath>
 #include <QFile>
 
@@ -44,7 +45,7 @@ class Corpus
          * \brief Trains a given network to match the corpus (writing error rates in **history)
          * The history field must be a pointer to a pointer, which has to be deleted then by the user.
          */
-        int train(NNetwork &network, float learningRate, int maxPasses, float **history = 0, bool random = true);
+        int train(NNetwork &network, float learningRate, int maxPasses, float **history = 0, bool random = true, bool verbose = false);
         //! Displays the corpus accuracy
         float accuracy(NNetwork &network, bool verbose = false) const;
 
@@ -57,8 +58,10 @@ class Corpus
 
         //! Returns the elem pointed by the given index
         neural_value* elem(unsigned int index) const { return mPool[index]; }
+        //! Returns the name of the elem pointed by the given index
+        string name(unsigned int index) const { return mNames[index]; }
         //! Add a sample to the corpus
-        void addElem(neural_value* elem);
+        void addElem(neural_value* elem, string name = "");
         //! Retuns the bounds of the corpus (the vector is : min_1 max_1 min_2 max_2 ... min_n max_n)
         vector<float> bounds() const;
 
@@ -68,6 +71,8 @@ class Corpus
         int mDimension;
 
         int mPoolSize; // Stores the actual capacity of the pool
+
+        vector<string> mNames; // Stores the names of the samples
 };
 
 #endif

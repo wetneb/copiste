@@ -2,6 +2,7 @@
 #define INCLUDEDNNETWORKH
 
 #include <vector>
+#include <sstream>
 #include <QHash>
 #include <cstdlib>
 
@@ -19,13 +20,19 @@ class NNetwork
     public:
         //! Default constructor.
         NNetwork(string fileName = "");
+        //! Destructor : calls clear()
+        ~NNetwork();
+        //! Clears the network (deletes everything)
+        void clear();
 
         //! Loads a network from an XML file
         bool load(string fileName);
-
         //! Writes the netowrk to a file
         void write(string filename);
 
+
+        //! Generates a simple network for a given dimension (number of inputs) and depth (number of layers, excluding the input and the output layer)
+        void generate(unsigned int dimension, unsigned int depth);
         //! Randomizes the weights, between -1 and 1 (useful before training)
         void randomize();
 

@@ -65,6 +65,7 @@ bool Corpus::load(string filename, bool verbose)
         mSize = node.childNodes().size();
 
         mPool = new neural_value*[mSize]; // deleted in erase()
+        mNames.resize(mSize);
         mPoolSize = mSize;
 
         node = node.firstChild();
@@ -76,6 +77,7 @@ bool Corpus::load(string filename, bool verbose)
             {
                 mPool[nbPointsSet] = new neural_value[mDimension+1]; // deleted in erase()
                 mPool[nbPointsSet][0] = node.toElement().attribute("goal", "1").toFloat();
+                mNames.push_back(node.toElement().attribute("name", "").toStdString());
 
                 nbCoordsSet = 0;
                 QDomNode pointNode = node.firstChild();
@@ -165,9 +167,10 @@ int* randomPermutation(int n)
     return result;
 }
 
-int Corpus::train(NNetwork &network, float learningRate, int maxPasses, float **history, bool random)
+int Corpus::train(NNetwork &network, float learningRate, int maxPasses, float **history, bool random, bool verbose)
 {
     bool errorFound = false;
+    int errorCount = 0;
     vector<neural_value> inputVec;
     inputVec.resize(mDimension);
 
@@ -186,7 +189,11 @@ int Corpus::train(NNetwork &network, float learningRate, int maxPasses, float **
         // Restart a new pass
         if((i+1)%mSize == 0)
         {
+            if(verbose)
+                cout << "Errors : "<<errorCount<<"/"<<mSize << endl;
+
             errorFound = false;
+            errorCount = 0;
 
             // Choose another permutation
             if(random)
@@ -214,10 +221,10 @@ int Corpus::train(NNetwork &network, float learningRate, int maxPasses, float **
         // Train
         if((sample[0])*answer <= 0)
         {
-            //cout <<"["<<inputVec[0]<<"]["<<inputVec[1]<<"] Goal = " << mPool[i%mSize][0] << ", result = "<< answer << endl;
             errorFound = true;
-            network.train(inputVec, sample[0], learningRate);
+            errorCount++;
         }
+        network.train(inputVec, sample[0], learningRate);
     }
     return i;
 }
@@ -298,7 +305,7 @@ unsigned int Corpus::dimension() const
     return mDimension;
 }
 
-void Corpus::addElem(neural_value* elem)
+void Corpus::addElem(neural_value* elem, string name)
 {
     if(mSize >= mPoolSize)
     {
@@ -317,6 +324,10 @@ void Corpus::addElem(neural_value* elem)
             mPool = new neural_value*[mPoolSize];
         }
     }
+
+    if((int)mNames.size() <= mSize)
+        mNames.push_back(name);
+    else mNames[mSize] = name;
 
     mPool[mSize] = elem;
     mSize++;

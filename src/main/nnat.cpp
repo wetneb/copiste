@@ -22,14 +22,15 @@ int main(int argc, char **argv)
         ("train,t", "Train the network")
         ("eval,e", "Compute the error rate of the network")
         ("plot,p", "Plot the network and / or the corpus")
-        ("net,n", po::value<std::string>(), "Path to the network")
+        ("net,n", po::value<std::string>(), "Path to the network. Use NEW/dim/depth to create"
+                        " a new one with \"dim\" inputs and \"depth\" hidden layers.")
         ("corpus,c", po::value<std::string>(), "Path to the corpus")
         ("out,o", po::value<std::string>(), "Path to the output (default: output.png)")
         ("rate,r", po::value<float>(), "Training rate (default: 0.01)")
         ("max,m", po::value<int>(), "Maximum iterations count for training (default: 1000)")
         ("no-random-weights", "Don't randomize weights before training")
         ("no-random-samples", "Don't randomize the order of the training corpus")
-        ("verbose", "Be verbose")
+        ("verbose", "Be verbose (print a longer output)")
         ("help,h", "Display this message")
     ;
 
@@ -63,7 +64,25 @@ int main(int argc, char **argv)
     if(vm.count("net"))
     {
         netFile = vm["net"].as<string> ();
-        net.load(netFile);
+
+        if(netFile.substr(0,4) == "NEW/")
+        {
+            cout << "Generating a new network" << endl;
+            istringstream s(netFile);
+            char buf = 0;
+            for(int i = 0; i < 4; i++)
+                s >> buf;
+            int dim = 0;
+            s >> dim;
+            s >> buf;
+            int depth = 0;
+            s >> depth;
+
+            net.generate(dim, depth);
+            net.randomize();
+        }
+        else
+            net.load(netFile);
     }
     else if(vm.count("train") or vm.count("eval"))
     {
@@ -94,7 +113,7 @@ int main(int argc, char **argv)
         if(vm.count("no-random-weights") == 0)
             net.randomize();
         float *history;
-        int nbIter = corpus.train(net, rate, iterMax, &history, (vm.count("no-random-weights") == 0));// 0 : &history
+        int nbIter = corpus.train(net, rate, iterMax, &history, (vm.count("no-random-samples") == 0), (vm.count("verbose") == 1));// 0 : &history
 
         if(verbose)
             cout << "Training ended after " << nbIter << " iterations.\n";
