@@ -14,6 +14,10 @@ class NNetwork;
 
 using namespace std;
 
+/** \todo Add a _real_ layer support : curently, the software can produce a XML file
+* which it won't be able to read back later (the order of the neurons has to be managed.
+*/
+
 //! A neural network.
 class NNetwork
 {

@@ -4,7 +4,8 @@ LivePlayer::LivePlayer(QWidget *parent) : QWidget(parent),
                                              FeatureDrawer(true),
                                              mNet(0),
                                              mLastImage(LIVE_PLAYER_WIDTH, LIVE_PLAYER_HEIGHT, QImage::Format_RGB32),
-                                             mLastPoints(0)
+                                             mLastPoints(0),
+                                             mLastUpdate(0)
 {
     setFixedSize(LIVE_PLAYER_WIDTH, LIVE_PLAYER_HEIGHT);
     setImageSize(LIVE_PLAYER_WIDTH, LIVE_PLAYER_HEIGHT);

@@ -39,6 +39,7 @@ class CorpusBuilder : private SoundAnalyser
         string mBasePath;
         vector<string> mFiles;
         vector<bool> mGoals;
+        vector<string> mSampleNames;
         vector<float*> mResults;
         vector<int> mNbElems;
         int mCurrentFile;

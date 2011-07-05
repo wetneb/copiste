@@ -3,7 +3,7 @@
 FeatureDrawer::FeatureDrawer(bool live) : SoundAnalyser(live),
             mOut(FEATURE_DRAWER_DEFAULT_WIDTH, FEATURE_DRAWER_DEFAULT_HEIGHT, QImage::Format_RGB32),
             mCaption("img/legende.png"),
-            mDrawn(false), mNet(0), mMin(0), mMax(0), mMinMaxSize(0)
+            mDrawn(false), mNet(0), mDrawSpectrum(true), mMin(0), mMax(0), mMinMaxSize(0)
 {
     ;
 }
@@ -62,13 +62,14 @@ void FeatureDrawer::draw(string filename, bool live)
 
     // Features
     painter.setPen(QColor(60,60,60));
-    int offset = (mOut.height() - top - bottom) / realDimension();
+    int offset = (mOut.height() - top - bottom) / (realDimension() + (mDrawSpectrum ? 1 : 0));
     for(int i = mOut.height()-1-bottom; i >= 0; i -= offset)
         painter.drawLine(0, i, mOut.width(), i);
 
     // Draw the features
     offset = 0;
-    float chunk = (mOut.height() - bottom - top) / realDimension();
+    int nbChunks = realDimension() + (mDrawSpectrum ? 1 : 0);
+    float chunk = (mOut.height() - bottom - top) / nbChunks;
     for(unsigned int f = 0; f < nbFeatures(); f++)
     {
         if(isUsed(f))
@@ -76,7 +77,7 @@ void FeatureDrawer::draw(string filename, bool live)
             for(unsigned int e = 0; e < nbElems(f); e++)
             {
                 // To be changed
-                mMax[offset] = ((offset == 1) ? max((float)0.5, mMax[offset]) : mMax[offset]);
+                mMax[offset] = ((offset == 2) ? max((float)0.5, mMax[offset]) : mMax[offset]);
                 mMin[offset] = 0;
 
                 float scale = (mMax[offset] - mMin[offset]) / chunk;
@@ -98,6 +99,29 @@ void FeatureDrawer::draw(string filename, bool live)
 
                 offset++;
             }
+        }
+        else if(name(f) == "_spectrum" && mDrawSpectrum)
+        {
+            int nbFrequenciesPerPixel = 0.5 * nbElems(f) / chunk;
+            float orig = mOut.height() - bottom - chunk*offset;
+            for(int i = plotStart; i - plotStart < mOut.width() && i < (int)nbSamples(); ++i)
+            {
+                int currentValue = 0;
+                for(unsigned int e = 0; e < nbElems(f)/2 && (e / nbFrequenciesPerPixel) < chunk; e++)
+                {
+                    currentValue += features(i)[f][e];
+                    if((e+1) % nbFrequenciesPerPixel == 0)
+                    {
+                        currentValue /= nbFrequenciesPerPixel;
+                        currentValue /= 5;
+                        currentValue = ((currentValue >= 256) ? 255 : currentValue);
+                        painter.setPen(QColor(currentValue, currentValue, currentValue));
+                        painter.drawPoint(i - plotStart, orig - (e / nbFrequenciesPerPixel));
+                        currentValue = 0;
+                    }
+                }
+            }
+            offset++;
         }
     }
 
@@ -167,6 +191,10 @@ void FeatureDrawer::draw(string filename, bool live)
 
                 offset++;
             }
+        }
+        else if(name(f) == "_spectrum" && mDrawSpectrum)
+        {
+            offset++;
         }
     }
 }

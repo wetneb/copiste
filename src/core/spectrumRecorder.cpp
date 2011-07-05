@@ -50,7 +50,12 @@ void SpectrumRecorder::useBuffer()
         mExtr.extract(mBuffer, AUDIO_CHUNK_SIZE);
         mExtr.normalize(255);
         for(int i = 0; i < mWindowSize / 2; ++i)
-            mOut.setPixel(i, mCurrentRow, qRgb(0, mExtr.spectrum()[i], 0));
+        {
+            int val = mExtr.spectrum()[i];
+            if(val > 255)
+                val = 255;
+            mOut.setPixel(i, mCurrentRow, qRgb(0, val, 0));
+        }
         mCurrentRow++;
     }
     else

@@ -109,11 +109,12 @@ void CorpusBuilder::compute()
         while((unsigned int)mCurrentFile < mFiles.size())
         {
             // Set up the media player
+            string filename = boost::filesystem::path(mFiles[mCurrentFile]).stem().string();
             if(mVerbose)
-            {
-                string filename = boost::filesystem::path(mFiles[mCurrentFile]).stem().string();
                 cout << "["<<mCurrentFile+1<<"/"<<mFiles.size()<<"] : "<<filename<<endl;
-            }
+
+            // Save the filename (so that the corpus can be labelled)
+            mSamplesNames.push_back(filename);
 
             // Do the computation
             ((SoundAnalyser*)this)->compute(mFiles[mCurrentFile]);
@@ -126,21 +127,27 @@ void CorpusBuilder::compute()
             float *mCurrentResults = 0;
             for(unsigned int k = startingPoint; k < nbSamples(); k++) // Loop through samples
             {
-                if(((k - startingPoint) % length) == 0 || k == nbSamples() - 1)
+                if(((k - startingPoint) % length) == 0 // If we reached the end of a sequence
+                                    || k == nbSamples() - 1) // or if we reached the end of the file
                 {
                     // Save the old one (if any)
                     if(mCurrentResults != 0)
                     {
+                        // Just compute the average of the features
                         for(unsigned int i = 0; i < realDimension(); ++i)
                             mCurrentResults[i] /= length;
                     }
 
                     // Create a new one (if any)
-                    if(nbSamples() - k >= (unsigned int)length)
+                    if(nbSamples() - k >= (unsigned int)length) // new segment
                     {
                         mNbElems[mCurrentFile]++;
+
+                        // Create a new array to store the features
                         mCurrentResults = new float[realDimension()];
                         mResults.push_back(mCurrentResults);
+
+                        // Init the array
                         for(unsigned int i = 0; i < realDimension(); ++i)
                             mCurrentResults[i] = 0;
                     }
@@ -190,7 +197,7 @@ bool CorpusBuilder::write(Corpus *corpus)
                 sample[j+1] = mResults[saved][j];
 
             // Add it to the corpus
-            corpus->addElem(sample);
+            corpus->addElem(sample, mSampleNames[i]);
 
             saved++;
         }

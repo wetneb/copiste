@@ -166,11 +166,24 @@ void NNetwork::generate(unsigned int dimension, unsigned int depth)
 
     cout << "Generated inputs."<<endl;
 
+    /* The following shape of network is currently implemented :
+
+            X   X   X   X   X   X
+
+        X   X   X   X   X   X   X   X
+
+                X   X   X   X
+
+                      X
+
+    */
+
     // Set up layers
     for(unsigned int i = 0; i < depth; i++)
     {
         vector<AbstractNeuron*> newLayer;
-        for(unsigned int j = 0; j < dimension; j++)
+        unsigned int nbNeuronsOnThisLayer = 2*dimension * 0.8 / (i + 1);
+        for(unsigned int j = 0; j < nbNeuronsOnThisLayer; j++)
         {
             ostringstream buf;
             buf << "Neuron "<< mNeurons.size() + 1;

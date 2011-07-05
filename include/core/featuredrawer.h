@@ -24,6 +24,9 @@ class FeatureDrawer : public SoundAnalyser
         //! Destructor
         ~FeatureDrawer();
 
+        //! Set if the spectrum should be drawn
+        void drawSpectrum(bool draw = true);
+
         //! Set a network that can be used to classify the samples
         void setNetwork(NNetwork *net);
 
@@ -47,6 +50,7 @@ class FeatureDrawer : public SoundAnalyser
         QImage mCaption;
         bool mDrawn;
         NNetwork *mNet;
+        bool mDrawSpectrum;
 
         float* mMin;
         float* mMax;

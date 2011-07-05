@@ -14,6 +14,8 @@ class View2D;
 #define POINT_1_PATH "img/point-1.png"
 #define CORPUS_EPSILON 0.0001
 
+/** \todo Include a BSP tree to display infoboxes when hovering points (with the labels of the corpus) */
+
 //! Internal struture used by View2D to keep in memory old views of a same network
 struct Viewport
 {
