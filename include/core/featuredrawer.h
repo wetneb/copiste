@@ -44,7 +44,7 @@ class FeatureDrawer : public SoundAnalyser
 
     private:
         //! Compute the min and the max of the features
-        void computeMinMax();
+        void computeMinMax(int startingPoint = 0);
 
         QImage mOut;
         QImage mCaption;

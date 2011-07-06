@@ -18,14 +18,13 @@ void FeatureDrawer::setImageSize(int width, int height)
         draw();
 }
 
+/** \todo Refactor this code (create independent functions, clean offsets…) */
+
 //! Draws the features to an image
 void FeatureDrawer::draw(string filename, bool live)
 {
     if(nbSamples() < 2)
         return;
-
-    // Compute the ranges
-    computeMinMax();
 
     mOut.fill(QColor(0,0,0).rgb());
     QPainter painter(&mOut);
@@ -50,6 +49,9 @@ void FeatureDrawer::draw(string filename, bool live)
         if((int)nbSamples() - (int)mOut.width() >= 0)
             plotStart = ((int)nbSamples() - (int)mOut.width());
     }
+
+    // Compute the ranges
+    computeMinMax(plotStart);
 
     // Draw lines
 
@@ -76,25 +78,25 @@ void FeatureDrawer::draw(string filename, bool live)
         {
             for(unsigned int e = 0; e < nbElems(f); e++)
             {
-                // To be changed
-                mMax[offset] = ((offset == 2) ? max((float)0.5, mMax[offset]) : mMax[offset]);
-                mMin[offset] = 0;
-
-                float scale = (mMax[offset] - mMin[offset]) / chunk;
+                int realOffset = offset  - (mDrawSpectrum ? 1 : 0);
+                if(mMax[realOffset] == mMin[realOffset])
+                    mMax[realOffset] = mMin[realOffset] + 0.01;
+                float scale = (mMax[realOffset] - mMin[realOffset]) / chunk;
                 float orig = mOut.height() - bottom - chunk*offset;
 
                 painter.setPen(colors[offset%8]);
 
-                if(mMin[offset] < mMax[offset])
+                QPoint lastPoint(0,0);
+                for(int i = plotStart; i - plotStart < mOut.width() && i < (int)nbSamples(); ++i)
                 {
-                    QPoint lastPoint(0,0);
-                    for(int i = plotStart; i - plotStart < mOut.width() && i < (int)nbSamples(); ++i)
-                    {
-                        if(i != plotStart)
-                            painter.drawLine(lastPoint, QPoint(i - plotStart, orig - (features(i)[f][e] - mMin[offset])/scale));
-                        lastPoint = QPoint(i - plotStart, orig - (features(i)[f][e] - mMin[offset])/scale);
-                    }
+                    float val = features(i)[f][e];
+                    if(val > mMax[realOffset])
+                        val = mMax[realOffset];
+                    //val = (i % 2) ? mMax[offset] : mMin[offset];
 
+                    if(i != plotStart)
+                        painter.drawLine(lastPoint, QPoint(i - plotStart, orig - (val - mMin[realOffset])/scale));
+                    lastPoint = QPoint(i - plotStart, orig - (val - mMin[realOffset])/scale);
                 }
 
                 offset++;
@@ -158,7 +160,7 @@ void FeatureDrawer::draw(string filename, bool live)
                 painter.fillRect(lastChange, 0, i - plotStart - lastChange, top, fillColor);
 
                 painter.setPen(QColor(200,200,200));
-                painter.drawLine(i-1 - plotStart, top, i-1 - plotStart, mOut.height()-bottom);
+                //painter.drawLine(i-1 - plotStart, top, i-1 - plotStart, mOut.height()-bottom);
 
                 lastChange = i - plotStart;
             }
@@ -199,7 +201,7 @@ void FeatureDrawer::draw(string filename, bool live)
     }
 }
 
-void FeatureDrawer::computeMinMax()
+void FeatureDrawer::computeMinMax(int startingPoint)
 {
     if(mMinMaxSize != realDimension())
     {
@@ -219,10 +221,10 @@ void FeatureDrawer::computeMinMax()
         {
             for(unsigned int e = 0; e < nbElems(f); e++)
             {
-                mMin[offset] = features(0)[f][e];
-                mMax[offset] = features(0)[f][e];
+                mMin[offset] = features(startingPoint)[f][e];
+                mMax[offset] = features(startingPoint)[f][e];
 
-                for(unsigned int i = 1; i < nbSamples(); i++)
+                for(unsigned int i = startingPoint + 1; i < nbSamples(); i++)
                 {
                     if(features(i)[f][e] < mMin[offset])
                         mMin[offset] = features(i)[f][e];
