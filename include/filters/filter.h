@@ -13,7 +13,7 @@ class Filter : public FeatureExtractor
         //! Default constructor : does nothing yet.
         Filter() : mExtr(0) { ; }
 
-        //! Still a virtual destructor (inherited from FeatureExtractor)
+        //! Destructor (inherited from FeatureExtractor) \todo virtual ??
         ~Filter() { ; }
 
         //! Binds the filter to the output of an extractor (or another filter). Returns the old one.

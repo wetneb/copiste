@@ -42,7 +42,9 @@ features_files = [ 'src/features/hzcrr.cpp',
 filters_files = [ 'src/filters/filter.cpp',
 		  'src/filters/average.cpp',
 		  'src/filters/range.cpp',
-		  'src/filters/flux.cpp' ]
+		  'src/filters/flux.cpp',
+		  'src/filters/centroid.cpp',
+		  'src/filters/highlowratio.cpp' ]
 
 audio_analysis_files = sound_analyser_files + features_files + filters_files
 
@@ -58,12 +60,14 @@ mkcorpus_files = neurones_files + audio_analysis_files + ['src/core/corpusbuilde
 classify_files = neurones_files + audio_analysis_files + ['src/core/classifier.cpp',
 		 'src/main/classify.cpp']
 
-featdraw_files = neurones_files + audio_analysis_files + ['src/main/featdraw.cpp', 'src/core/featuredrawer.cpp' ]
+featdraw_files = neurones_files + audio_analysis_files + ['src/main/featdraw.cpp',
+							'src/core/featuredrawer.cpp' ]
 
 specdraw_files = audio_analysis_files + [ 'src/core/spectrumRecorder.cpp',
 		  'src/main/specdraw.cpp']
 
-live_files = neurones_files + audio_analysis_files + ['src/main/live.cpp', 'src/core/liveplayer.cpp', 'src/core/featuredrawer.cpp' ]
+live_files = neurones_files + audio_analysis_files + ['src/main/live.cpp',
+		'src/core/liveplayer.cpp', 'src/core/featuredrawer.cpp' ]
 
 
 env.Program('nnat', nnat_files)

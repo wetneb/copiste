@@ -47,9 +47,10 @@
 			</Target>
 			<Target title="featdraw">
 				<Option output="featdraw" prefix_auto="1" extension_auto="1" />
-				<Option type="0" />
+				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="test/suhov-crop.wav" />
+				<Option use_console_runner="0" />
+				<Option parameters=" hzcrr-lster --network music-speech ../Neurones/dumps/tsf-horace-silver.mp3" />
 			</Target>
 			<Target title="classify">
 				<Option output="classify" prefix_auto="1" extension_auto="1" />
@@ -61,6 +62,22 @@
 				<Option type="0" />
 				<Option compiler="gcc" />
 			</Target>
+			<Target title="corpustosvg">
+				<Option output="corpustosvg" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Linker>
+					<Add library="board" />
+				</Linker>
+			</Target>
+			<Target title="mkpca">
+				<Option output="mkpca" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add directory="/usr/include/eigen3" />
+				</Compiler>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
@@ -70,7 +87,7 @@
 			<Add directory="/usr/local/share/qt4/include/QtXml" />
 			<Add directory="/usr/local/share/qt4/include/QtXmlPatterns" />
 			<Add directory="/usr/include/boost" />
-			<Add directory="/home/berthe/Programmation/Neurones/include" />
+			<Add directory="/home/berthe/Programmation/NowPlaying/include" />
 		</Compiler>
 		<Linker>
 			<Add library="QtCore" />
@@ -88,6 +105,8 @@
 			<Option target="classify" />
 			<Option target="featdraw" />
 			<Option target="live" />
+			<Option target="mkcorpus" />
+			<Option target="corpustosvg" />
 		</Unit>
 		<Unit filename="include/algo/analysis.h">
 			<Option target="nnat" />
@@ -98,6 +117,8 @@
 			<Option target="mkcorpus" />
 			<Option target="classify" />
 			<Option target="live" />
+			<Option target="corpustosvg" />
+			<Option target="mkpca" />
 		</Unit>
 		<Unit filename="include/algo/inputneuron.h">
 			<Option target="nnat" />
@@ -105,6 +126,8 @@
 			<Option target="classify" />
 			<Option target="featdraw" />
 			<Option target="live" />
+			<Option target="corpustosvg" />
+			<Option target="mkpca" />
 		</Unit>
 		<Unit filename="include/algo/neuron.h">
 			<Option target="nnat" />
@@ -112,6 +135,8 @@
 			<Option target="classify" />
 			<Option target="featdraw" />
 			<Option target="live" />
+			<Option target="corpustosvg" />
+			<Option target="mkpca" />
 		</Unit>
 		<Unit filename="include/algo/nnetwork.h">
 			<Option target="nnat" />
@@ -119,6 +144,8 @@
 			<Option target="classify" />
 			<Option target="featdraw" />
 			<Option target="live" />
+			<Option target="corpustosvg" />
+			<Option target="mkpca" />
 		</Unit>
 		<Unit filename="include/core/audiochunk.h">
 			<Option target="nnat" />
@@ -198,6 +225,12 @@
 			<Option target="classify" />
 			<Option target="live" />
 		</Unit>
+		<Unit filename="include/filters/centroid.h">
+			<Option target="mkcorpus" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+			<Option target="live" />
+		</Unit>
 		<Unit filename="include/filters/filter.h">
 			<Option target="mkcorpus" />
 			<Option target="specdraw" />
@@ -208,6 +241,12 @@
 		<Unit filename="include/filters/flux.h">
 			<Option target="mkcorpus" />
 			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+			<Option target="live" />
+		</Unit>
+		<Unit filename="include/filters/highlowratio.h">
+			<Option target="mkcorpus" />
 			<Option target="featdraw" />
 			<Option target="classify" />
 			<Option target="live" />
@@ -225,11 +264,16 @@
 		<Unit filename="include/gui/view2D.h">
 			<Option target="nnat" />
 		</Unit>
+		<Unit filename="include/pca/pcatransformer.h">
+			<Option target="mkpca" />
+		</Unit>
 		<Unit filename="src/algo/corpus.cpp">
 			<Option target="nnat" />
 			<Option target="mkcorpus" />
 			<Option target="classify" />
 			<Option target="live" />
+			<Option target="corpustosvg" />
+			<Option target="mkpca" />
 		</Unit>
 		<Unit filename="src/algo/neuron.cpp">
 			<Option target="nnat" />
@@ -237,6 +281,8 @@
 			<Option target="classify" />
 			<Option target="featdraw" />
 			<Option target="live" />
+			<Option target="corpustosvg" />
+			<Option target="mkpca" />
 		</Unit>
 		<Unit filename="src/algo/nnetwork.cpp">
 			<Option target="nnat" />
@@ -244,6 +290,8 @@
 			<Option target="classify" />
 			<Option target="featdraw" />
 			<Option target="live" />
+			<Option target="corpustosvg" />
+			<Option target="mkpca" />
 		</Unit>
 		<Unit filename="src/core/classifier.cpp">
 			<Option target="classify" />
@@ -313,6 +361,12 @@
 			<Option target="classify" />
 			<Option target="live" />
 		</Unit>
+		<Unit filename="src/filters/centroid.cpp">
+			<Option target="mkcorpus" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+			<Option target="live" />
+		</Unit>
 		<Unit filename="src/filters/filter.cpp">
 			<Option target="mkcorpus" />
 			<Option target="specdraw" />
@@ -323,6 +377,12 @@
 		<Unit filename="src/filters/flux.cpp">
 			<Option target="mkcorpus" />
 			<Option target="specdraw" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+			<Option target="live" />
+		</Unit>
+		<Unit filename="src/filters/highlowratio.cpp">
+			<Option target="mkcorpus" />
 			<Option target="featdraw" />
 			<Option target="classify" />
 			<Option target="live" />
@@ -349,6 +409,9 @@
 		<Unit filename="src/main/classify.cpp">
 			<Option target="classify" />
 		</Unit>
+		<Unit filename="src/main/corpustosvg.cpp">
+			<Option target="corpustosvg" />
+		</Unit>
 		<Unit filename="src/main/featdraw.cpp">
 			<Option target="featdraw" />
 		</Unit>
@@ -358,11 +421,17 @@
 		<Unit filename="src/main/mkcorpus.cpp">
 			<Option target="mkcorpus" />
 		</Unit>
+		<Unit filename="src/main/mkpca.cpp">
+			<Option target="mkpca" />
+		</Unit>
 		<Unit filename="src/main/nnat.cpp">
 			<Option target="nnat" />
 		</Unit>
 		<Unit filename="src/main/specdraw.cpp">
 			<Option target="specdraw" />
+		</Unit>
+		<Unit filename="src/pca/pcatransformer.cpp">
+			<Option target="mkpca" />
 		</Unit>
 		<Extensions>
 			<code_completion />

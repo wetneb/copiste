@@ -27,6 +27,8 @@ class SoundAnalyser;
 #include "filters/average.h"
 #include "filters/flux.h"
 #include "filters/range.h"
+#include "filters/highlowratio.h"
+#include "filters/centroid.h"
 
 using namespace std;
 
@@ -81,6 +83,8 @@ class SoundAnalyser : private StreamPlayer
         bool isUsed(unsigned int index);
         //! Get the name of the nth feature
         string name(unsigned int n);
+        //! Get the id of the feature named so (-1 if not found)
+        int getFeatureByName(string name);
 
         //! Handle audio chunks
         void useBuffer();

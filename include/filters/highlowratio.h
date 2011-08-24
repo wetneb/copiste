@@ -11,7 +11,7 @@
  * the float can be set in the XML file.
  * The user can also decide if the number of values higher or lower should be counted.
  */
-class HighLowRatioFilter
+class HighLowRatioFilter : public Filter
 {
     public:
         //! Constructor : does nothing by default
@@ -41,6 +41,9 @@ class HighLowRatioFilter
 
         //! Get a int parameter (available : high, windowSize)
         virtual int getInt(string key);
+
+        //! Returns the size of the results (which is the size of the upstream feature)
+        int size() { return mResults.size(); }
 
     private:
         void reallocate(unsigned int newSize);

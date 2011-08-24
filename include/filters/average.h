@@ -3,7 +3,7 @@
 
 #include "filters/filter.h"
 
-//! A filter for computing the average of a value
+//! A filter for computing the temporal average of a value
 class AverageFilter : public Filter
 {
     public:

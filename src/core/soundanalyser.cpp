@@ -63,6 +63,10 @@ bool SoundAnalyser::setupPipeline(string filename)
                     flt = new RangeFilter;
                 else if(type == "Flux")
                     flt = new FluxFilter;
+                else if(type == "Centroid")
+                    flt = new CentroidFilter;
+                else if(type == "HighLowRatio")
+                    flt = new HighLowRatioFilter;
 
                 if(flt != 0)
                 {
@@ -82,8 +86,7 @@ bool SoundAnalyser::setupPipeline(string filename)
                     else
                         cout << filename << " : Missing <ref> for "<<name <<".\n";
                 }
-
-                if(flt == 0)
+                else
                 {
                     cout << filename << " : Unable to load filter "<<name<<" of type "<<type<<"."<<endl;
                 }
@@ -136,6 +139,7 @@ SoundAnalyser::~SoundAnalyser()
 {
     resetExtractors();
     clearFeatures();
+    cout << "~SoundAnalyser()" << endl;
 }
 
 //! Clears the features
@@ -301,5 +305,18 @@ FeatureExtractor* SoundAnalyser::getExtractor(string name)
     for(unsigned int i = 0; i < mExtr.size() && res == 0; i++)
         if(mExtr[i].first == name)
             res = mExtr[i].second;
+    return res;
+}
+
+//! Get the id of the feature named so (-1 if not found)
+int SoundAnalyser::getFeatureByName(string name)
+{
+    int res = -1, i = 0;
+    while(res == -1 && i < (int)mExtr.size())
+    {
+        if(mExtr[i].first == name)
+            res = i;
+        i++;
+    }
     return res;
 }
