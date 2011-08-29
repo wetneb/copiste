@@ -11,8 +11,6 @@ class HZCRRExtr;
 #define DEFAULT_ZCR_BOUND 2.0
 #define DEFAULT_HZCRR_CHUNKS_NUMBER (44100 / AUDIO_CHUNK_SIZE)
 
-// TODO : HZCRR and LSTER should be computed by a special filter since the algos are the same
-
 /**
  * \class HZCRRExtr
  * \brief Extracts the High ZCR Ratio (ZCR stands for Zero Crossing Rate)

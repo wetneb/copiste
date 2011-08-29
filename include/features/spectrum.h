@@ -3,6 +3,10 @@
 
 #include "features/extractor.h"
 
+/** \todo Implement overlapping : the results would be better if the frames were overlapping a bit (2/3)
+ * See http://oxygene.sk/lukas/2011/01/how-does-chromaprint-work/
+ */
+
 /**
  * \class SpectrumExtr
  * \brief Retrives the spectrum using FFT
