@@ -6,7 +6,7 @@
 namespace po = boost::program_options;
 
 #include <iostream>
-using namespace std; // A supprimer (ou pas)
+using namespace std;
 
 #include "core/featuredrawer.h"
 
@@ -68,15 +68,19 @@ int main(int argc, char **argv)
             fd.compute(filename);
             fd.waitComputed();
             fd.draw(boost::filesystem::path(filename).stem().string());
+            cout << "Hey" << endl << endl;
             fd.writeToFile(output);
+            cout << "Done" << endl;
         }
         else
             cout << "Failed to load the pipeline." << endl;
+        cout << "OUT" << endl;
     }
     else
     {
         cout << "No input file has been set. Use --help for more info."<<endl;
     }
+    cout << "DELETED" << endl;
 
     return 0;
 }

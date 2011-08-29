@@ -11,6 +11,7 @@
 
 #define FEATURE_DRAWER_DEFAULT_WIDTH 1600
 #define FEATURE_DRAWER_DEFAULT_HEIGHT 600
+#define FEATURE_DRAWER_SPECTRUM_NAME "_spectrum"
 
 using namespace std;
 

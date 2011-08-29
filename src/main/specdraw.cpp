@@ -44,7 +44,9 @@ int main(int argc, char **argv)
         cout << "File to read : " << filename << endl;
         cout << "Target : "<<output<<endl;
         sr.compute(filename);
+        cout << endl << endl << "Computed" << endl << endl;
         sr.writeToFile(output);
+        cout << "Saved."<< endl;
     }
     return 0;
 }

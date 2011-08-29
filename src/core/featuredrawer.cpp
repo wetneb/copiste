@@ -50,6 +50,12 @@ void FeatureDrawer::draw(string filename, bool live)
             plotStart = ((int)nbSamples() - (int)mOut.width());
     }
 
+    // Should we draw spectrum ?
+    if(mDrawSpectrum)
+    {
+        mDrawSpectrum = (getFeatureByName(FEATURE_DRAWER_SPECTRUM_NAME) != -1);
+    }
+
     // Compute the ranges
     computeMinMax(plotStart);
 
@@ -199,6 +205,8 @@ void FeatureDrawer::draw(string filename, bool live)
             offset++;
         }
     }
+
+    painter.end();
 }
 
 void FeatureDrawer::computeMinMax(int startingPoint)
@@ -258,8 +266,10 @@ void FeatureDrawer::setNetwork(NNetwork *net)
 
 FeatureDrawer::~FeatureDrawer()
 {
+    cout << "~FeatureDrawer" << endl; /*
     if(mMin)
        delete mMin;
     if(mMax)
-       delete mMax;
+       delete mMax; */
+    cout << "~FeatureDrawer()" << endl;
 }
