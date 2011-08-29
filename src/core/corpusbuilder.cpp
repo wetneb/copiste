@@ -114,7 +114,7 @@ void CorpusBuilder::compute()
                 cout << "["<<mCurrentFile+1<<"/"<<mFiles.size()<<"] : "<<filename<<endl;
 
             // Save the filename (so that the corpus can be labelled)
-            mSamplesNames.push_back(filename);
+            mSampleNames.push_back(filename);
 
             // Do the computation
             ((SoundAnalyser*)this)->compute(mFiles[mCurrentFile]);
