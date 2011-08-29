@@ -21,12 +21,14 @@ NNetwork::NNetwork(string fileName)
 NNetwork::~NNetwork()
 {
     clear();
+    cout << "~NNetwork()" << endl;
 }
 
 void NNetwork::clear()
 {
     // \todo delete the neurons !
     // Look at ~Neuron
+    ;
 }
 
 bool NNetwork::load(string fileName)
