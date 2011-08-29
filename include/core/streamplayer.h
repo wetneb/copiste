@@ -51,8 +51,6 @@ void prepareRender(void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int si
  * This class is intended to be rewritten for more specific usages (spectrum analysis, feature extraction, aso.).
  * Its the interface between libVLC (which reads the media, decodes, resamples, and does all the hard DSP) and
  * the using of the data.
- *
- * TODO : add parameters : enable to set verbosity (display progress or not)
  */
 class StreamPlayer
 {
@@ -60,7 +58,7 @@ class StreamPlayer
         // Set up functions
 
         //! Default constructor. Starts VLC instance.
-        StreamPlayer(bool live = false);
+        StreamPlayer(bool live = false, bool verbose = true);
         //! Default destructor. Frees memory and closes VLC.
         ~StreamPlayer();
         //! Returns URL of the currently playing stream
@@ -119,6 +117,9 @@ class StreamPlayer
         char* mAudioData;
         unsigned int mAudioDataSize;
         unsigned int mFrequency; // detected from VLC
+
+    protected:
+        bool mVerbose;
 
     private:
         // Paramètres

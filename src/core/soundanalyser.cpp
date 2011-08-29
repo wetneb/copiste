@@ -206,7 +206,7 @@ bool SoundAnalyser::compute(string url)
 
 void SoundAnalyser::sequenceEnds()
 {
-    if(mLastUpdateTime != 0)
+    if(mVerbose && mLastUpdateTime != 0)
     {
         cout << "\e[F\e[K" << flush;
          mLastUpdateTime = 0;
@@ -223,7 +223,7 @@ void SoundAnalyser::useBuffer()
 {
     if(mExtr.size())
     {
-        if(mLastUpdateTime < playingTime() - 500)
+        if(mVerbose && mLastUpdateTime < playingTime() - 500)
         {
             if(mLastUpdateTime != 0)
                 cout << "\e[F" << flush; // Magic sequence which flushes the last written line (not so magic, see ANSI spec)
