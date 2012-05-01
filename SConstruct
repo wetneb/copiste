@@ -14,6 +14,7 @@ cpppath = [ 'include',
 	    '/usr/include/boost' ]
 
 libs = [ 'vlc',
+         'vlccore',
 	 'QtCore',
 	 'QtGui',
 	 'QtXml',
