@@ -23,6 +23,8 @@
 
 #include <iostream>
 
+using namespace std;
+
 //! A typedef allowing us to change easely the hardware precision used in computations
 typedef float neural_value;
 
@@ -59,10 +61,10 @@ class AbstractNeuron
         virtual void forgetChild(AbstractNeuron* child) = 0;
 
         //! Display the neuron as a string
-        virtual std::string str() const = 0;
+        virtual string str() const = 0;
 
         //! Returns the name of the neuron
-        virtual std::string name() const = 0;
+        virtual string name() const = 0;
 
         //! Cleans the cache (forgets the output value and the error, but keeps weights and parents)
         virtual void clean() = 0;

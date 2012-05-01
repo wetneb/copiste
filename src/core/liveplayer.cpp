@@ -32,11 +32,9 @@ LivePlayer::LivePlayer(QWidget *parent) : QWidget(parent),
     QPainter painter(&mLastImage);
     painter.fillRect(0,0, width(), height(), QColor(0,0,0));
     painter.setFont(QFont("Arial", 25));
-    painter.setPen(QColor(255,255,255));
-    painter.drawText(0,0, width(), height(), Qt::AlignCenter, "Patience... on se connecte...");
-    painter.end();
+    painter.drawText(0,0, width(), height(), Qt::AlignCenter, "Loading...");
 
-    repaint();
+    update();
 }
 
 void LivePlayer::useFeatures()
