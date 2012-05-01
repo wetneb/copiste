@@ -21,7 +21,8 @@ libs = [ 'vlc',
 	 'QtXmlPatterns',
 	 'boost_program_options',
 	 'boost_filesystem',
-	 'boost_thread']
+	 'boost_thread',
+         'boost_system']
 
 # End of the configuration section
 
