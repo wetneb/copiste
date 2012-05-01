@@ -2872,7 +2872,7 @@
 1307890002 source:/home/berthe/Programmation/Neurones/src/gui/moc_editor.cpp
 	"gui/editor.h"
 
-1298376172 /usr/local/share/qt4/include/QtGui/QPaintEvent
+1331733715 /usr/local/share/qt4/include/QtGui/QPaintEvent
 	"qevent.h"
 
 1305980300 /home/berthe/Programmation/Neurones/src/gui/view2D.h
@@ -2890,43 +2890,44 @@
 	<QPaintEvent>
 	<QPainter>
 
-1298376172 /usr/local/share/qt4/include/QtGui/QMainWindow
+1331733716 /usr/local/share/qt4/include/QtGui/QMainWindow
 	"qmainwindow.h"
 
-1298376239 /usr/local/share/qt4/include/QtGui/qmainwindow.h
+1331733676 /usr/local/share/qt4/include/QtGui/qmainwindow.h
 	<QtGui/qwidget.h>
 	<QtGui/qtabwidget.h>
 
-1298376239 /usr/local/share/qt4/include/QtGui/qtabwidget.h
+1331733676 /usr/local/share/qt4/include/QtGui/qtabwidget.h
 	<QtGui/qwidget.h>
 	<QtGui/qicon.h>
 
-1298376239 /usr/local/share/qt4/include/QtGui/qicon.h
+1331733676 /usr/local/share/qt4/include/QtGui/qicon.h
 	<QtCore/qglobal.h>
 	<QtCore/qsize.h>
 	<QtCore/qlist.h>
 	<QtGui/qpixmap.h>
 
-1298376172 /usr/local/share/qt4/include/QtGui/QStatusBar
+1331733716 /usr/local/share/qt4/include/QtGui/QStatusBar
 	"qstatusbar.h"
 
-1298376239 /usr/local/share/qt4/include/QtGui/qstatusbar.h
+1331733676 /usr/local/share/qt4/include/QtGui/qstatusbar.h
 	<QtGui/qwidget.h>
 
-1298376173 /usr/local/share/qt4/include/QtGui/QMenuBar
+1331733715 /usr/local/share/qt4/include/QtGui/QMenuBar
 	"qmenubar.h"
 
-1298376239 /usr/local/share/qt4/include/QtGui/qmenubar.h
+1331733676 /usr/local/share/qt4/include/QtGui/qmenubar.h
 	<QtGui/qmenu.h>
 
-1298376239 /usr/local/share/qt4/include/QtGui/qmenu.h
+1331733676 /usr/local/share/qt4/include/QtGui/qmenu.h
 	<QtGui/qwidget.h>
 	<QtCore/qstring.h>
 	<QtGui/qicon.h>
 	<QtGui/qaction.h>
 	<QtGui/qpixmap.h>
+	<windef.h>
 
-1298376238 /usr/local/share/qt4/include/QtGui/qaction.h
+1331733676 /usr/local/share/qt4/include/QtGui/qaction.h
 	<QtGui/qkeysequence.h>
 	<QtCore/qstring.h>
 	<QtGui/qwidget.h>
@@ -2934,13 +2935,13 @@
 	<QtGui/qicon.h>
 	<QtGui/qactiongroup.h>
 
-1298376238 /usr/local/share/qt4/include/QtGui/qactiongroup.h
+1331733676 /usr/local/share/qt4/include/QtGui/qactiongroup.h
 	<QtGui/qaction.h>
 
-1298376172 /usr/local/share/qt4/include/QtGui/QToolBar
+1331733715 /usr/local/share/qt4/include/QtGui/QToolBar
 	"qtoolbar.h"
 
-1298376239 /usr/local/share/qt4/include/QtGui/qtoolbar.h
+1331733676 /usr/local/share/qt4/include/QtGui/qtoolbar.h
 	<QtGui/qwidget.h>
 
 1303244029 source:/home/berthe/Programmation/Neurones/src/featuresMain.cpp
@@ -6405,7 +6406,7 @@
 1314630908 source:/home/berthe/Programmation/NowPlaying/src/filters/range.cpp
 	"filters/range.h"
 
-1314630907 source:/home/berthe/Programmation/NowPlaying/src/algo/corpus.cpp
+1335891449 source:/home/berthe/Programmation/NowPlaying/src/algo/corpus.cpp
 	"algo/corpus.h"
 
 1314630908 source:/home/berthe/Programmation/NowPlaying/src/main/live.cpp
@@ -6418,27 +6419,27 @@
 1334850286 source:/home/berthe/Programmation/NowPlaying/src/core/liveplayer.cpp
 	"core/liveplayer.h"
 
-1309199416 source:/home/berthe/Programmation/NowPlaying/src/gui/editor.cpp
+1335892098 source:/home/berthe/Programmation/NowPlaying/src/gui/editor.cpp
 	"gui/editor.h"
 
-1307955872 source:/home/berthe/Programmation/NowPlaying/src/gui/moc_editor.cpp
-	"gui/editor.h"
+1331488453 source:/home/berthe/Programmation/NowPlaying/src/gui/moc_editor.cpp
+	"../../include/gui/editor.h"
 
-1307955872 source:/home/berthe/Programmation/NowPlaying/src/gui/moc_view2D.cpp
-	"gui/view2D.h"
+1331488578 source:/home/berthe/Programmation/NowPlaying/src/gui/moc_view2D.cpp
+	"../../include/gui/view2D.h"
 
-1309609072 source:/home/berthe/Programmation/NowPlaying/src/gui/view2D.cpp
+1335892758 source:/home/berthe/Programmation/NowPlaying/src/gui/view2D.cpp
 	"gui/view2D.h"
 	<iostream>
 	<QPaintEvent>
 	<QPainter>
 
-1309782878 source:/home/berthe/Programmation/NowPlaying/src/main/nnat.cpp
+1335893142 source:/home/berthe/Programmation/NowPlaying/src/main/nnat.cpp
 	<iostream>
 	<QApplication>
 	<program_options.hpp>
 	"algo/corpus.h"
-	"algo/nnetwork.h"
+	"algo/neuralnetwork.h"
 	"gui/view2D.h"
 	"gui/editor.h"
 
@@ -6450,19 +6451,19 @@
 	<iostream>
 	"core/spectrumRecorder.h"
 
-1335689944 /home/berthe/Programmation/NowPlaying/include/algo/corpus.h
+1335891449 /home/berthe/Programmation/NowPlaying/include/algo/corpus.h
+	<iostream>
 	<string>
 	<vector>
 	<cmath>
 	<QFile>
-	"abstractneuron.h"
-	"nnetwork.h"
+	<QDomDocument>
 
 1335690008 /home/berthe/Programmation/NowPlaying/include/algo/abstractneuron.h
 	<QDomNode>
 	<iostream>
 
-1335690076 /home/berthe/Programmation/NowPlaying/include/algo/nnetwork.h
+1335891449 /home/berthe/Programmation/NowPlaying/include/algo/nnetwork.h
 	<vector>
 	<sstream>
 	<QHash>
@@ -6514,7 +6515,7 @@
 	<string>
 	"features/spectrum.h"
 
-1314644094 /home/berthe/Programmation/NowPlaying/include/features/spectrum.h
+1335891449 /home/berthe/Programmation/NowPlaying/include/features/spectrum.h
 	"features/extractor.h"
 
 1314630749 /home/berthe/Programmation/NowPlaying/include/features/extractor.h
@@ -6563,20 +6564,20 @@
 1308669331 source:/home/berthe/Programmation/NowPlaying/src/core/corpusbuilder.cpp
 	"core/corpusbuilder.h"
 
-1309078994 /home/berthe/Programmation/NowPlaying/include/gui/editor.h
+1335891820 /home/berthe/Programmation/NowPlaying/include/gui/editor.h
 	<QMainWindow>
 	<QStatusBar>
 	<QMenuBar>
 	<QToolBar>
 	<QFileDialog>
 	"gui/view2D.h"
-	"algo/nnetwork.h"
+	"algo/neuralnetwork.h"
 	"algo/corpus.h"
 
-1309795959 /home/berthe/Programmation/NowPlaying/include/gui/view2D.h
+1335892028 /home/berthe/Programmation/NowPlaying/include/gui/view2D.h
 	<QWidget>
 	<stack>
-	"algo/nnetwork.h"
+	"algo/neuralnetwork.h"
 	"algo/corpus.h"
 
 1314630749 /home/berthe/Programmation/NowPlaying/include/core/liveplayer.h
@@ -7331,26 +7332,26 @@
 
 1306761337 /usr/include/eigen3/Eigen/src/Eigen2Support/Geometry/ParametrizedLine.h
 
-1298376173 /usr/local/share/qt4/include/QtGui/QFileDialog
+1331733716 /usr/local/share/qt4/include/QtGui/QFileDialog
 	"qfiledialog.h"
 
-1298376238 /usr/local/share/qt4/include/QtGui/qfiledialog.h
+1331733675 /usr/local/share/qt4/include/QtGui/qfiledialog.h
 	<QtCore/qdir.h>
 	<QtCore/qstring.h>
 	<QtGui/qdialog.h>
 
-1298376240 /usr/local/share/qt4/include/QtCore/qdir.h
+1331733678 /usr/local/share/qt4/include/QtCore/qdir.h
 	<QtCore/qstring.h>
 	<QtCore/qfileinfo.h>
 	<QtCore/qstringlist.h>
 	<QtCore/qshareddata.h>
 
-1298376240 /usr/local/share/qt4/include/QtCore/qfileinfo.h
+1331733678 /usr/local/share/qt4/include/QtCore/qfileinfo.h
 	<QtCore/qfile.h>
 	<QtCore/qlist.h>
 	<QtCore/qshareddata.h>
 
-1298376238 /usr/local/share/qt4/include/QtGui/qdialog.h
+1331733675 /usr/local/share/qt4/include/QtGui/qdialog.h
 	<QtGui/qwidget.h>
 
 1314630749 /home/berthe/Programmation/NowPlaying/include/core/spectrumRecorder.h
@@ -8360,10 +8361,10 @@
 	<QtCore/qstring.h>
 	<QtGui/qwindowdefs.h>
 
-1335864971 source:/home/berthe/Programmation/NowPlaying/src/algo/neuralnetwork.cpp
+1335891449 source:/home/berthe/Programmation/NowPlaying/src/algo/neuralnetwork.cpp
 	"algo/neuralnetwork.h"
 
-1335865000 /home/berthe/Programmation/NowPlaying/include/algo/neuralnetwork.h
+1335891449 /home/berthe/Programmation/NowPlaying/include/algo/neuralnetwork.h
 	<string>
 	<cmath>
 	<cstdlib>

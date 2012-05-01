@@ -28,7 +28,7 @@
 class Editor;
 
 #include "gui/view2D.h"
-#include "algo/nnetwork.h"
+#include "algo/neuralnetwork.h"
 #include "algo/corpus.h"
 
 //! The main class for the graphical network trainer
@@ -38,7 +38,7 @@ class Editor : public QMainWindow
     public:
         Editor(QWidget *parent = 0);
 
-        void setNet(NNetwork *net);
+        void setNet(NeuralNetwork *net);
         void setCorpus(Corpus *corpus);
 
     protected:

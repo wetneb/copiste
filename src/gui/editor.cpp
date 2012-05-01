@@ -39,7 +39,7 @@ Editor::Editor(QWidget *parent) : QMainWindow(parent)
     connect(mToolbar, SIGNAL(actionTriggered(QAction*)), this, SLOT(handleAction(QAction*)));
 }
 
-void Editor::setNet(NNetwork *net)
+void Editor::setNet(NeuralNetwork *net)
 {
     mView.setNet(net);
 }
@@ -65,7 +65,7 @@ void Editor::handleAction(QAction *action)
     {
         if(mView.corpus() && mView.net())
         {
-            mView.corpus()->train(*mView.net(), 0.001, 10000);
+            //mView.corpus()->train(*mView.net(), 0.001, 10000);
             mView.renderScene();
             mView.repaint();
         }
@@ -98,7 +98,7 @@ void Editor::handleAction(QAction *action)
     {
         if(mView.net())
         {
-            mView.net()->write(
+            mView.net()->save(
             QFileDialog::getOpenFileName(this,
                 "Save network", "~", tr("XML files (*.xml)")).toStdString());
         }

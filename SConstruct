@@ -29,8 +29,7 @@ libs = [ 'vlccore',
 env = Environment(LIBPATH=libpath, CPPPATH = cpppath, LIBS=libs)
 
 neurones_files = [ 'src/algo/corpus.cpp',
-		   'src/algo/neuron.cpp',
-		   'src/algo/nnetwork.cpp' ]
+		   'src/algo/neuralnetwork.cpp' ]
 
 sound_analyser_files = [ 'src/core/soundanalyser.cpp',
 			 'src/core/streamplayer.cpp' ]

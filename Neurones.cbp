@@ -135,25 +135,7 @@
 			<Option target="classify" />
 			<Option target="live" />
 		</Unit>
-		<Unit filename="include/algo/neuron.h">
-			<Option target="nnat" />
-			<Option target="mkcorpus" />
-			<Option target="classify" />
-			<Option target="featdraw" />
-			<Option target="live" />
-			<Option target="corpustosvg" />
-			<Option target="mkpca" />
-		</Unit>
-		<Unit filename="include/algo/nnetwork.h">
-			<Option target="nnat" />
-			<Option target="mkcorpus" />
-			<Option target="classify" />
-			<Option target="featdraw" />
-			<Option target="live" />
-			<Option target="corpustosvg" />
-			<Option target="mkpca" />
-		</Unit>
-		<Unit filename="include/core/audiochunk.h">
+                <Unit filename="include/core/audiochunk.h">
 			<Option target="nnat" />
 			<Option target="mkcorpus" />
 		</Unit>
@@ -295,24 +277,6 @@
 			<Option target="featdraw" />
 			<Option target="classify" />
 			<Option target="live" />
-		</Unit>
-		<Unit filename="src/algo/neuron.cpp">
-			<Option target="nnat" />
-			<Option target="mkcorpus" />
-			<Option target="classify" />
-			<Option target="featdraw" />
-			<Option target="live" />
-			<Option target="corpustosvg" />
-			<Option target="mkpca" />
-		</Unit>
-		<Unit filename="src/algo/nnetwork.cpp">
-			<Option target="nnat" />
-			<Option target="mkcorpus" />
-			<Option target="classify" />
-			<Option target="featdraw" />
-			<Option target="live" />
-			<Option target="corpustosvg" />
-			<Option target="mkpca" />
 		</Unit>
 		<Unit filename="src/core/classifier.cpp">
 			<Option target="classify" />

@@ -23,7 +23,7 @@
 #include <program_options.hpp>
 
 #include "algo/corpus.h"
-#include "algo/nnetwork.h"
+#include "algo/neuralnetwork.h"
 #include "gui/view2D.h"
 #include "gui/editor.h"
 
@@ -72,21 +72,22 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    string corpusFile = "", netFile = "", outFile = "out.png";
+    std::string corpusFile = "", netFile = "", outFile = "out.png";
     bool verbose = vm.count("verbose");
     float rate = 0.01;
     int iterMax = 1000;
-    NNetwork net;
+    NeuralNetwork net;
     Corpus corpus;
 
     if(vm.count("net"))
     {
-        netFile = vm["net"].as<string> ();
+        netFile = vm["net"].as<std::string> ();
 
         if(netFile.substr(0,4) == "NEW/")
         {
-            cout << "Generating a new network" << endl;
-            istringstream s(netFile);
+            std::cout << "Generating a new network" << std::endl;
+            std::istringstream s(netFile);
+            /*
             char buf = 0;
             for(int i = 0; i < 4; i++)
                 s >> buf;
@@ -94,9 +95,9 @@ int main(int argc, char **argv)
             s >> dim;
             s >> buf;
             int depth = 0;
-            s >> depth;
+            s >> depth; */
 
-            net.generate(dim, depth);
+            //net.generate(dim, depth);
             net.randomize();
         }
         else
@@ -110,7 +111,7 @@ int main(int argc, char **argv)
 
     if(vm.count("corpus"))
     {
-        corpusFile = vm["corpus"].as<string> ();
+        corpusFile = vm["corpus"].as<std::string> ();
         corpus.load(corpusFile);
     }
     else if(vm.count("train") or vm.count("eval"))
@@ -131,23 +132,26 @@ int main(int argc, char **argv)
         if(vm.count("no-random-weights") == 0)
             net.randomize();
         float *history;
-        int nbIter = corpus.train(net, rate, iterMax, &history, (vm.count("no-random-samples") == 0), (vm.count("verbose") == 1));// 0 : &history
+        //! TODO : training
+        int nbIter = 0;//corpus.train(net, rate, iterMax, &history, (vm.count("no-random-samples") == 0), (vm.count("verbose") == 1));// 0 : &history
 
         if(verbose)
-            cout << "Training ended after " << nbIter << " iterations.\n";
+            std::cout << "Training ended after " << nbIter << " iterations.\n";
         plotHistory(history,iterMax*corpus.size(), 13);
 
-        net.write("trained-network.xml");
+        net.save("trained-network.xml");
     }
 
 
     if(vm.count("eval"))
     {
-        float accuracy = corpus.accuracy(net, verbose);
+        // float accuracy = corpus.accuracy(net, verbose);
+        //! \TODO enable accuracy computation
+        float accuracy = 0.42; // DELETE ME
         if(verbose)
             std::cout << "Accuracy : "<<accuracy*100<<"%" << std::endl;
         else
-            cout << (int)(accuracy*100) << endl;
+            std::cout << (int)(accuracy*100) << std::endl;
     }
 
     if(vm.count("plot"))
@@ -161,7 +165,7 @@ int main(int argc, char **argv)
         else view.setCorpus(new Corpus(2));
         if(netFile != "")
             view.setNet(&net);
-        cout << "Set." << endl;
+        std::cout << "Set." << std::endl;
 
         view.show();
         //view.renderToImage(outFile);

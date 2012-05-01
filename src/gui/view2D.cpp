@@ -36,14 +36,14 @@ View2D::View2D(QWidget *parent) : QWidget(parent), mCurrentPoint(false)
     setMouseTracking(true);
 }
 
-QColor colorFromValue(neural_value value)
+QColor colorFromValue(float value)
 {
     if(value < 0)
         return QColor(127*(1.0+value),63,0);
     return QColor(63, 127*(1.0-value), 0);
 }
 
-void View2D::renderToImage(string fileName, string format, int w, int h)
+void View2D::renderToImage(std::string fileName, std::string format, int w, int h)
 {
     QImage image(w, h, QImage::Format_RGB32);
 
@@ -72,20 +72,18 @@ void View2D::renderScene()
     // Draw the network first
     if(mNet)
     {
-        vector<float> inputVec;
+        std::vector<float> inputVec;
         inputVec.resize(2);
 
         // Bulk draw : each pixel is computed exactly.
-        // TODO : compute less points and interpolate between them.
+        //! \TODO : compute less points and interpolate between them.
         for(int x = 0; x != width(); ++x)
         {
             inputVec[0] = x*mViewport.scaleX + mViewport.x;
             for(int y = 0; y != height(); ++y)
             {
                 inputVec[1] = y*mViewport.scaleY + mViewport.y;
-
-                mNet->clean();
-                float value = mNet->compute(inputVec);
+                float value = mNet->classify(inputVec);
                 painter.setPen(colorFromValue(value));
 
                 painter.drawPoint(x,y);
@@ -111,7 +109,7 @@ void View2D::setCorpus(Corpus *corpus)
     if(corpus->dimension() == 2 || corpus->size() != 0)
     {
         mCorpus = corpus;
-        vector<float> bounds = corpus->bounds();
+        std::vector<float> bounds = corpus->bounds();
         float sizeX = (bounds[1] - bounds[0]), sizeY = (bounds[3] - bounds[2]);
         if(sizeX < CORPUS_EPSILON)
             sizeX = 1;
@@ -139,7 +137,7 @@ void View2D::paintEvent(QPaintEvent *event)
     if(mZooming)
     {
         painter.setPen(QColor(0,0,0));
-        int minX = min(mCurrentX, mStartX), minY = min(mCurrentY, mStartY), maxX = max(mCurrentX, mStartX), maxY = max(mCurrentY, mStartY);
+        int minX = std::min(mCurrentX, mStartX), minY = std::min(mCurrentY, mStartY), maxX = std::max(mCurrentX, mStartX), maxY = std::max(mCurrentY, mStartY);
         painter.drawRect(minX, minY, maxX - minX, maxY - minY);
     }
 
@@ -190,7 +188,7 @@ void View2D::mouseReleaseEvent(QMouseEvent *event)
     int x = event->x(), y = event->y();
     if(event->button() == Qt::LeftButton)
     {
-        QRect rect(QPoint(min(x, mStartX), min(y, mStartY)), QPoint(max(x, mStartX), max(y, mStartY)));
+        QRect rect(QPoint(std::min(x, mStartX), std::min(y, mStartY)), QPoint(std::max(x, mStartX), std::max(y, mStartY)));
         mZooming = false;
 
         if(rect.height() > 50 && rect.width() > 50)
@@ -210,7 +208,7 @@ void View2D::mouseReleaseEvent(QMouseEvent *event)
     }
     else if(event->button() == Qt::RightButton)
     {
-        neural_value *sampleVec = new neural_value[3]; // deleted by mCorpus->erase()
+        float *sampleVec = new float[3]; // deleted by mCorpus->erase()
         sampleVec[0] = mCurrentPoint;
         sampleVec[1] = x*mViewport.scaleX + mViewport.x;
         sampleVec[2] = y*mViewport.scaleY + mViewport.y;
@@ -254,7 +252,7 @@ void View2D::keyReleaseEvent(QKeyEvent *event)
     else event->ignore();
 }
 
-void View2D::setNet(NNetwork *net)
+void View2D::setNet(NeuralNetwork *net)
 {
     mNet = net;
 }
@@ -288,7 +286,7 @@ Corpus* View2D::corpus()
     return mCorpus;
 }
 
-NNetwork* View2D::net()
+NeuralNetwork* View2D::net()
 {
     return mNet;
 }
