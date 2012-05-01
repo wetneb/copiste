@@ -24,8 +24,6 @@
 #include <cmath>
 #include <QFile>
 
-using namespace std;
-
 class Corpus;
 
 #include "abstractneuron.h"
@@ -38,7 +36,7 @@ class Corpus
         /// Construction, destruction
 
         //! Default constructor. Loads a file if specified.
-        Corpus(string file = "");
+        Corpus(std::string file = "");
         //! Constructor, creating an empty corpus of dimension dim
         Corpus(int dim);
         //! Copy constructor
@@ -51,9 +49,9 @@ class Corpus
         /// Input, output
 
         //! Loads the corpus from an XML file
-        bool load(string file, bool verbose = false);
+        bool load(std::string file, bool verbose = false);
         //! Write the corpus to a file
-        void write(string file);
+        void write(std::string file);
         //! Writes to the standard output the set of elements
         void display() const;
 
@@ -90,7 +88,7 @@ class Corpus
 
         int mPoolSize; // Stores the actual capacity of the pool
 
-        vector<string> mNames; // Stores the names of the samples
+        std::vector<string> mNames; // Stores the names of the samples
 };
 
 #endif

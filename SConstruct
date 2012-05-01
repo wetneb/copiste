@@ -13,13 +13,15 @@ cpppath = [ 'include',
 	    '/usr/local/share/qt4/include/QtXmlPatterns',
 	    '/usr/include/boost' ]
 
-libs = [ 'vlc',
+libs = [ 'vlccore',
+         'vlc',
 	 'QtCore',
 	 'QtGui',
 	 'QtXml',
 	 'QtXmlPatterns',
 	 'boost_program_options',
 	 'boost_filesystem',
+         'boost_system',
 	 'boost_thread']
 
 # End of the configuration section

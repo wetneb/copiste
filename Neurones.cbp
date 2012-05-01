@@ -129,6 +129,12 @@
 			<Option target="corpustosvg" />
 			<Option target="mkpca" />
 		</Unit>
+		<Unit filename="include/algo/neuralnetwork.h">
+			<Option target="nnat" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+			<Option target="live" />
+		</Unit>
 		<Unit filename="include/algo/neuron.h">
 			<Option target="nnat" />
 			<Option target="mkcorpus" />
@@ -264,6 +270,15 @@
 		<Unit filename="include/gui/view2D.h">
 			<Option target="nnat" />
 		</Unit>
+		<Unit filename="include/hash/hasher.h">
+			<Option target="live" />
+		</Unit>
+		<Unit filename="include/hash/hashutility.h">
+			<Option target="live" />
+		</Unit>
+		<Unit filename="include/hash/peakhasher.h">
+			<Option target="live" />
+		</Unit>
 		<Unit filename="include/pca/pcatransformer.h">
 			<Option target="mkpca" />
 		</Unit>
@@ -274,6 +289,12 @@
 			<Option target="live" />
 			<Option target="corpustosvg" />
 			<Option target="mkpca" />
+		</Unit>
+		<Unit filename="src/algo/neuralnetwork.cpp">
+			<Option target="nnat" />
+			<Option target="featdraw" />
+			<Option target="classify" />
+			<Option target="live" />
 		</Unit>
 		<Unit filename="src/algo/neuron.cpp">
 			<Option target="nnat" />
@@ -405,6 +426,12 @@
 		</Unit>
 		<Unit filename="src/gui/view2D.cpp">
 			<Option target="nnat" />
+		</Unit>
+		<Unit filename="src/hash/hashutility.cpp">
+			<Option target="live" />
+		</Unit>
+		<Unit filename="src/hash/peakhasher.cpp">
+			<Option target="live" />
 		</Unit>
 		<Unit filename="src/main/classify.cpp">
 			<Option target="classify" />

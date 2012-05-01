@@ -1,11 +1,14 @@
 <target corpus="rtl-inter"> 
-	<class prefix="INTER_Texte_" goal="1" />
-	<class prefix="RTL_Texte_" goal="1" />
-    <class prefix="RTL_Musique_" goal="0" />
-    <class prefix="INTER_Musique_" goal="0" />
-    <class prefix="TSF_Musique_" goal="0" />
-    <class prefix="TSF_Texte_" goal="1" />
-    <class prefix="TSF_Musique_" goal="0" />
-    <class prefix="NOVA_Musique_" goal="0" /> 
-    <!-- <class prefix="RTL_Pub" goal="1" /> -->
+	<class prefix="INTER_Texte_" goal="0" />
+	<class prefix="RTL_Texte_" goal="0" />
+    	<class prefix="TSF_Texte_" goal="0" />
+    	<class prefix="RTL_Musique_" goal="0" />
+    	<class prefix="INTER_Musique_" goal="0" />
+    	<class prefix="TSF_Musique_" goal="0" />
+    	<class prefix="TSF_Musique_" goal="0" />
+    	<class prefix="NOVA_Musique_" goal="0" /> 
+	<class prefix="RTL_Pub" goal="1" />
+	<class prefix="CLASSIQUE_Pub" goal="1" />
+	<class prefix="TSF_Pub" goal="1" />
+	<class prefix="NOVA_Pub" goal="1" />
 </target>
