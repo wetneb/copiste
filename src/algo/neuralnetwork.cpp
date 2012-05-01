@@ -64,6 +64,12 @@ float NeuralNetwork::train(Corpus c, float regularization)
     return 0;
 }
 
+//! Randomize the weights of the network
+void NeuralNetwork::randomize()
+{
+    ;
+}
+
 //! Get the output of the network on a given input
 float NeuralNetwork::classify(std::vector<float> input)
 {

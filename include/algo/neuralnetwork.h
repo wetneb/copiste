@@ -63,6 +63,9 @@ class NeuralNetwork
        //! Get the output of the network on a given input
        float classify(std::vector<float> input);
 
+       //! Randomize the weights of the network
+       void randomize();
+
        /// Parameters
 
        //! Number of layers of the network (hidden layers + output layer)
