@@ -41,6 +41,9 @@ class Editor : public QMainWindow
         void setNet(NeuralNetwork *net);
         void setCorpus(Corpus *corpus);
 
+        void setRegularization(float r);
+        void setTrainingRate(float r);
+
     protected:
         void keyReleaseEvent(QKeyEvent *event);
 
@@ -52,6 +55,8 @@ class Editor : public QMainWindow
     private:
         View2D mView;
         QToolBar *mToolbar;
+
+        float mTrainingRate, mRegularization;
 };
 
 #endif

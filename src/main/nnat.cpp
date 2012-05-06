@@ -45,6 +45,7 @@ int main(int argc, char **argv)
         ("corpus,c", po::value<std::string>(), "Path to the corpus")
         ("out,o", po::value<std::string>(), "Path to the output (default: output.png)")
         ("rate,r", po::value<float>(), "Training rate (default: 0.01)")
+        ("regularization,l", po::value<float>(), "Regularization factor (default: 0.001)")
         ("max,m", po::value<int>(), "Maximum iterations count for training (default: 1000)")
         ("no-random-weights", "Don't randomize weights before training")
         ("no-random-samples", "Don't randomize the order of the training corpus")
@@ -74,20 +75,17 @@ int main(int argc, char **argv)
 
     std::string corpusFile = "", netFile = "", outFile = "out.png";
     bool verbose = vm.count("verbose");
-    float rate = 0.01;
-    int iterMax = 1000;
+    float rate = 0.01, regularization = 0.01;
     NeuralNetwork net;
     Corpus corpus;
 
     if(vm.count("net"))
     {
         netFile = vm["net"].as<std::string> ();
-
         if(netFile.substr(0,4) == "NEW/")
         {
-            std::cout << "Generating a new network" << std::endl;
             std::istringstream s(netFile);
-            /*
+
             char buf = 0;
             for(int i = 0; i < 4; i++)
                 s >> buf;
@@ -95,13 +93,18 @@ int main(int argc, char **argv)
             s >> dim;
             s >> buf;
             int depth = 0;
-            s >> depth; */
+            s >> depth;
 
-            //net.generate(dim, depth);
+            std::vector<int> geom;
+
+            for(int i = 0; i < depth; i++)
+                geom.push_back(dim);
+            net.reset(geom);
             net.randomize();
+            net.toFile("generated.txt"); //! \todo delete me
         }
         else
-            net.load(netFile);
+            net.fromFile(netFile);
     }
     else if(vm.count("train") or vm.count("eval"))
     {
@@ -123,31 +126,34 @@ int main(int argc, char **argv)
     if(vm.count("rate"))
         rate = vm["rate"].as<float> ();
 
+    if(vm.count("regularization"))
+        regularization = vm["regularization"].as<float> ();
+
+    //! \todo : delete or…
+    /*
     if(vm.count("max"))
         iterMax = vm["max"].as<int> ();
+        */
 
     // Running
     if(vm.count("train"))
     {
         if(vm.count("no-random-weights") == 0)
             net.randomize();
-        float *history;
-        //! TODO : training
-        int nbIter = 0;//corpus.train(net, rate, iterMax, &history, (vm.count("no-random-samples") == 0), (vm.count("verbose") == 1));// 0 : &history
+        corpus.display();
+        float cost = net.train(corpus, rate, regularization); //, iterMax, &history, (vm.count("no-random-samples") == 0), (vm.count("verbose") == 1));// 0 : &history
 
         if(verbose)
-            std::cout << "Training ended after " << nbIter << " iterations.\n";
-        plotHistory(history,iterMax*corpus.size(), 13);
+            std::cout << "Training ended with cost " << cost << "\n";
+        // plotHistory(history,iterMax*corpus.size(), 13);
 
-        net.save("trained-network.xml");
+        net.toFile("trained-network.xml");
     }
 
 
     if(vm.count("eval"))
     {
-        // float accuracy = corpus.accuracy(net, verbose);
-        //! \TODO enable accuracy computation
-        float accuracy = 0.42; // DELETE ME
+        float accuracy = net.accuracy(corpus);
         if(verbose)
             std::cout << "Accuracy : "<<accuracy*100<<"%" << std::endl;
         else
@@ -165,7 +171,8 @@ int main(int argc, char **argv)
         else view.setCorpus(new Corpus(2));
         if(netFile != "")
             view.setNet(&net);
-        std::cout << "Set." << std::endl;
+        view.setTrainingRate(rate);
+        view.setRegularization(regularization);
 
         view.show();
         //view.renderToImage(outFile);

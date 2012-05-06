@@ -22,7 +22,8 @@ libs = [ 'vlccore',
 	 'boost_program_options',
 	 'boost_filesystem',
          'boost_system',
-	 'boost_thread']
+	 'boost_thread',
+         'boost_serialization']
 
 # End of the configuration section
 

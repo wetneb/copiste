@@ -29,6 +29,12 @@
 #include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <boost/numeric/ublas/io.hpp>
 
+// Serialization
+#include <fstream>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
+
 // Temporaire
 #include "corpus.h"
 
@@ -52,16 +58,19 @@ class NeuralNetwork
        void reset(std::vector<int> geometry);
 
        //! Loads a network from a file. Returns true if it succeded.
-       bool load(std::string file);
+       bool fromFile(std::string file);
 
        //! Save the current network to a file.
-       bool save(std::string file);
+       bool toFile(std::string file);
 
        //! Train the network on a corpus
-       float train(Corpus c, float regularization);
+       float train(Corpus &c, float rate, float regularization);
 
        //! Get the output of the network on a given input
        float classify(std::vector<float> input);
+
+       //! See how well the network does on a given corpus (between 0, not accurate, and 1, accurate)
+       float accuracy(Corpus &c);
 
        //! Randomize the weights of the network
        void randomize();
@@ -76,7 +85,25 @@ class NeuralNetwork
 
        float gradientDescent(ublas::matrix<float> &ds, ublas::vector<float> &tv, float rate, unsigned int steps);
 
-       std::vector< ublas::matrix<float> > gradient(ublas::matrix<float> &ds, ublas::vector<float> &tv);
+       //! Get the output of the network on a given set of inputs
+       ublas::matrix<float> classify(ublas::matrix<float> input);
+
+        //! Gradient of the cost function
+       std::vector< ublas::matrix<float> > gradient(ublas::matrix<float> &ds, ublas::vector<float> &tv, float regularization = 0);
+
+       //! Gradient checking
+       std::vector< ublas::matrix<float> > gradientChecking(ublas::matrix<float> &ds, ublas::vector<float> &tv, float regularization = 0, float epsilon = 0.0001);
+
+       //! Cost function computation
+       float costFunction(ublas::matrix<float> &ds, ublas::vector<float> &tv, float regularization = 0);
+
+       /// Corpus management
+
+       //! Create a ublas::matrix from an array
+       static ublas::matrix<float> createDataset(Corpus &c);
+
+       //! Create a ublas::vector from an array
+       static ublas::vector<float> createTargetVector(Corpus &c);
 
        /// Utility
 
@@ -85,6 +112,12 @@ class NeuralNetwork
 
        //! Add 1s at the bottom of a matrix
        static ublas::matrix<float> addOne(ublas::matrix<float> v);
+
+       //! Remove 1s at the bottom of a matrix
+       static ublas::matrix_range<ublas::matrix<float> > removeOnes(ublas::matrix<float> m);
+
+       //! Get the j-th column of a matrix as a matrix
+       static ublas::matrix_range<ublas::matrix<float> > jthCol(ublas::matrix<float> m, size_t j);
 
        //! Apply a function element-wise to a vector
        static ublas::vector<float> elementWise(ublas::vector<float> v, float (*f)(float));
@@ -100,6 +133,11 @@ class NeuralNetwork
 
         //! Create a vector from a matrix (unroll it)
        static ublas::matrix<float> roll(ublas::vector<float> m, unsigned int r, unsigned int c);
+
+       //! Internal usage : for load and save
+       friend class boost::serialization::access;
+       template<class Archive>
+       void serialize(Archive & ar, const unsigned int version);
 
 };
 

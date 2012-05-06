@@ -208,7 +208,7 @@ bool CorpusBuilder::write(Corpus *corpus)
 
             // Bind the file to a class
             if(i < mFiles.size())
-                sample[0] = (mGoals[i] ? 1 : (-1));
+                sample[0] = (mGoals[i] ? 1 : 0);
 
             // Add the features
             for(unsigned int j = 0; j < realDimension(); j++)

@@ -11,7 +11,7 @@
 				<Option object_output="obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-teg --net networks/MLP.xml --corpus corpus/linear-discrimination.xml --verbose" />
+				<Option parameters="-tp --net NEW/2/4 --corpus corpus/bilinear-discrimination.xml --verbose -l 0.001 -r 0.005" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -98,6 +98,8 @@
 			<Add library="boost_program_options" />
 			<Add library="boost_thread" />
 			<Add library="boost_filesystem" />
+			<Add library="boost_serialization" />
+			<Add library="vlccore" />
 			<Add directory="/usr/local/share/qt4/lib" />
 		</Linker>
 		<Unit filename="include/algo/abstractneuron.h">
@@ -135,7 +137,7 @@
 			<Option target="classify" />
 			<Option target="live" />
 		</Unit>
-                <Unit filename="include/core/audiochunk.h">
+		<Unit filename="include/core/audiochunk.h">
 			<Option target="nnat" />
 			<Option target="mkcorpus" />
 		</Unit>

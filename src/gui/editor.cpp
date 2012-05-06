@@ -49,6 +49,16 @@ void Editor::setCorpus(Corpus *corpus)
     mView.setCorpus(corpus);
 }
 
+void Editor::setRegularization(float r)
+{
+    mRegularization = r;
+}
+
+void Editor::setTrainingRate(float r)
+{
+    mTrainingRate = r;
+}
+
 void Editor::handleAction(QAction *action)
 {
     if(action->text() == "Redraw")
@@ -65,7 +75,7 @@ void Editor::handleAction(QAction *action)
     {
         if(mView.corpus() && mView.net())
         {
-            //mView.corpus()->train(*mView.net(), 0.001, 10000);
+            std::cout << "Training ended with cost " << mView.net()->train(*mView.corpus(), mTrainingRate, mRegularization) << std::endl;
             mView.renderScene();
             mView.repaint();
         }
@@ -98,7 +108,7 @@ void Editor::handleAction(QAction *action)
     {
         if(mView.net())
         {
-            mView.net()->save(
+            mView.net()->toFile(
             QFileDialog::getOpenFileName(this,
                 "Save network", "~", tr("XML files (*.xml)")).toStdString());
         }

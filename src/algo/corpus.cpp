@@ -95,6 +95,11 @@ bool Corpus::load(std::string filename, bool verbose)
             {
                 mPool[nbPointsSet] = new float[mDimension+1]; // deleted in erase()
                 mPool[nbPointsSet][0] = node.toElement().attribute("goal", "1").toFloat();
+
+                // in an earlier version, the negative samples were labelled with -1 instead of 0
+                if(mPool[nbPointsSet][0] < 0)
+                    mPool[nbPointsSet][0] = 0;
+
                 mNames.push_back(node.toElement().attribute("name", "").toStdString());
 
                 nbCoordsSet = 0;

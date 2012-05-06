@@ -36,11 +36,16 @@ View2D::View2D(QWidget *parent) : QWidget(parent), mCurrentPoint(false)
     setMouseTracking(true);
 }
 
+int between0and255(int val)
+{
+    return std::min(255, std::max(0, val));
+}
+
 QColor colorFromValue(float value)
 {
-    if(value < 0)
-        return QColor(127*(1.0+value),63,0);
-    return QColor(63, 127*(1.0-value), 0);
+    if(value < 0.5)
+        return QColor(between0and255(255*value),63,0);
+    return QColor(63, between0and255(255*(1.0-value)), 0);
 }
 
 void View2D::renderToImage(std::string fileName, std::string format, int w, int h)
