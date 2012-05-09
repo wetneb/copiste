@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     }
 
     Classifier cl(vm.count("verbose"));
-    NNetwork net;
+    NeuralNetwork net;
 
     if(vm.count("input-file"))
     {
@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 
         if(cl.setupPipeline(pipeline))
         {
-            if(net.load(network))
+            if(net.fromFile(network))
             {
                 cl.setNetwork(&net);
                 cl.compute(vm["input-file"].as< string >());

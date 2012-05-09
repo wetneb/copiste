@@ -25,11 +25,36 @@
 #include <QToolBar>
 #include <QFileDialog>
 
+// Settings dialog
+#include <QSpinBox>
+#include <QDoubleSpinBox>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+
 class Editor;
 
 #include "gui/view2D.h"
 #include "algo/neuralnetwork.h"
 #include "algo/corpus.h"
+
+//! A settings dialog
+class SettingsDialog : public QDialog
+{
+    Q_OBJECT
+    public:
+        SettingsDialog(double rate, double reg, int iter, QWidget *parent = 0);
+
+    public slots:
+        void emitValues();
+    signals:
+        void values(double rate, double reg, int iter);
+
+    private:
+        QDoubleSpinBox mRate, mReg;
+        QSpinBox mIter;
+};
 
 //! The main class for the graphical network trainer
 class Editor : public QMainWindow
@@ -41,8 +66,9 @@ class Editor : public QMainWindow
         void setNet(NeuralNetwork *net);
         void setCorpus(Corpus *corpus);
 
-        void setRegularization(float r);
-        void setTrainingRate(float r);
+        void setRegularization(double r);
+        void setTrainingRate(double r);
+        void setIter(int iter);
 
     protected:
         void keyReleaseEvent(QKeyEvent *event);
@@ -50,13 +76,16 @@ class Editor : public QMainWindow
     public slots:
         void dispRendering();
         void dispRendered();
-        void handleAction(QAction *action);
+        void handleRequest(QAction *action);
+        void updateSettings(double rate, double reg, int iter);
 
     private:
         View2D mView;
         QToolBar *mToolbar;
 
-        float mTrainingRate, mRegularization;
+        // Training parameters
+        double mTrainingRate, mRegularization;
+        int mIter;
 };
 
 #endif

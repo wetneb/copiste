@@ -86,7 +86,7 @@ class SoundAnalyser : private StreamPlayer
         //! Return the number of elements of the nth feature
         unsigned int nbElems(unsigned int n);
         //! Return the array of features for the nth sample
-        float** features(unsigned int n);
+        double** features(unsigned int n);
         //! Return the number of sample we've been computing
         unsigned int nbSamples() { return mFeatures.size(); }
         //! Clears the features
@@ -122,7 +122,7 @@ class SoundAnalyser : private StreamPlayer
     private:
         vector<pair<string, FeatureExtractor* > > mExtr; // TODO : it could be an hashtable
         vector<bool> mUsed;
-        vector<float**> mFeatures;
+        vector<double**> mFeatures;
 
         int mDimension;
         int mRealDimension;

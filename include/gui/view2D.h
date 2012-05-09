@@ -37,15 +37,15 @@ class View2D;
 //! Internal struture used by View2D to keep in memory old views of a same network
 struct Viewport
 {
-    float x;
-    float y;
-    float scaleX;
-    float scaleY;
+    double x;
+    double y;
+    double scaleX;
+    double scaleY;
     QPixmap img;
 };
 typedef struct Viewport Viewport;
 
-void plotHistory(float* history, int size, int corpusSize);
+void plotHistory(double* history, int size, int corpusSize);
 
 //! A renderer for a 2D neural network
 class View2D : public QWidget

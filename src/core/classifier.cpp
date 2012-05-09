@@ -31,14 +31,15 @@ string Classifier::getClass()
     if(mNet)
     {
         // Create the input vector
-        vector<float> inputVector;
+        vector<double> inputVector;
         for(unsigned int i = 0; i < nbFeatures(); i++)
         {
             if(isUsed(i))
             {
                 for(unsigned int j = 0; j < nbElems(i); j++)
                 {
-                    float sum = 0;
+		    //! \TODO do we really need an average here ?
+                    double sum = 0;
                     // Compute the average
                     for(unsigned int k = nbSamples()*0.1; k < nbSamples(); k++)
                         sum += features(k)[i][j];
@@ -53,7 +54,7 @@ string Classifier::getClass()
             cout << endl;
 
         // Send the input vector to the network
-        float response = mNet->compute(inputVector);
+        double response = mNet->classify(inputVector);
 
         // Get the result
         if(response >= 0)
@@ -65,7 +66,7 @@ string Classifier::getClass()
     return result;
 }
 
-void Classifier::setNetwork(NNetwork *net)
+void Classifier::setNetwork(NeuralNetwork *net)
 {
     mNet = net;
 }

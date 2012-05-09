@@ -23,7 +23,7 @@
 #include <QImage>
 #include <boost/thread.hpp>
 #include "core/featuredrawer.h"
-#include "algo/nnetwork.h"
+#include "algo/neuralnetwork.h"
 
 #define LIVE_PLAYER_HEIGHT 600
 #define LIVE_PLAYER_WIDTH 800
@@ -44,8 +44,6 @@ class LivePlayer : public QWidget, public FeatureDrawer
         void paintEvent(QPaintEvent *event);
 
     private:
-        NNetwork *mNet;
-
         QImage mLastImage;
         int *mLastPoints;
         boost::mutex mLock;

@@ -18,10 +18,10 @@
 
 #include <iostream>
 #include <QApplication>
-#include <program_options.hpp>
+#include <boost/program_options.hpp>
 
 #include "core/liveplayer.h"
-#include "algo/nnetwork.h"
+#include "algo/neuralnetwork.h"
 
 namespace po = boost::program_options;
 
@@ -59,12 +59,12 @@ int main(int argc, char **argv)
     if(vm.count("input-file"))
     {
         LivePlayer lp;
-        NNetwork net;
+        NeuralNetwork net;
 
         if(vm.count("network"))
         {
             string network = "networks/" + (vm["network"].as< string >()) + ".xml";
-            if(net.load(network))
+            if(net.fromFile(network))
                 lp.setNetwork(&net);
             else
                 cout << "Warning : Unable to load the network, disabling classification." << endl;

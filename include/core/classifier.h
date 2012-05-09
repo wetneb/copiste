@@ -20,7 +20,7 @@
 #define INCLUDED_CLASSIFIER
 
 #include "core/soundanalyser.h"
-#include "algo/nnetwork.h"
+#include "algo/neuralnetwork.h"
 
 //! A class reading a file and classifying its content
 class Classifier : public SoundAnalyser
@@ -30,13 +30,13 @@ class Classifier : public SoundAnalyser
         Classifier(bool verbose = true);
 
         //! Set the network that should be used for classification
-        void setNetwork(NNetwork *net);
+        void setNetwork(NeuralNetwork *net);
 
         //! Get the class of the content
         string getClass();
 
     private:
-        NNetwork *mNet;
+        NeuralNetwork *mNet;
         bool mVerbose;
 };
 

@@ -36,7 +36,7 @@ void FeatureDrawer::setImageSize(int width, int height)
         draw();
 }
 
-/** \todo Refactor this code (create independent functions, clean offsets…) */
+/** \todo Refactor this code (create independent functions,  offsets…) */
 
 //! Draws the features to an image
 void FeatureDrawer::draw(string filename, bool live)
@@ -80,7 +80,7 @@ void FeatureDrawer::draw(string filename, bool live)
     // Draw lines
 
     // Seconds
-    float a_second = samplingFrequency() / AUDIO_CHUNK_SIZE;
+    double a_second = samplingFrequency() / AUDIO_CHUNK_SIZE;
     painter.setPen(QColor(30,30,30));
     int linesStart = plotStart % (int)a_second;
     for(int i = 1; linesStart + a_second * i < mOut.width() && linesStart + a_second * i <= nbSamples(); i++)
@@ -95,7 +95,7 @@ void FeatureDrawer::draw(string filename, bool live)
     // Draw the features
     offset = 0;
     int nbChunks = realDimension() + (mDrawSpectrum ? 1 : 0);
-    float chunk = (mOut.height() - bottom - top) / nbChunks;
+    double chunk = (mOut.height() - bottom - top) / nbChunks;
     for(unsigned int f = 0; f < nbFeatures(); f++)
     {
         if(isUsed(f))
@@ -105,15 +105,15 @@ void FeatureDrawer::draw(string filename, bool live)
                 int realOffset = offset  - (mDrawSpectrum ? 1 : 0);
                 if(mMax[realOffset] == mMin[realOffset])
                     mMax[realOffset] = mMin[realOffset] + 0.01;
-                float scale = (mMax[realOffset] - mMin[realOffset]) / chunk;
-                float orig = mOut.height() - bottom - chunk*offset;
+                double scale = (mMax[realOffset] - mMin[realOffset]) / chunk;
+                double orig = mOut.height() - bottom - chunk*offset;
 
                 painter.setPen(colors[offset%8]);
 
                 QPoint lastPoint(0,0);
                 for(int i = plotStart; i - plotStart < mOut.width() && i < (int)nbSamples(); ++i)
                 {
-                    float val = features(i)[f][e];
+                    double val = features(i)[f][e];
                     if(val > mMax[realOffset])
                         val = mMax[realOffset];
                     //val = (i % 2) ? mMax[offset] : mMin[offset];
@@ -129,7 +129,7 @@ void FeatureDrawer::draw(string filename, bool live)
         else if(name(f) == "_spectrum" && mDrawSpectrum)
         {
             int nbFrequenciesPerPixel = 0.5 * nbElems(f) / chunk;
-            float orig = mOut.height() - bottom - chunk*offset;
+            double orig = mOut.height() - bottom - chunk*offset;
             for(int i = plotStart; i - plotStart < mOut.width() && i < (int)nbSamples(); ++i)
             {
                 int currentValue = 0;
@@ -154,13 +154,13 @@ void FeatureDrawer::draw(string filename, bool live)
     // Draw the response of the network
     if(mNet)
     {
-        float currentClass = 0;
+        double currentClass = 0;
         int lastChange = 0;
         for(int i = plotStart; i - plotStart < mOut.width() && i - plotStart < (int)nbSamples(); ++i)
         {
-            float response = 0;
+            double response = 0;
             // Create the input vector
-            vector<float> inputVector;
+            vector<double> inputVector;
             for(unsigned int k = 0; k < nbFeatures(); k++)
             {
                 if(isUsed(k))
@@ -171,8 +171,7 @@ void FeatureDrawer::draw(string filename, bool live)
             }
 
             // Send the input vector to the network
-            mNet->clean();
-            response = mNet->compute(inputVector);
+            response = mNet->classify(inputVector);
 
             // Draw the class
             if(currentClass * response <= 0 || i - plotStart == mOut.width()-1 || i - plotStart == (int)nbSamples()-1)
@@ -207,7 +206,7 @@ void FeatureDrawer::draw(string filename, bool live)
         {
             for(unsigned int e = 0; e < nbElems(f); e++)
             {
-                float origV = mOut.height() - bottom - chunk*offset;
+                double origV = mOut.height() - bottom - chunk*offset;
                 int origH = (live ? 160 : mOut.width());
 
                 painter.setPen(colors[offset%8]);
@@ -235,8 +234,8 @@ void FeatureDrawer::computeMinMax(int startingPoint)
            delete mMin;
         if(mMax)
            delete mMax;
-        mMin = new float[realDimension()]; // deleted in the destructor
-        mMax = new float[realDimension()]; // deleted in the destructor
+        mMin = new double[realDimension()]; // deleted in the destructor
+        mMax = new double[realDimension()]; // deleted in the destructor
         mMinMaxSize = realDimension();
     }
 
@@ -277,13 +276,14 @@ void FeatureDrawer::writeToDevice(QPaintDevice *device)
     painter.drawImage(0, 0, mOut);
 }
 
-void FeatureDrawer::setNetwork(NNetwork *net)
+void FeatureDrawer::setNetwork(NeuralNetwork *net)
 {
     mNet = net;
 }
 
 FeatureDrawer::~FeatureDrawer()
 {
+	//! \TODO :  all this
     cout << "~FeatureDrawer" << endl; /*
     if(mMin)
        delete mMin;
