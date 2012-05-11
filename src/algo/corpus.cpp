@@ -34,10 +34,10 @@ Corpus::Corpus(const Corpus &c, unsigned int keepOnly)
     mDimension = std::min(c.dimension(), keepOnly);
     mSize = c.size();
     mPoolSize = c.mPoolSize;
-    mPool = new float*[mPoolSize];
+    mPool = new double*[mPoolSize];
     for(int i = 0; i < mSize; i++)
     {
-        mPool[i] = new float[mDimension+1];
+        mPool[i] = new double[mDimension+1];
         for(int j = 0; j < mDimension+1; j++)
             mPool[i][j] = c.elem(i)[j];
     }
@@ -82,7 +82,7 @@ bool Corpus::load(std::string filename, bool verbose)
         mDimension = node.toElement().attribute("dimension", "1").toInt();
         mSize = node.childNodes().size();
 
-        mPool = new float*[mSize]; // deleted in erase()
+        mPool = new double*[mSize]; // deleted in erase()
         mNames.resize(mSize);
         mPoolSize = mSize;
 
@@ -93,7 +93,7 @@ bool Corpus::load(std::string filename, bool verbose)
 
             if(elem.tagName() == "point")
             {
-                mPool[nbPointsSet] = new float[mDimension+1]; // deleted in erase()
+                mPool[nbPointsSet] = new double[mDimension+1]; // deleted in erase()
                 mPool[nbPointsSet][0] = node.toElement().attribute("goal", "1").toFloat();
 
                 // in an earlier version, the negative samples were labelled with -1 instead of 0
@@ -172,6 +172,8 @@ void Corpus::write(std::string fileName)
     file.close();
 }
 
+//! \todo remove this, unused
+/*
 int* randomPermutation(int n)
 {
     int* result = new int[n];
@@ -189,6 +191,7 @@ int* randomPermutation(int n)
     }
     return result;
 }
+*/
 
 void Corpus::display() const
 {
@@ -204,9 +207,9 @@ void Corpus::display() const
     }
 }
 
-std::vector<float> Corpus::bounds() const
+std::vector<double> Corpus::bounds() const
 {
-    std::vector<float> result(mDimension*2,0);
+    std::vector<double> result(mDimension*2,0);
 
     for(int i = 0; i != mSize; ++i)
         for(int j = 0; j != mDimension; ++j)
@@ -244,14 +247,14 @@ unsigned int Corpus::dimension() const
     return mDimension;
 }
 
-void Corpus::addElem(float* elem, std::string name)
+void Corpus::addElem(double* elem, std::string name)
 {
     if(mSize >= mPoolSize)
     {
         if(mPoolSize > 0)
         {
             mPoolSize *= 2;
-            float** newPool = new float*[mPoolSize];
+            double** newPool = new double*[mPoolSize];
             for(int i = 0; i < mPoolSize/2; ++i)
                 newPool[i] = mPool[i];
             delete mPool;
@@ -260,7 +263,7 @@ void Corpus::addElem(float* elem, std::string name)
         else
         {
             mPoolSize = 1;
-            mPool = new float*[mPoolSize];
+            mPool = new double*[mPoolSize];
         }
     }
 

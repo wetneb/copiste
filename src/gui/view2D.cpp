@@ -41,7 +41,7 @@ int between0and255(int val)
     return std::min(255, std::max(0, val));
 }
 
-QColor colorFromValue(float value)
+QColor colorFromValue(double value)
 {
     if(value < 0.5)
         return QColor(between0and255(255*value),63,0);
@@ -77,7 +77,7 @@ void View2D::renderScene()
     // Draw the network first
     if(mNet)
     {
-        std::vector<float> inputVec;
+        std::vector<double> inputVec;
         inputVec.resize(2);
 
         // Bulk draw : each pixel is computed exactly.
@@ -88,7 +88,7 @@ void View2D::renderScene()
             for(int y = 0; y != height(); ++y)
             {
                 inputVec[1] = y*mViewport.scaleY + mViewport.y;
-                float value = mNet->classify(inputVec);
+                double value = mNet->classify(inputVec);
                 painter.setPen(colorFromValue(value));
 
                 painter.drawPoint(x,y);
@@ -114,8 +114,8 @@ void View2D::setCorpus(Corpus *corpus)
     if(corpus->dimension() == 2 || corpus->size() != 0)
     {
         mCorpus = corpus;
-        std::vector<float> bounds = corpus->bounds();
-        float sizeX = (bounds[1] - bounds[0]), sizeY = (bounds[3] - bounds[2]);
+        std::vector<double> bounds = corpus->bounds();
+        double sizeX = (bounds[1] - bounds[0]), sizeY = (bounds[3] - bounds[2]);
         if(sizeX < CORPUS_EPSILON)
             sizeX = 1;
         if(sizeY < CORPUS_EPSILON)
@@ -201,8 +201,8 @@ void View2D::mouseReleaseEvent(QMouseEvent *event)
             Viewport newViewport = mViewport;
             newViewport.x += newViewport.scaleX*rect.x();
             newViewport.y += newViewport.scaleY*rect.y();
-            newViewport.scaleX *= rect.width() / (float)width();
-            newViewport.scaleY *= rect.height() / (float)height();
+            newViewport.scaleX *= rect.width() / (double)width();
+            newViewport.scaleY *= rect.height() / (double)height();
 
             mViewport = newViewport;
 
@@ -213,7 +213,7 @@ void View2D::mouseReleaseEvent(QMouseEvent *event)
     }
     else if(event->button() == Qt::RightButton)
     {
-        float *sampleVec = new float[3]; // deleted by mCorpus->erase()
+        double *sampleVec = new double[3]; // deleted by mCorpus->erase()
         sampleVec[0] = mCurrentPoint;
         sampleVec[1] = x*mViewport.scaleX + mViewport.x;
         sampleVec[2] = y*mViewport.scaleY + mViewport.y;
@@ -264,17 +264,17 @@ void View2D::setNet(NeuralNetwork *net)
 
 #define MAX_WIDTH_HISTORY 2000
 
-void plotHistory(float* history, int size, int corpusSize)
+void plotHistory(double* history, int size, int corpusSize)
 {
     QImage out(MAX_WIDTH_HISTORY,250,QImage::Format_RGB32);
     QPainter painter(&out);
     painter.fillRect(0,0,MAX_WIDTH_HISTORY,250,Qt::white);
     painter.setPen(QColor(0,0,0));
-    float lastPoint = 1;
+    double lastPoint = 1;
 
     for(int i = 0; i < size/corpusSize && i != MAX_WIDTH_HISTORY; ++i)
     {
-        float newVal = 0;
+        double newVal = 0;
         for(int j = i*corpusSize; j < i*corpusSize+corpusSize; ++j)
             newVal += history[j];
         newVal /= corpusSize;

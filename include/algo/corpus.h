@@ -62,16 +62,16 @@ class Corpus
         unsigned int dimension() const;
 
         //! Returns the elem pointed by the given index
-        float* elem(unsigned int index) const { return mPool[index]; }
+        double* elem(unsigned int index) const { return mPool[index]; }
         //! Returns the name of the elem pointed by the given index
         std::string name(unsigned int index) const { return mNames[index]; }
         //! Add a sample to the corpus
-        void addElem(float* elem, std::string name = "");
+        void addElem(double* elem, std::string name = "");
         //! Retuns the bounds of the corpus (the vector is : min_1 max_1 min_2 max_2 ... min_n max_n)
-        std::vector<float> bounds() const;
+        std::vector<double> bounds() const;
 
     private:
-        float** mPool;
+        double** mPool;
         int mSize; // Stores the number of elements stored in the pool
         int mDimension;
 
