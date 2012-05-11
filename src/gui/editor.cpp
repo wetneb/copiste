@@ -119,8 +119,8 @@ void Editor::handleRequest(QAction *action)
         if(mView.corpus())
         {
             mView.corpus()->write(
-            QFileDialog::getOpenFileName(this,
-                "Save corpus", "~", tr("XML files (*.xml)")).toStdString());
+            QFileDialog::getSaveFileName(this,
+                "Save corpus", "~").toStdString());
         }
     }
     else if(action->text() == "Save network")
@@ -128,8 +128,8 @@ void Editor::handleRequest(QAction *action)
         if(mView.net())
         {
             mView.net()->toFile(
-            QFileDialog::getOpenFileName(this,
-                "Save network", "~", tr("XML files (*.xml)")).toStdString());
+            QFileDialog::getSaveFileName(this,
+                "Save network", "~").toStdString());
         }
     }
 }

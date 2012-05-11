@@ -35,7 +35,7 @@ int main(int argc, char **argv)
     desc.add_options()
         ("input-file", "The file. The one.")
         ("pipeline,p", "The pipeline that should be used (it will be loaded from pipeline/$PIPELINE.xml)")
-        ("network,n", "The network that should be used (it will be loaded from networks/$NETWORK.xml)")
+        ("network,n", "The network that should be used (it will be loaded from networks/$NETWORK)")
         ("verbose", "Be verbose.")
         ("help,h", "Display this message");
 
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     if(vm.count("input-file"))
     {
         string pipeline = "pipeline/" + (vm["pipeline"].as< string >()) + ".xml";
-        string network = "networks/" + (vm["network"].as< string >()) + ".xml";
+        string network = "networks/" + (vm["network"].as< string >());
 
         if(cl.setupPipeline(pipeline))
         {

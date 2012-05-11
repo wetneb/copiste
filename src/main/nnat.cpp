@@ -40,8 +40,9 @@ int main(int argc, char **argv)
         ("train,t", "Train the network")
         ("eval,e", "Compute the error rate of the network")
         ("plot,p", "Plot the network and / or the corpus")
-        ("net,n", po::value<std::string>(), "Path to the network. Use NEW/dim/depth to create"
-                        " a new one with \"dim\" inputs and \"depth\" hidden layers.")
+        ("net,n", po::value<std::string>(), "Path to the network. Use NEW/dim1,dim2,..,dimN/ to create"
+                        " a new one with \"dim1\" ... \"dimN\" as input and hidden layer sizes "
+			"(output layer is always one single unit).")
         ("corpus,c", po::value<std::string>(), "Path to the corpus")
         ("out,o", po::value<std::string>(), "Path to the output (default: output.png)")
         ("rate,r", po::value<double>(), "Training rate (default: 0.01)")
@@ -62,9 +63,9 @@ int main(int argc, char **argv)
     if(vm.count("help"))
     {
         std::cout << "Neural network analysis tool.\n\nExamples:" << std::endl;
-        std::cout << "Evaluate how accurate is a network on a corpus :\n   nnat -e --net my_network.xml --corpus my_corpus.xml\n" << std::endl;
-        std::cout << "Train a network to match a corpus :\n   nnat -t --net my_network.xml --corpus my_corpus.xml\n" << std::endl;
-        std::cout << "Plot a network and/or a corpus :\n   nnat -g --net my_network.xml --corpus my_corpus.xml\n" << std::endl;
+        std::cout << "Evaluate how accurate is a network on a corpus :\n   nnat -e --net my_network --corpus my_corpus.xml\n" << std::endl;
+        std::cout << "Train a network to match a corpus :\n   nnat -t --net my_network --corpus my_corpus.xml\n" << std::endl;
+        std::cout << "Plot a network and/or a corpus :\n   nnat -g --net my_network --corpus my_corpus.xml\n" << std::endl;
         std::cout << desc << std::endl;
         return 0;
     }
@@ -105,7 +106,7 @@ int main(int argc, char **argv)
             net.randomize();
         }
         else
-            net.fromFile(netFile);
+            net.fromFile("networks/" + netFile);
     }
     else if(vm.count("train") or vm.count("eval"))
     {
@@ -147,7 +148,7 @@ int main(int argc, char **argv)
             std::cout << "Training ended with cost " << cost << "\n";
         // plotHistory(history,iterMax*corpus.size(), 13);
 
-        net.toFile("trained-network.xml");
+        net.toFile("networks/trained-network");
     }
 
 
@@ -181,7 +182,7 @@ int main(int argc, char **argv)
 
         return app.exec();
     }
-
+    
     return 0;
 }
 
