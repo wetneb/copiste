@@ -41,7 +41,7 @@
 
 using namespace boost::numeric;
 
-float sigmoid(float x);
+double sigmoid(double x);
 
 //! A sightly better neural network
 class NeuralNetwork
@@ -64,13 +64,13 @@ class NeuralNetwork
        bool toFile(std::string file);
 
        //! Train the network on a corpus
-       float train(Corpus &c, float rate, float regularization);
+       double train(Corpus &c, double rate, double regularization, int nbIter, bool debug = false);
 
        //! Get the output of the network on a given input
-       float classify(std::vector<float> input);
+       double classify(std::vector<double> input);
 
        //! See how well the network does on a given corpus (between 0, not accurate, and 1, accurate)
-       float accuracy(Corpus &c);
+       double accuracy(Corpus &c);
 
        //! Randomize the weights of the network
        void randomize();
@@ -81,58 +81,58 @@ class NeuralNetwork
        unsigned int nbLayers() { return mLayers.size(); }
 
    private:
-       std::vector< ublas::matrix<float> > mLayers;
+       std::vector< ublas::matrix<double> > mLayers;
 
-       float gradientDescent(ublas::matrix<float> &ds, ublas::vector<float> &tv, float rate, unsigned int steps);
+       double gradientDescent(ublas::matrix<double> &ds, ublas::vector<double> &tv, double rate, unsigned int steps);
 
        //! Get the output of the network on a given set of inputs
-       ublas::matrix<float> classify(ublas::matrix<float> input);
+       ublas::matrix<double> classify(ublas::matrix<double> input);
 
         //! Gradient of the cost function
-       std::vector< ublas::matrix<float> > gradient(ublas::matrix<float> &ds, ublas::vector<float> &tv, float regularization = 0);
+       std::vector< ublas::matrix<double> > gradient(ublas::matrix<double> &ds, ublas::vector<double> &tv, double regularization = 0);
 
        //! Gradient checking
-       std::vector< ublas::matrix<float> > gradientChecking(ublas::matrix<float> &ds, ublas::vector<float> &tv, float regularization = 0, float epsilon = 0.0001);
+       std::vector< ublas::matrix<double> > gradientChecking(ublas::matrix<double> &ds, ublas::vector<double> &tv, double regularization = 0, double epsilon = 0.0001);
 
        //! Cost function computation
-       float costFunction(ublas::matrix<float> &ds, ublas::vector<float> &tv, float regularization = 0);
+       double costFunction(ublas::matrix<double> &ds, ublas::vector<double> &tv, double regularization = 0);
 
        /// Corpus management
 
        //! Create a ublas::matrix from an array
-       static ublas::matrix<float> createDataset(Corpus &c);
+       static ublas::matrix<double> createDataset(Corpus &c);
 
        //! Create a ublas::vector from an array
-       static ublas::vector<float> createTargetVector(Corpus &c);
+       static ublas::vector<double> createTargetVector(Corpus &c);
 
        /// Utility
 
        //! Add a 1 at the end of a vector
-       static ublas::vector<float> addOne(ublas::vector<float> v);
+       static ublas::vector<double> addOne(ublas::vector<double> v);
 
        //! Add 1s at the bottom of a matrix
-       static ublas::matrix<float> addOne(ublas::matrix<float> v);
+       static ublas::matrix<double> addOne(ublas::matrix<double> v);
 
        //! Remove 1s at the bottom of a matrix
-       static ublas::matrix_range<ublas::matrix<float> > removeOnes(ublas::matrix<float> m);
+       static ublas::matrix_range<ublas::matrix<double> > removeOnes(ublas::matrix<double> m);
 
        //! Get the j-th column of a matrix as a matrix
-       static ublas::matrix_range<ublas::matrix<float> > jthCol(ublas::matrix<float> m, size_t j);
+       static ublas::matrix_range<ublas::matrix<double> > jthCol(ublas::matrix<double> m, size_t j);
 
        //! Apply a function element-wise to a vector
-       static ublas::vector<float> elementWise(ublas::vector<float> v, float (*f)(float));
+       static ublas::vector<double> elementWise(ublas::vector<double> v, double (*f)(double));
 
        //! Apply a function element-wise to a matrix
-       static ublas::matrix<float> elementWise(ublas::matrix<float> v, float (*f)(float));
+       static ublas::matrix<double> elementWise(ublas::matrix<double> v, double (*f)(double));
 
        //! Create a matrix from a vector
-       static ublas::matrix<float> vecToMat(ublas::vector<float> v);
+       static ublas::matrix<double> vecToMat(ublas::vector<double> v);
 
        //! Create a vector from a matrix (unroll it)
-       static ublas::vector<float> unroll(ublas::matrix<float> m);
+       static ublas::vector<double> unroll(ublas::matrix<double> m);
 
         //! Create a vector from a matrix (unroll it)
-       static ublas::matrix<float> roll(ublas::vector<float> m, unsigned int r, unsigned int c);
+       static ublas::matrix<double> roll(ublas::vector<double> m, unsigned int r, unsigned int c);
 
        //! Internal usage : for load and save
        friend class boost::serialization::access;

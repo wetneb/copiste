@@ -29,7 +29,7 @@
 
 namespace po = boost::program_options;
 
-void plotHistory(float* history, int size);
+void plotHistory(double* history, int size);
 int* randomPermutation(int n);
 
 int main(int argc, char **argv)
@@ -44,12 +44,13 @@ int main(int argc, char **argv)
                         " a new one with \"dim\" inputs and \"depth\" hidden layers.")
         ("corpus,c", po::value<std::string>(), "Path to the corpus")
         ("out,o", po::value<std::string>(), "Path to the output (default: output.png)")
-        ("rate,r", po::value<float>(), "Training rate (default: 0.01)")
-        ("regularization,l", po::value<float>(), "Regularization factor (default: 0.001)")
-        ("max,m", po::value<int>(), "Maximum iterations count for training (default: 1000)")
+        ("rate,r", po::value<double>(), "Training rate (default: 0.01)")
+        ("regularization,l", po::value<double>(), "Regularization factor (default: 0.001)")
+        ("iter,i", po::value<int>(), "Maximum iterations count for training (default: 1000)")
         ("no-random-weights", "Don't randomize weights before training")
         ("no-random-samples", "Don't randomize the order of the training corpus")
         ("verbose", "Be verbose (print a longer output)")
+	("debug,d", "Debug mode : check the gradient")
         ("help,h", "Display this message")
     ;
 
@@ -75,7 +76,7 @@ int main(int argc, char **argv)
 
     std::string corpusFile = "", netFile = "", outFile = "out.png";
     bool verbose = vm.count("verbose");
-    float rate = 0.01, regularization = 0.01;
+    double rate = 0.01, regularization = 0.01;
     NeuralNetwork net;
     Corpus corpus;
 
@@ -84,24 +85,24 @@ int main(int argc, char **argv)
         netFile = vm["net"].as<std::string> ();
         if(netFile.substr(0,4) == "NEW/")
         {
+	    //! \todo Document and handle errors
             std::istringstream s(netFile);
 
             char buf = 0;
             for(int i = 0; i < 4; i++)
                 s >> buf;
-            int dim = 0;
-            s >> dim;
-            s >> buf;
-            int depth = 0;
-            s >> depth;
-
             std::vector<int> geom;
-
-            for(int i = 0; i < depth; i++)
-                geom.push_back(dim);
+	    int dim = 0;
+	    do
+	    {
+		   s >> dim;
+		   geom.push_back(dim);
+		   s >> buf;
+	    }
+	    while(buf != '/'); 
+            
             net.reset(geom);
             net.randomize();
-            net.toFile("generated.txt"); //! \todo delete me
         }
         else
             net.fromFile(netFile);
@@ -124,16 +125,15 @@ int main(int argc, char **argv)
     }
 
     if(vm.count("rate"))
-        rate = vm["rate"].as<float> ();
+        rate = vm["rate"].as<double> ();
 
     if(vm.count("regularization"))
-        regularization = vm["regularization"].as<float> ();
+        regularization = vm["regularization"].as<double> ();
 
-    //! \todo : delete or…
-    /*
-    if(vm.count("max"))
-        iterMax = vm["max"].as<int> ();
-        */
+    int nbIter = 1000;
+    if(vm.count("iter"))
+        nbIter = vm["iter"].as<int> ();
+
 
     // Running
     if(vm.count("train"))
@@ -141,7 +141,7 @@ int main(int argc, char **argv)
         if(vm.count("no-random-weights") == 0)
             net.randomize();
         corpus.display();
-        float cost = net.train(corpus, rate, regularization); //, iterMax, &history, (vm.count("no-random-samples") == 0), (vm.count("verbose") == 1));// 0 : &history
+        double cost = net.train(corpus, rate, regularization, nbIter, (vm.count("debug") != 0)); // &history, (vm.count("no-random-samples") == 0), (vm.count("verbose") == 1));// 0 : &history
 
         if(verbose)
             std::cout << "Training ended with cost " << cost << "\n";
@@ -153,7 +153,7 @@ int main(int argc, char **argv)
 
     if(vm.count("eval"))
     {
-        float accuracy = net.accuracy(corpus);
+        double accuracy = net.accuracy(corpus);
         if(verbose)
             std::cout << "Accuracy : "<<accuracy*100<<"%" << std::endl;
         else
@@ -173,6 +173,8 @@ int main(int argc, char **argv)
             view.setNet(&net);
         view.setTrainingRate(rate);
         view.setRegularization(regularization);
+        view.setIter(nbIter);
+	view.setDebug(vm.count("debug") != 0);
 
         view.show();
         //view.renderToImage(outFile);

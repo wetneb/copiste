@@ -17,17 +17,27 @@
 
  #include "algo/neuralnetwork.h"
 
- float sigmoid(float x) // This is actually the hyperbolic tangent
+ double sigmoid(double x) // This is actually the hyperbolic tangent
 {
+    if(x > 45)
+	    return 1.0;
+    else if(x < - 45)
+	    return 0;
     return (1.0 / (1.0 + exp(-x))); // adaptation
 }
 
-float d_sigmoid(float x)
+double d_sigmoid(double x)
 {
-    return 1.0*exp(-x)/((1.0 + exp(-x))*(1.0 + exp(-x))); // adaptation
+    if(x > 45)
+	    return 0;
+    else if(x < -45)
+	    return 1;
+    double val = 1.0 + exp(-x);
+    return (val - 1)/(val*val); // adaptation
 }
 
 
+void pmatrix(ublas::matrix<double> m, std::string name);
 
 //! Loads a neural network from a file if specified
 NeuralNetwork::NeuralNetwork(std::string file)
@@ -71,7 +81,7 @@ bool NeuralNetwork::toFile(std::string file)
     return true;
 }
 
-void pmatrix(ublas::matrix<float> m, std::string name)
+void pmatrix(ublas::matrix<double> m, std::string name)
 {
     std::cout << name << " : "<< std::endl;
     for(unsigned int i = 0; i < m.size1(); i++)
@@ -83,34 +93,41 @@ void pmatrix(ublas::matrix<float> m, std::string name)
 }
 
 //! Train the network on a corpus
-float NeuralNetwork::train(Corpus &c, float rate, float regularization)
+double NeuralNetwork::train(Corpus &c, double rate, double regularization, int nbIter, bool debug)
 {
-    ublas::matrix<float> dataset = createDataset(c);
-    ublas::vector<float> targetVec = createTargetVector(c);
+    ublas::matrix<double> dataset = createDataset(c);
+    ublas::vector<double> targetVec = createTargetVector(c);
 
-    std::vector<ublas::matrix<float> > grad;
+    std::vector<ublas::matrix<double> > grad;
 
-    for(unsigned int i = 0; i < 10000; i++)
+    std::cout << rate << ", " << regularization << ", " << nbIter << std::endl;
+
+    for(int i = 0; i < nbIter; i++)
     {
         grad = gradient(dataset, targetVec, regularization);
-        /*
-        std::vector<ublas::matrix<float> > gradCheck = gradientChecking(dataset, targetVec, regularization, 0.001);
+        
+        if(debug)
+	{
+	       	std::vector<ublas::matrix<double> > gradCheck = gradientChecking(dataset, targetVec, regularization, 0.000001); // 0.001 is epsilon
 
-        for(unsigned int k = 0; k < nbLayers(); k++)
-        {
-            pmatrix(grad[k], "Gradient");
-            pmatrix(gradCheck[k], "Check");
-        }
-        */
+        	for(unsigned int k = 0; k < nbLayers(); k++)
+        	{
+            		pmatrix(grad[k], "Gradient");
+            		pmatrix(gradCheck[k], "Check");
+        	}
+	}
 
         for(unsigned int j = 0; j < nbLayers(); j++)
             mLayers[j] -= rate * grad[j];
     }
 
-    return costFunction(dataset, targetVec);
+    for(unsigned int i = 0; i < nbLayers(); i++)
+	    pmatrix(mLayers[i], "Poids");
+
+    return costFunction(dataset, targetVec, regularization);
 }
 
-float genRandom(float /*input*/)
+double genRandom(double /*input*/)
 {
     return 2.0*rand()/RAND_MAX - 1.0;
 }
@@ -124,10 +141,10 @@ void NeuralNetwork::randomize()
 }
 
 //! Get the output of the network on a given input
-float NeuralNetwork::classify(std::vector<float> input)
+double NeuralNetwork::classify(std::vector<double> input)
 {
     //! \todo use the other classify function
-    ublas::vector<float> activation(input.size() + 1);
+    ublas::vector<double> activation(input.size() + 1);
     for(unsigned int i = 0; i < input.size(); i++)
         activation[i] = input[i];
     activation[input.size()] = 1.0;
@@ -139,9 +156,9 @@ float NeuralNetwork::classify(std::vector<float> input)
 }
 
 //! Get the output of the network on a given set of inputs
-ublas::matrix<float> NeuralNetwork::classify(ublas::matrix<float> input)
+ublas::matrix<double> NeuralNetwork::classify(ublas::matrix<double> input)
 {
-    std::vector<ublas::matrix<float> > activation(nbLayers() + 1);
+    std::vector<ublas::matrix<double> > activation(nbLayers() + 1);
     activation[0] = addOne(input);
 
     for(unsigned int i = 0; i < nbLayers(); i++)
@@ -152,14 +169,14 @@ ublas::matrix<float> NeuralNetwork::classify(ublas::matrix<float> input)
 
 
 //! See how well the network does on a given corpus
-float NeuralNetwork::accuracy(Corpus &c)
+double NeuralNetwork::accuracy(Corpus &c)
 {
     return 0;
 }
 
-ublas::matrix<float> NeuralNetwork::createDataset(Corpus &c)
+ublas::matrix<double> NeuralNetwork::createDataset(Corpus &c)
 {
-    ublas::matrix<float> ds(c.dimension(), c.size());
+    ublas::matrix<double> ds(c.dimension(), c.size());
 
     for(unsigned int i = 0; i < c.size(); i++)
     {
@@ -170,9 +187,9 @@ ublas::matrix<float> NeuralNetwork::createDataset(Corpus &c)
     return ds;
 }
 
-ublas::vector<float> NeuralNetwork::createTargetVector(Corpus &c)
+ublas::vector<double> NeuralNetwork::createTargetVector(Corpus &c)
 {
-    ublas::vector<float> tv(c.size());
+    ublas::vector<double> tv(c.size());
 
     for(unsigned int i = 0; i < c.size(); i++)
         tv[i] = c.elem(i)[0];
@@ -194,84 +211,78 @@ ublas::vector<float> NeuralNetwork::createTargetVector(Corpus &c)
  *   comme mLayers[i]
  */
 
- //! TODO : debug + regularization
 
  //! TODO : optimize
 
- void psizes(ublas::matrix<float> m, std::string name)
+// !TODO delete this function
+ void psizes(ublas::matrix<double> m, std::string name)
  {
      std::cout << name << " : "<<m.size1()<< "x"<<m.size2() << std::endl;
  }
 
 //! Backpropagation
-std::vector< ublas::matrix<float> > NeuralNetwork::gradient(ublas::matrix<float> &ds, ublas::vector<float> &tv, float regularization)
+std::vector< ublas::matrix<double> > NeuralNetwork::gradient(ublas::matrix<double> &ds,
+		                                        ublas::vector<double> &tv, double regularization)
 {
-    std::vector<ublas::matrix<float> > activation(nbLayers() + 1), error(nbLayers() + 1), delta(nbLayers() + 1);
+    std::vector<ublas::matrix<double> > activation(nbLayers() + 1), error(nbLayers() + 1), delta(nbLayers());
     activation[0] = addOne(ds);
 
+    // Forward propagation
     for(unsigned int i = 0; i < nbLayers(); i++)
         activation[i+1] = addOne(elementWise(prod(mLayers[i], activation[i]), sigmoid));
 
     // Backward propagation
-    error[nbLayers()] = removeOnes(activation[nbLayers()]) - trans(vecToMat(tv));
-
-    // \todo begin copied code
-    delta[nbLayers()-1].resize(mLayers[nbLayers()-1].size1(), mLayers[nbLayers()-1].size2());
-    delta[nbLayers()-1] *= 0;
-    for(unsigned int j = 0; j < error[nbLayers()].size2(); j++)
+    for(unsigned int i = nbLayers(); i >= 1; i--) // Loop through the layers (backward)
     {
-        ublas::matrix_range< ublas::matrix<float> >
-            errV = jthCol(error[nbLayers()], j),
-            actV = jthCol(activation[nbLayers()-1], j);
+	if(i == nbLayers())
+		error[i] = removeOnes(activation[i]) - trans(vecToMat(tv));
+	else
+        	error[i] = element_prod(prod(removeOnes(trans(mLayers[i])), error[i+1]),
+			                 elementWise(removeOnes(activation[i]), d_sigmoid));
 
-        delta[nbLayers()-1] += prod(errV, trans(actV));
-    }
-    // end copied code
-
-    for(int i = nbLayers()-1; i >= 1; i--)
-    {
-        error[i] = element_prod( prod(removeOnes(trans(mLayers[i])), error[i+1]), elementWise(removeOnes(activation[i]), d_sigmoid) );
         delta[i-1].resize(mLayers[i-1].size1(), mLayers[i-1].size2());
         delta[i-1] *= 0;
-        for(unsigned int j = 0; j < error[i].size2(); j++)
-        {
-            ublas::matrix_range< ublas::matrix<float> >
-                errV = jthCol(error[i], j),
-                actV = jthCol(activation[i-1], j);
-
-            delta[i-1] += prod(errV, trans (actV));
-        }
+	
+        for(unsigned int j = 0; j < error[i].size2(); j++) // Loop through the samples of the dataset
+            delta[i-1] += prod(jthCol(error[i],j), trans (jthCol(activation[i-1],j)));
     }
 
 
-    for(unsigned int i = 0; i < nbLayers(); i++)
+    for(unsigned int i = 0; i < nbLayers(); i++) // we don't regularize the input layer (en fait là si \todo)
     {
+	 // Attention : si on change i = 0 au dessus, il faut faire delta[0] /= ds.size2() ailleurs !!!
          delta[i] /= ds.size2();
          for(unsigned int j = 0; j < delta[i].size2() - 1; j++) // we don't regularize the bias term
-            jthCol(delta[i],j) += regularization * jthCol(mLayers[i], j);
+	      for(unsigned int k = 0; k < delta[i].size1(); k++)
+		  delta[i](k,j) += regularization * mLayers[i](k,j);
     }
 
-
+    // \todo Andrew Ng divise tout par size2() (même le terme de régularisation)
     return delta;
 }
 
 //! Cost function computation
-float NeuralNetwork::costFunction(ublas::matrix<float> &ds, ublas::vector<float> &tv, float regularization)
+double NeuralNetwork::costFunction(ublas::matrix<double> &ds, ublas::vector<double> &tv, double regularization)
 {
-    ublas::matrix<float> finalActivations = classify(ds);
+    ublas::matrix<double> finalActivations = classify(ds);
 
-    float sum = 0;
+    double sum = 0;
     for(unsigned int i = 0; i < finalActivations.size2(); i++)
-        sum -= (tv[i] == 1 ? log(finalActivations(0,i)) : log(1.0 - finalActivations(0,i)));
+        sum -= (tv[i] > 0.5 ? log(finalActivations(0,i)) : log(1.0 - finalActivations(0,i)));
 
-    //! \todo add regularization
+    sum /= ds.size2();
 
-    return sum / ds.size2();
+    for(unsigned int i = 0; i < nbLayers(); i++) // we don't regularize the input layer (en fait là si \todo)
+	    for(unsigned int j = 0; j < mLayers[i].size1(); j++)
+		    for(unsigned int k = 0; k < mLayers[i].size2() - 1; k++) // we don't regularize the bias term
+			    sum += regularization * 0.5 * pow(mLayers[i](j,k), 2);
+
+    return sum;
 }
 
-std::vector< ublas::matrix<float> > NeuralNetwork::gradientChecking(ublas::matrix<float> &ds, ublas::vector<float> &tv, float reg, float epsilon)
+std::vector< ublas::matrix<double> > NeuralNetwork::gradientChecking(ublas::matrix<double> &ds, ublas::vector<double> &tv, double reg, double epsilon)
 {
-    std::vector<ublas::matrix<float> > grad(nbLayers());
+    std::vector<ublas::matrix<double> > grad(nbLayers());
 
     for(unsigned int k = 0; k < nbLayers(); k++)
     {
@@ -281,9 +292,9 @@ std::vector< ublas::matrix<float> > NeuralNetwork::gradientChecking(ublas::matri
             for(unsigned int j = 0; j < mLayers[k].size2(); j++)
             {
                 mLayers[k](i,j) += epsilon;
-                float cost_plus = costFunction(ds,tv,reg);
+                double cost_plus = costFunction(ds,tv,reg);
                 mLayers[k](i,j) -= 2*epsilon;
-                float cost_minus = costFunction(ds,tv,reg);
+                double cost_minus = costFunction(ds,tv,reg);
                 mLayers[k](i,j) += epsilon;
                 grad[k](i,j) = (cost_plus - cost_minus) / (2*epsilon);
             }
@@ -293,11 +304,11 @@ std::vector< ublas::matrix<float> > NeuralNetwork::gradientChecking(ublas::matri
     return grad;
 }
 
-float NeuralNetwork::gradientDescent(ublas::matrix<float> &ds, ublas::vector<float> &tv, float rate, unsigned int steps)
+double NeuralNetwork::gradientDescent(ublas::matrix<double> &ds, ublas::vector<double> &tv, double rate, unsigned int steps)
 {
     for(unsigned int i = 0; i < steps; i++)
     {
-        std::vector<ublas::matrix<float> > delta = gradient(ds, tv);
+        std::vector<ublas::matrix<double> > delta = gradient(ds, tv);
         for(unsigned int i = 0; i < nbLayers(); i++)
             mLayers[i] -= rate * delta[i];
 
@@ -307,7 +318,7 @@ float NeuralNetwork::gradientDescent(ublas::matrix<float> &ds, ublas::vector<flo
 }
 
 //! Add a 1 at the end of a vector
-ublas::vector<float> NeuralNetwork::addOne(ublas::vector<float> v)
+ublas::vector<double> NeuralNetwork::addOne(ublas::vector<double> v)
 {
     v.resize(v.size() + 1);
     v[v.size()-1] = 1;
@@ -316,40 +327,40 @@ ublas::vector<float> NeuralNetwork::addOne(ublas::vector<float> v)
 }
 
 //! Add 1s at the bottom of a matrix
-ublas::matrix<float> NeuralNetwork::addOne(ublas::matrix<float> v)
+ublas::matrix<double> NeuralNetwork::addOne(ublas::matrix<double> v)
 {
     v.resize(v.size1() + 1, v.size2());
-    ublas::matrix_row< ublas::matrix<float> > lastRow(v, v.size1()-1);
+    ublas::matrix_row< ublas::matrix<double> > lastRow(v, v.size1()-1);
 
     std::fill(lastRow.begin(), lastRow.end(), 1);
     return v;
 }
 
-ublas::matrix_range<ublas::matrix<float> > NeuralNetwork::removeOnes(ublas::matrix<float> m)
+ublas::matrix_range<ublas::matrix<double> > NeuralNetwork::removeOnes(ublas::matrix<double> m)
 {
-    return ublas::matrix_range<ublas::matrix<float> >(m, ublas::range(0,m.size1()-1), ublas::range(0,m.size2()));
+    return ublas::matrix_range<ublas::matrix<double> >(m, ublas::range(0,m.size1()-1), ublas::range(0,m.size2()));
 }
 
-ublas::matrix_range<ublas::matrix<float> > NeuralNetwork::jthCol(ublas::matrix<float> m, size_t j)
+ublas::matrix_range<ublas::matrix<double> > NeuralNetwork::jthCol(ublas::matrix<double> m, size_t j)
 {
-    return ublas::matrix_range<ublas::matrix<float> >(m, ublas::range(0,m.size1()), ublas::range(j,j+1));
+    return ublas::matrix_range<ublas::matrix<double> >(m, ublas::range(0,m.size1()), ublas::range(j,j+1));
 }
 
 //! Apply a function element-wise to a vector
-ublas::vector<float> NeuralNetwork::elementWise(ublas::vector<float> v, float (*f)(float))
+ublas::vector<double> NeuralNetwork::elementWise(ublas::vector<double> v, double (*f)(double))
 {
-    ublas::vector<float> res = v;
+    ublas::vector<double> res = v;
     for(unsigned int i = 0; i < v.size(); i++)
         res[i] = (*f)(v[i]);
     return res;
 }
 
 //! Apply a function element-wise to a matrix
-ublas::matrix<float> NeuralNetwork::elementWise(ublas::matrix<float> m, float (*f)(float))
+ublas::matrix<double> NeuralNetwork::elementWise(ublas::matrix<double> m, double (*f)(double))
 {
     // This could be achieved in a smarter way using iterators and the "transform" function
     // std::transform(mat.begin1(), mat.end1(), mat.begin1(), boost::math::tgamma);
-    ublas::matrix<float> res = m;
+    ublas::matrix<double> res = m;
     for(unsigned int i = 0; i < m.size1(); i++)
        for(unsigned int j = 0; j < m.size2(); j++)
         res(i,j) = (*f)(res(i,j));
@@ -357,18 +368,18 @@ ublas::matrix<float> NeuralNetwork::elementWise(ublas::matrix<float> m, float (*
 }
 
 //! Create a matrix from a vector
-ublas::matrix<float> NeuralNetwork::vecToMat(ublas::vector<float> v)
+ublas::matrix<double> NeuralNetwork::vecToMat(ublas::vector<double> v)
 {
-    ublas::matrix<float> res(v.size(), 1);
-    ublas::matrix_column< ublas::matrix<float> > col(res,0);
+    ublas::matrix<double> res(v.size(), 1);
+    ublas::matrix_column< ublas::matrix<double> > col(res,0);
     col = v;
     return res;
 }
 
 //! Create a vector from a matrix (unroll it)
-ublas::vector<float> NeuralNetwork::unroll(ublas::matrix<float> m)
+ublas::vector<double> NeuralNetwork::unroll(ublas::matrix<double> m)
 {
-    ublas::vector<float> res(m.size1()*m.size2());
+    ublas::vector<double> res(m.size1()*m.size2());
     for(unsigned int i = 0; i < m.size1(); i++)
          for(unsigned int j = 0; j < m.size2(); j++)
               res[i*m.size1()+j] = m(i,j);
@@ -376,9 +387,9 @@ ublas::vector<float> NeuralNetwork::unroll(ublas::matrix<float> m)
 }
 
 //! Create a vector from a matrix (unroll it)
-ublas::matrix<float> roll(ublas::vector<float> v, unsigned int r, unsigned int c)
+ublas::matrix<double> roll(ublas::vector<double> v, unsigned int r, unsigned int c)
 {
-    ublas::matrix<float> res(r,c);
+    ublas::matrix<double> res(r,c);
     if(r*c == v.size())
     {
         for(unsigned int i = 0; i < r; i++)
