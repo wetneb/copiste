@@ -32,6 +32,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QCheckBox>
 
 class Editor;
 
@@ -44,16 +45,17 @@ class SettingsDialog : public QDialog
 {
     Q_OBJECT
     public:
-        SettingsDialog(double rate, double reg, int iter, QWidget *parent = 0);
+        SettingsDialog(double rate, double reg, int iter, bool debug, QWidget *parent = 0);
 
     public slots:
         void emitValues();
     signals:
-        void values(double rate, double reg, int iter);
+        void values(double rate, double reg, int iter, bool debug);
 
     private:
         QDoubleSpinBox mRate, mReg;
         QSpinBox mIter;
+	QCheckBox mDebug;
 };
 
 //! The main class for the graphical network trainer
@@ -69,6 +71,7 @@ class Editor : public QMainWindow
         void setRegularization(double r);
         void setTrainingRate(double r);
         void setIter(int iter);
+	void setDebug(bool debug);
 
     protected:
         void keyReleaseEvent(QKeyEvent *event);
@@ -77,7 +80,7 @@ class Editor : public QMainWindow
         void dispRendering();
         void dispRendered();
         void handleRequest(QAction *action);
-        void updateSettings(double rate, double reg, int iter);
+        void updateSettings(double rate, double reg, int iter, bool debug);
 
     private:
         View2D mView;
@@ -86,6 +89,7 @@ class Editor : public QMainWindow
         // Training parameters
         double mTrainingRate, mRegularization;
         int mIter;
+	bool mDebug;
 };
 
 #endif
