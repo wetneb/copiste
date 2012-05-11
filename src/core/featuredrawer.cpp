@@ -174,10 +174,12 @@ void FeatureDrawer::draw(string filename, bool live)
             response = mNet->classify(inputVector);
 
             // Draw the class
-            if(currentClass * response <= 0 || i - plotStart == mOut.width()-1 || i - plotStart == (int)nbSamples()-1)
+            if((currentClass - 0.5) * (response - 0.5) <= 0 ||
+		          i - plotStart == mOut.width()-1 ||
+			  i - plotStart == (int)nbSamples()-1)
             {
                 QColor fillColor;
-                if(currentClass > 0)
+                if(currentClass > 0.5)
                     fillColor = QColor(50, 150, 50);
                 else fillColor = QColor(200, 70, 30);
                 painter.fillRect(lastChange, 0, i - plotStart - lastChange, top, fillColor);
@@ -187,7 +189,7 @@ void FeatureDrawer::draw(string filename, bool live)
 
                 lastChange = i - plotStart;
             }
-            currentClass = 10*response;
+            currentClass = response;
         }
     }
 
