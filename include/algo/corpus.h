@@ -19,17 +19,16 @@
 #ifndef INCLUDEDCORPUSH
 #define INCLUDEDCORPUSH
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <cmath>
 #include <QFile>
+#include <QDomDocument>
 
 using namespace std;
 
 class Corpus;
-
-#include "abstractneuron.h"
-#include "nnetwork.h"
 
 //! Stores a set of training examples for a neural net
 class Corpus
@@ -57,16 +56,6 @@ class Corpus
         //! Writes to the standard output the set of elements
         void display() const;
 
-        /// Computing
-
-        /**
-         * \brief Trains a given network to match the corpus (writing error rates in **history)
-         * The history field must be a pointer to a pointer, which has to be deleted then by the user.
-         */
-        int train(NNetwork &network, float learningRate, int maxPasses, float **history = 0, bool random = true, bool verbose = false);
-        //! Displays the corpus accuracy
-        float accuracy(NNetwork &network, bool verbose = false) const;
-
         /// Accessors
 
         //! Returns the number of elements (i.e. vectors) contained in the corpus
@@ -75,22 +64,22 @@ class Corpus
         unsigned int dimension() const;
 
         //! Returns the elem pointed by the given index
-        neural_value* elem(unsigned int index) const { return mPool[index]; }
+        double* elem(unsigned int index) const { return mPool[index]; }
         //! Returns the name of the elem pointed by the given index
-        string name(unsigned int index) const { return mNames[index]; }
+        std::string name(unsigned int index) const { return mNames[index]; }
         //! Add a sample to the corpus
-        void addElem(neural_value* elem, string name = "");
+        void addElem(double* elem, std::string name = "");
         //! Retuns the bounds of the corpus (the vector is : min_1 max_1 min_2 max_2 ... min_n max_n)
-        vector<float> bounds() const;
+        std::vector<double> bounds() const;
 
     private:
-        neural_value** mPool;
+        double** mPool;
         int mSize; // Stores the number of elements stored in the pool
         int mDimension;
 
         int mPoolSize; // Stores the actual capacity of the pool
 
-        vector<string> mNames; // Stores the names of the samples
+        std::vector<std::string> mNames; // Stores the names of the samples
 };
 
 #endif

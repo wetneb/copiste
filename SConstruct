@@ -1,16 +1,17 @@
 # Just change these three lists :
 
+import os
 
 libpath = [ '/usr/lib',
 	    '/usr/local/lib',
 	    '/usr/local/share/qt4/lib' ]
 
 cpppath = [ 'include',
-	    '/usr/local/share/qt4/include',
-	    '/usr/local/share/qt4/include/QtGui',
-	    '/usr/local/share/qt4/include/QtCore',
-	    '/usr/local/share/qt4/include/QtXml',
-	    '/usr/local/share/qt4/include/QtXmlPatterns',
+	    '/usr/include/qt4',
+	    '/usr/include/qt4/QtGui',
+	    '/usr/include/qt4/QtCore',
+	    '/usr/include/qt4/QtXml',
+	    '/usr/include/qt4/QtXmlPatterns',
 	    '/usr/include/boost' ]
 
 libs = [ 'vlc',
@@ -21,16 +22,21 @@ libs = [ 'vlc',
 	 'QtXmlPatterns',
 	 'boost_program_options',
 	 'boost_filesystem',
+         'boost_system',
 	 'boost_thread',
-         'boost_system']
+         'boost_serialization']
+
+flags = ['-Wall']
 
 # End of the configuration section
 
-env = Environment(LIBPATH=libpath, CPPPATH = cpppath, LIBS=libs)
-
+env = Environment(LIBPATH=libpath, CPPPATH = cpppath, LIBS=libs, CPPFLAGS = flags,
+                  ENV = {'PATH' : os.environ['PATH'],
+                         'HOME' : os.environ['HOME'],
+                         'TERM' : os.environ['TERM'],
+			})
 neurones_files = [ 'src/algo/corpus.cpp',
-		   'src/algo/neuron.cpp',
-		   'src/algo/nnetwork.cpp' ]
+		   'src/algo/neuralnetwork.cpp' ]
 
 sound_analyser_files = [ 'src/core/soundanalyser.cpp',
 			 'src/core/streamplayer.cpp' ]

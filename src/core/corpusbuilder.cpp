@@ -85,7 +85,11 @@ bool CorpusBuilder::setup(string fileName)
         {
             if(boost::filesystem::is_regular_file(iter->status()))
             {
+#if BOOST_VERSION <= 104200
+		string filename = iter->path().filename();
+#else
                 string filename = iter->path().filename().string();
+#endif
 
                 // Search the filename in the prefix table
                 unsigned int prefixId = 0;
@@ -94,7 +98,11 @@ bool CorpusBuilder::setup(string fileName)
 
                 if(prefixId < rules.size())
                 {
+#if BOOST_VERSION <= 104200
+		    mFiles.push_back(string("file://" + boost::filesystem::system_complete(iter->path()).string()));
+#else
                     mFiles.push_back(string("file://" + boost::filesystem::absolute(iter->path()).string()));
+#endif
                     mGoals.push_back((int)(rules[prefixId].second));
                     mNbElems.push_back(0);
                 }
@@ -127,7 +135,11 @@ void CorpusBuilder::compute()
         while((unsigned int)mCurrentFile < mFiles.size())
         {
             // Set up the media player
+#if BOOST_VERSION <= 104200
+	    string filename = boost::filesystem::path(mFiles[mCurrentFile]).stem();
+#else
             string filename = boost::filesystem::path(mFiles[mCurrentFile]).stem().string();
+#endif
             if(mVerbose)
                 cout << "["<<mCurrentFile+1<<"/"<<mFiles.size()<<"] : "<<filename<<endl;
 
@@ -142,7 +154,7 @@ void CorpusBuilder::compute()
             const int startingPoint = mCompOffset * samplingFrequency() / AUDIO_CHUNK_SIZE;
             const int length = ((mElemLength == 0) ? (nbSamples() - startingPoint - 1) : (mElemLength * samplingFrequency() / AUDIO_CHUNK_SIZE));
 
-            float *mCurrentResults = 0;
+            double *mCurrentResults = 0;
             for(unsigned int k = startingPoint; k < nbSamples(); k++) // Loop through samples
             {
                 if(((k - startingPoint) % length) == 0 // If we reached the end of a sequence
@@ -162,7 +174,7 @@ void CorpusBuilder::compute()
                         mNbElems[mCurrentFile]++;
 
                         // Create a new array to store the features
-                        mCurrentResults = new float[realDimension()];
+                        mCurrentResults = new double[realDimension()];
                         mResults.push_back(mCurrentResults);
 
                         // Init the array
@@ -203,12 +215,12 @@ bool CorpusBuilder::write(Corpus *corpus)
         for(int k = 0; k < mNbElems[i] && (unsigned int)saved < mResults.size(); ++k)
         {
             // Declare a new sample
-            float* sample = new float[realDimension()+1]; // deleted by corpus->erase()
+            double* sample = new double[realDimension()+1]; // deleted by corpus->erase()
             sample[0] = 0; // Default value
 
             // Bind the file to a class
             if(i < mFiles.size())
-                sample[0] = (mGoals[i] ? 1 : (-1));
+                sample[0] = (mGoals[i] ? 1 : 0);
 
             // Add the features
             for(unsigned int j = 0; j < realDimension(); j++)

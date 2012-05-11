@@ -23,7 +23,7 @@ class View2D;
 
 #include <QWidget>
 #include <stack>
-#include "algo/nnetwork.h"
+#include "algo/neuralnetwork.h"
 #include "algo/corpus.h"
 
 #define VIEW_OUTPUT_WIDTH 700
@@ -37,15 +37,15 @@ class View2D;
 //! Internal struture used by View2D to keep in memory old views of a same network
 struct Viewport
 {
-    float x;
-    float y;
-    float scaleX;
-    float scaleY;
+    double x;
+    double y;
+    double scaleX;
+    double scaleY;
     QPixmap img;
 };
 typedef struct Viewport Viewport;
 
-void plotHistory(float* history, int size, int corpusSize);
+void plotHistory(double* history, int size, int corpusSize);
 
 //! A renderer for a 2D neural network
 class View2D : public QWidget
@@ -56,12 +56,12 @@ class View2D : public QWidget
         View2D(QWidget *parent = 0);
 
         //! Render the graph to a file rather than displaying it on the screen
-        void renderToImage(string fileName, string format = "PNG", int w = VIEW_OUTPUT_WIDTH, int h = VIEW_OUTPUT_HEIGHT);
+        void renderToImage(std::string fileName, std::string format = "PNG", int w = VIEW_OUTPUT_WIDTH, int h = VIEW_OUTPUT_HEIGHT);
 
         //! Sets the corpus to render
         void setCorpus(Corpus *corpus);
         //! Sets the network to render
-        void setNet(NNetwork *net);
+        void setNet(NeuralNetwork *net);
 
         //! Rendering function.
         void renderScene();
@@ -69,7 +69,7 @@ class View2D : public QWidget
         //! Returns the corpus
         Corpus* corpus();
         //! Returns the network
-        NNetwork* net();
+        NeuralNetwork* net();
 
         //! Sends key events from parent widgets
         void handleKeyReleaseEvent(QKeyEvent *event);
@@ -96,7 +96,7 @@ class View2D : public QWidget
 
     private:
         Corpus *mCorpus;
-        NNetwork *mNet;
+        NeuralNetwork *mNet;
 
         QPixmap mPoint0;
         QPixmap mPoint1;

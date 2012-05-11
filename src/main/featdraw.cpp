@@ -16,17 +16,21 @@
  */
 
 
-#include <program_options.hpp>
-#include <filesystem.hpp>
+#include <boost/version.hpp>
+#include <boost/program_options.hpp>
+#include <boost/filesystem.hpp>
 
 #include <QApplication>
 
 namespace po = boost::program_options;
 
 #include <iostream>
-using namespace std;
+#include <string>
 
 #include "core/featuredrawer.h"
+
+
+using namespace std;
 
 /**
  * \brief Main function for computing a graphical representation of the features
@@ -63,12 +67,12 @@ int main(int argc, char **argv)
     if(vm.count("input-file"))
     {
         FeatureDrawer fd;
-        NNetwork net;
+        NeuralNetwork net;
 
         if(vm.count("network"))
         {
             string network = "networks/" + (vm["network"].as< string >()) + ".xml";
-            if(net.load(network))
+            if(net.fromFile(network))
                 fd.setNetwork(&net);
             else
                 cout << "Warning : Unable to load the network, disabling classification." << endl;
@@ -78,27 +82,36 @@ int main(int argc, char **argv)
         if(fd.setupPipeline(pipeline))
         {
             string filename = vm["input-file"].as< string >();
-            string output = string("output/"+(boost::filesystem::path(filename).filename().string())+"-features.png");
+
+#if BOOST_VERSION <= 104200 //! \TODO : find at what version did the change happen	    
+            string output("output/"+(boost::filesystem::path(filename).filename())+"-features.png");
+#else
+	    string output("output/"+(boost::filesystem::path(filename).filename().string()+"-features.png");
+#endif
             if(vm.count("output-file"))
                 output = vm["input-file"].as< string >();
 
             cout << "File to read : " << filename << endl;
             fd.compute(filename);
             fd.waitComputed();
-            fd.draw(boost::filesystem::path(filename).stem().string());
-            cout << "Hey" << endl << endl;
+#if BOOST_VERSION <= 104200
+            fd.draw(boost::filesystem::path(filename).stem());
+#else
+	    fd.draw(boost::filesystem::path(filename).stem().string());
+#endif
+            cout << "Hey" << endl << endl; //! \TODO : delete me !
             fd.writeToFile(output);
-            cout << "Done" << endl;
+            cout << "Done" << endl; //! \TODO : delete me !
         }
         else
             cout << "Failed to load the pipeline." << endl;
-        cout << "OUT" << endl;
+        cout << "OUT" << endl; //! \TODO : delete me !
     }
     else
     {
         cout << "No input file has been set. Use --help for more info."<<endl;
     }
-    cout << "DELETED" << endl;
+    cout << "DELETED" << endl; // \TODO : delete me !
 
     return 0;
 }

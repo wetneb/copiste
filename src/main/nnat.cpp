@@ -23,13 +23,13 @@
 #include <program_options.hpp>
 
 #include "algo/corpus.h"
-#include "algo/nnetwork.h"
+#include "algo/neuralnetwork.h"
 #include "gui/view2D.h"
 #include "gui/editor.h"
 
 namespace po = boost::program_options;
 
-void plotHistory(float* history, int size);
+void plotHistory(double* history, int size);
 int* randomPermutation(int n);
 
 int main(int argc, char **argv)
@@ -40,15 +40,18 @@ int main(int argc, char **argv)
         ("train,t", "Train the network")
         ("eval,e", "Compute the error rate of the network")
         ("plot,p", "Plot the network and / or the corpus")
-        ("net,n", po::value<std::string>(), "Path to the network. Use NEW/dim/depth to create"
-                        " a new one with \"dim\" inputs and \"depth\" hidden layers.")
+        ("net,n", po::value<std::string>(), "Path to the network. Use NEW/dim1,dim2,..,dimN/ to create"
+                        " a new one with \"dim1\" ... \"dimN\" as input and hidden layer sizes "
+			"(output layer is always one single unit).")
         ("corpus,c", po::value<std::string>(), "Path to the corpus")
         ("out,o", po::value<std::string>(), "Path to the output (default: output.png)")
-        ("rate,r", po::value<float>(), "Training rate (default: 0.01)")
-        ("max,m", po::value<int>(), "Maximum iterations count for training (default: 1000)")
+        ("rate,r", po::value<double>(), "Training rate (default: 0.01)")
+        ("regularization,l", po::value<double>(), "Regularization factor (default: 0.001)")
+        ("iter,i", po::value<int>(), "Maximum iterations count for training (default: 1000)")
         ("no-random-weights", "Don't randomize weights before training")
         ("no-random-samples", "Don't randomize the order of the training corpus")
         ("verbose", "Be verbose (print a longer output)")
+	("debug,d", "Debug mode : check the gradient")
         ("help,h", "Display this message")
     ;
 
@@ -60,9 +63,9 @@ int main(int argc, char **argv)
     if(vm.count("help"))
     {
         std::cout << "Neural network analysis tool.\n\nExamples:" << std::endl;
-        std::cout << "Evaluate how accurate is a network on a corpus :\n   nnat -e --net my_network.xml --corpus my_corpus.xml\n" << std::endl;
-        std::cout << "Train a network to match a corpus :\n   nnat -t --net my_network.xml --corpus my_corpus.xml\n" << std::endl;
-        std::cout << "Plot a network and/or a corpus :\n   nnat -g --net my_network.xml --corpus my_corpus.xml\n" << std::endl;
+        std::cout << "Evaluate how accurate is a network on a corpus :\n   nnat -e --net my_network --corpus my_corpus.xml\n" << std::endl;
+        std::cout << "Train a network to match a corpus :\n   nnat -t --net my_network --corpus my_corpus.xml\n" << std::endl;
+        std::cout << "Plot a network and/or a corpus :\n   nnat -g --net my_network --corpus my_corpus.xml\n" << std::endl;
         std::cout << desc << std::endl;
         return 0;
     }
@@ -72,35 +75,38 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    string corpusFile = "", netFile = "", outFile = "out.png";
+    std::string corpusFile = "", netFile = "", outFile = "out.png";
     bool verbose = vm.count("verbose");
-    float rate = 0.01;
-    int iterMax = 1000;
-    NNetwork net;
+    double rate = 0.01, regularization = 0.01;
+    NeuralNetwork net;
     Corpus corpus;
 
     if(vm.count("net"))
     {
-        netFile = vm["net"].as<string> ();
-
+        netFile = vm["net"].as<std::string> ();
         if(netFile.substr(0,4) == "NEW/")
         {
-            cout << "Generating a new network" << endl;
-            istringstream s(netFile);
+	    //! \todo Document and handle errors
+            std::istringstream s(netFile);
+
             char buf = 0;
             for(int i = 0; i < 4; i++)
                 s >> buf;
-            int dim = 0;
-            s >> dim;
-            s >> buf;
-            int depth = 0;
-            s >> depth;
-
-            net.generate(dim, depth);
+            std::vector<int> geom;
+	    int dim = 0;
+	    do
+	    {
+		   s >> dim;
+		   geom.push_back(dim);
+		   s >> buf;
+	    }
+	    while(buf != '/'); 
+            
+            net.reset(geom);
             net.randomize();
         }
         else
-            net.load(netFile);
+            net.fromFile("networks/" + netFile);
     }
     else if(vm.count("train") or vm.count("eval"))
     {
@@ -110,7 +116,7 @@ int main(int argc, char **argv)
 
     if(vm.count("corpus"))
     {
-        corpusFile = vm["corpus"].as<string> ();
+        corpusFile = vm["corpus"].as<std::string> ();
         corpus.load(corpusFile);
     }
     else if(vm.count("train") or vm.count("eval"))
@@ -120,34 +126,39 @@ int main(int argc, char **argv)
     }
 
     if(vm.count("rate"))
-        rate = vm["rate"].as<float> ();
+        rate = vm["rate"].as<double> ();
 
-    if(vm.count("max"))
-        iterMax = vm["max"].as<int> ();
+    if(vm.count("regularization"))
+        regularization = vm["regularization"].as<double> ();
+
+    int nbIter = 1000;
+    if(vm.count("iter"))
+        nbIter = vm["iter"].as<int> ();
+
 
     // Running
     if(vm.count("train"))
     {
         if(vm.count("no-random-weights") == 0)
             net.randomize();
-        float *history;
-        int nbIter = corpus.train(net, rate, iterMax, &history, (vm.count("no-random-samples") == 0), (vm.count("verbose") == 1));// 0 : &history
+        corpus.display();
+        double cost = net.train(corpus, rate, regularization, nbIter, (vm.count("debug") != 0)); // &history, (vm.count("no-random-samples") == 0), (vm.count("verbose") == 1));// 0 : &history
 
         if(verbose)
-            cout << "Training ended after " << nbIter << " iterations.\n";
-        plotHistory(history,iterMax*corpus.size(), 13);
+            std::cout << "Training ended with cost " << cost << "\n";
+        // plotHistory(history,iterMax*corpus.size(), 13);
 
-        net.write("trained-network.xml");
+        net.toFile("networks/trained-network");
     }
 
 
     if(vm.count("eval"))
     {
-        float accuracy = corpus.accuracy(net, verbose);
+        double accuracy = net.accuracy(corpus);
         if(verbose)
             std::cout << "Accuracy : "<<accuracy*100<<"%" << std::endl;
         else
-            cout << (int)(accuracy*100) << endl;
+            std::cout << (int)(accuracy*100) << std::endl;
     }
 
     if(vm.count("plot"))
@@ -161,14 +172,17 @@ int main(int argc, char **argv)
         else view.setCorpus(new Corpus(2));
         if(netFile != "")
             view.setNet(&net);
-        cout << "Set." << endl;
+        view.setTrainingRate(rate);
+        view.setRegularization(regularization);
+        view.setIter(nbIter);
+	view.setDebug(vm.count("debug") != 0);
 
         view.show();
         //view.renderToImage(outFile);
 
         return app.exec();
     }
-
+    
     return 0;
 }
 

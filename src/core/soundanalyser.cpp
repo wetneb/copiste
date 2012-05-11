@@ -232,9 +232,9 @@ void SoundAnalyser::useBuffer()
             else cout << "Playing... " << playingTime() / 1000 << " seconds"<< endl;
             mLastUpdateTime = playingTime();
         }
-        float **featureArray = new float*[mExtr.size()]; // deleted in clearFeatures()
+        double **featureArray = new double*[mExtr.size()]; // deleted in clearFeatures()
         for(unsigned int i = 0; i < mExtr.size(); ++i)
-            featureArray[i] = new float[mExtr[i].second->size()]; // deleted in clearFeatures()
+            featureArray[i] = new double[mExtr[i].second->size()]; // deleted in clearFeatures()
 
         // For each feature
         for(unsigned int i = 0; i < mExtr.size(); ++i)
@@ -303,7 +303,7 @@ unsigned int SoundAnalyser::nbElems(unsigned int n)
 }
 
 //! Return the array of features at a given time
-float** SoundAnalyser::features(unsigned int n)
+double** SoundAnalyser::features(unsigned int n)
 {
     if(n < mFeatures.size())
         return mFeatures[n];

@@ -25,7 +25,7 @@
 #include <QPainter>
 
 #include "core/soundanalyser.h"
-#include "algo/nnetwork.h"
+#include "algo/neuralnetwork.h"
 
 #define FEATURE_DRAWER_DEFAULT_WIDTH 1600
 #define FEATURE_DRAWER_DEFAULT_HEIGHT 600
@@ -47,7 +47,7 @@ class FeatureDrawer : public SoundAnalyser
         void drawSpectrum(bool draw = true);
 
         //! Set a network that can be used to classify the samples
-        void setNetwork(NNetwork *net);
+        void setNetwork(NeuralNetwork *net);
 
         //! Changes the size of the output. Redraws if needed.
         void setImageSize(int width, int height);
@@ -68,11 +68,11 @@ class FeatureDrawer : public SoundAnalyser
         QImage mOut;
         QImage mCaption;
         bool mDrawn;
-        NNetwork *mNet;
+        NeuralNetwork *mNet;
         bool mDrawSpectrum;
 
-        float* mMin;
-        float* mMax;
+        double* mMin;
+        double* mMax;
         unsigned int mMinMaxSize;
 };
 
