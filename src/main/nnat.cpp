@@ -137,16 +137,19 @@ int main(int argc, char **argv)
 
 
     // Running
+    bool debug = (vm.count("debug") != 0);
     if(vm.count("train"))
     {
         if(vm.count("no-random-weights") == 0)
             net.randomize();
-        corpus.display();
-        double cost = net.train(corpus, rate, regularization, nbIter, (vm.count("debug") != 0)); // &history, (vm.count("no-random-samples") == 0), (vm.count("verbose") == 1));// 0 : &history
+
+	if(debug)
+        	corpus.display();
+
+        double cost = net.train(corpus, rate, regularization, nbIter, debug); 
 
         if(verbose)
             std::cout << "Training ended with cost " << cost << "\n";
-        // plotHistory(history,iterMax*corpus.size(), 13);
 
         net.toFile("networks/trained-network");
     }

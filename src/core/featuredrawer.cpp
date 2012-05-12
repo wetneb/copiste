@@ -279,7 +279,12 @@ void FeatureDrawer::writeToDevice(QPaintDevice *device)
 
 void FeatureDrawer::setNetwork(NeuralNetwork *net)
 {
-    mNet = net;
+    if(net->dimension() == this->dimension())
+        mNet = net;
+    else 
+        std::cerr << "Error : the input dimension of the network (" 
+         << net->dimension() << ") and the output dimension of the pipeline ("
+         << this->dimension() << ") differ." << std::endl;
 }
 
 FeatureDrawer::~FeatureDrawer()

@@ -57,8 +57,8 @@ string Classifier::getClass()
         double response = mNet->classify(inputVector);
 
         // Get the result
-        if(response >= 0)
-            result = "Speech";
+        if(response >= 0.5)
+            result = "Speech"; //! \todo This is hardcoded !
         else
             result = "Music";
     }

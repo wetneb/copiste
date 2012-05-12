@@ -47,7 +47,7 @@ class FeatureDrawer : public SoundAnalyser
         void drawSpectrum(bool draw = true);
 
         //! Set a network that can be used to classify the samples
-        void setNetwork(NeuralNetwork *net);
+        virtual void setNetwork(NeuralNetwork *net);
 
         //! Changes the size of the output. Redraws if needed.
         void setImageSize(int width, int height);

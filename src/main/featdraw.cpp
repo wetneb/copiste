@@ -99,19 +99,15 @@ int main(int argc, char **argv)
 #else
 	    fd.draw(boost::filesystem::path(filename).stem().string());
 #endif
-            cout << "Hey" << endl << endl; //! \TODO : delete me !
             fd.writeToFile(output);
-            cout << "Done" << endl; //! \TODO : delete me !
         }
         else
             cout << "Failed to load the pipeline." << endl;
-        cout << "OUT" << endl; //! \TODO : delete me !
     }
     else
     {
         cout << "No input file has been set. Use --help for more info."<<endl;
     }
-    cout << "DELETED" << endl; // \TODO : delete me !
 
     return 0;
 }

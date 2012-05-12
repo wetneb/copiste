@@ -34,7 +34,7 @@
 
 #include "features/spectrum.h"
 
-#define AUDIO_CHUNK_SIZE 2048
+#define AUDIO_CHUNK_SIZE 4096 
 
 using namespace std;
 

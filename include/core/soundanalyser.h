@@ -47,6 +47,7 @@ class SoundAnalyser;
 #include "filters/range.h"
 #include "filters/highlowratio.h"
 #include "filters/centroid.h"
+#include "filters/memory.h"
 
 using namespace std;
 

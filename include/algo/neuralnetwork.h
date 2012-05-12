@@ -43,7 +43,7 @@ using namespace boost::numeric;
 
 double sigmoid(double x);
 
-//! A sightly better neural network
+//! A slightly better neural network
 class NeuralNetwork
 {
     public:
@@ -79,6 +79,9 @@ class NeuralNetwork
 
        //! Number of layers of the network (hidden layers + output layer)
        unsigned int nbLayers() { return mLayers.size(); }
+
+       //! Input dimension of the network (size of the input layer)
+       unsigned int dimension();
 
    private:
        std::vector< ublas::matrix<double> > mLayers;
