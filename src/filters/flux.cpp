@@ -18,6 +18,7 @@
 
 #include "filters/flux.h"
 
+#define FLUX_EPSILON 0.001
 #include <cmath>
 
 //! Compute the transformation : compute the "flux"
@@ -28,7 +29,11 @@ void FluxFilter::transform(vector<float> data)
         if(mResult.size() != data.size())
             mResult.resize(data.size());
         for(unsigned int i = 0; i < data.size(); i++)
-            mResult[i] = abs(mLastVect[i] - data[i]);
+        {
+            mResult[i] = (log(data[i] + 1) - log(mLastVect[i] + 1) + FLUX_EPSILON);
+            mResult[i] *= mResult[i];
+            //mResult[i] = 0.42;
+        }
     }
 
     mLastVect = data;

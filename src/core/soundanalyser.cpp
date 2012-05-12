@@ -85,6 +85,8 @@ bool SoundAnalyser::setupPipeline(string filename)
                     flt = new CentroidFilter;
                 else if(type == "HighLowRatio")
                     flt = new HighLowRatioFilter;
+		else if(type == "Memory")
+	            flt = new MemoryFilter;
 
                 if(flt != 0)
                 {
@@ -157,7 +159,6 @@ SoundAnalyser::~SoundAnalyser()
 {
     resetExtractors();
     clearFeatures();
-    cout << "~SoundAnalyser()" << endl;
 }
 
 //! Clears the features

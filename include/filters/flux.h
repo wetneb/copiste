@@ -21,7 +21,12 @@
 
 #include "filters/filter.h"
 
-//! A filter for computing the amount of variations of a given feature (absolute value of the discrete derivative)
+/*
+ * Reference : A Robust Audio Classification and Segmentation Method
+ * Lie Lu, Hao Jiang and HongJiang Zhang
+ */
+
+//! A filter for computing the amount of variations of a given feature
 class FluxFilter : public Filter
 {
     public:

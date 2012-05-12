@@ -85,9 +85,9 @@ class SpectrumExtr : public FeatureExtractor
         /// Accessors
         // These functions can be used to retrive the result of the computation.
 
-        //! Retrieve the results (from the index). The values are usually between -1 and 1
+        //! Retrieve the results (from the index). 
         float value(int index);
-        //! Retrieve the entire array (TODO : delete me)
+        //! Retrieve the entire array
         uint16_t* spectrum();
         //! Get the number of available values
         int size();

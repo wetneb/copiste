@@ -23,7 +23,6 @@ void HighLowRatioFilter::transform(vector<float> data)
 {
     // This code is quite efficient but we choosed not to compare all the values of the memory
     // to the new average at each iteration. It might just slow down the variations of the output.
-    //! \todo Control this with a special bool parameter, or choose.
 
     if(mMemory.size() != data.size())
         reallocate(data.size());
