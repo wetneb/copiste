@@ -22,6 +22,7 @@ FeatureExtractor* Filter::bind(FeatureExtractor* extr)
 {
     FeatureExtractor* old = mExtr;
     mExtr = extr;
+    parentChanged();
     return old;
 }
 

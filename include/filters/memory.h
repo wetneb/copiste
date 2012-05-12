@@ -16,46 +16,46 @@
  */
 
 
-#ifndef INCLUDED_AVERAGEH
-#define INCLUDED_AVERAGEH
+#ifndef INCLUDED_MEMORYH
+#define INCLUDED_MEMORYH
 
 #include "filters/filter.h"
 
-//! A filter for computing the temporal average of a value
-class AverageFilter : public Filter
+//! A class for keeping track of the last n values of features
+class MemoryFilter : public Filter
 {
     public:
-        //! Default constructor : does nothing
-        AverageFilter() : Filter(), mHistory(0), mAverage(0), mSize(0), mDimension(0), mCurrentIndex(0) { ; }
+	//! Constructor
+	MemoryFilter();
 
-        //! Destructor : cleans the memory
-        ~AverageFilter();
-
-        //! Run the algorithm and store the results
+        //! Do the actual computation on the features
         void transform(vector<float> data);
 
-        //! Retrive the results (from the index). The values are usually between -1 and 1
+        //! Returns the number of available features : n*m (where m is the number of input features)
+        int size() { return mN*mM; }
+
+        //! Get the result (index = i*n + j where i is the feature and j the frame)
         float value(int index = 0);
 
-        //! Get the number of available values
-        int size();
-
-        //! Set a int parameter (available : size)
+        //! Set a int parameter : "depth", the n parameter (depth of the memory)
         void setInt(string key, int value);
 
-        //! Get a int parameter  (available : size)
+        //! Get a int parameter : "depth"
         int getInt(string key);
 
    protected:
-        //! Update the sizes
+        //! Updates the sizes
         void parentChanged();
 
     private:
-        float** mHistory;
-        float* mAverage;
-        int mSize;
-        int mDimension;
-        int mCurrentIndex;
+    	//! The "depth" of the memory
+        unsigned int mN;
+	    //! The number of features
+	    unsigned int mM;
+	    //! The memory
+	    vector< vector<float> > mMem;
+	    //! Current index where to fill data
+	    unsigned int mCurr;
 };
 
 #endif

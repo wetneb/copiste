@@ -93,11 +93,8 @@ int AverageFilter::getInt(string key)
     return result;
 }
 
-FeatureExtractor* AverageFilter::bind(FeatureExtractor* extr)
+void AverageFilter::parentChanged()
 {
-    FeatureExtractor* old = mExtr;
-    mExtr = extr;
     mDimension = mExtr->size();
-    return old;
 }
 

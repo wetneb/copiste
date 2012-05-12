@@ -4,7 +4,8 @@ import os
 
 libpath = [ '/usr/lib',
 	    '/usr/local/lib',
-	    '/usr/local/share/qt4/lib' ]
+	    '/usr/local/share/qt4/lib',
+]
 
 cpppath = [ 'include',
 	    '/usr/include/qt4',
@@ -12,7 +13,8 @@ cpppath = [ 'include',
 	    '/usr/include/qt4/QtCore',
 	    '/usr/include/qt4/QtXml',
 	    '/usr/include/qt4/QtXmlPatterns',
-	    '/usr/include/boost' ]
+	    '/usr/include/boost',
+]
 
 libs = [ 'vlc',
          'vlccore',
@@ -24,7 +26,8 @@ libs = [ 'vlc',
 	 'boost_filesystem',
          'boost_system',
 	 'boost_thread',
-         'boost_serialization']
+         'boost_serialization',
+]
 
 flags = ['-Wall']
 
@@ -36,23 +39,28 @@ env = Environment(LIBPATH=libpath, CPPPATH = cpppath, LIBS=libs, CPPFLAGS = flag
                          'TERM' : os.environ['TERM'],
 			})
 neurones_files = [ 'src/algo/corpus.cpp',
-		   'src/algo/neuralnetwork.cpp' ]
+		   'src/algo/neuralnetwork.cpp',
+]
 
 sound_analyser_files = [ 'src/core/soundanalyser.cpp',
-			 'src/core/streamplayer.cpp' ]
+			 'src/core/streamplayer.cpp',
+]
 
 features_files = [ 'src/features/hzcrr.cpp',
 		   'src/features/lster.cpp',
 		   'src/features/zcr.cpp',
 		   'src/features/ste.cpp',
-		   'src/features/spectrum.cpp' ]
+		   'src/features/spectrum.cpp',
+]
 
 filters_files = [ 'src/filters/filter.cpp',
 		  'src/filters/average.cpp',
 		  'src/filters/range.cpp',
 		  'src/filters/flux.cpp',
 		  'src/filters/centroid.cpp',
-		  'src/filters/highlowratio.cpp' ]
+		  'src/filters/highlowratio.cpp',
+                  'src/filters/memory.cpp',
+]
 
 audio_analysis_files = sound_analyser_files + features_files + filters_files
 
@@ -60,7 +68,8 @@ nnat_files = neurones_files + ['src/gui/editor.cpp',
 	     'src/gui/moc_editor.cpp',
 	     'src/gui/moc_view2D.cpp',
 	     'src/gui/view2D.cpp',
-	     'src/main/nnat.cpp' ]
+	     'src/main/nnat.cpp',
+]
 
 mkcorpus_files = neurones_files + audio_analysis_files + ['src/core/corpusbuilder.cpp',
 		 'src/main/mkcorpus.cpp']

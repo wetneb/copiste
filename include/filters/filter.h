@@ -35,7 +35,7 @@ class Filter : public FeatureExtractor
         ~Filter() { ; }
 
         //! Binds the filter to the output of an extractor (or another filter). Returns the old one.
-        virtual FeatureExtractor* bind(FeatureExtractor* extr);
+        FeatureExtractor* bind(FeatureExtractor* extr);
 
         /** \brief Extract data
          * This method should not be reimplemented by the user.
@@ -48,6 +48,10 @@ class Filter : public FeatureExtractor
         virtual void transform(vector<float> data) = 0;
 
     protected:
+        //! Callback called when the upstream extractor changes
+        virtual void parentChanged() { ; }
+
+        //! The extractor from which the data is drawn
         FeatureExtractor* mExtr;
 };
 
