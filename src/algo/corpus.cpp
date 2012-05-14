@@ -153,6 +153,7 @@ void Corpus::write(std::string fileName)
         QDomElement pointNode = doc.createElement("point");
 
         pointNode.setAttribute("goal", mPool[iPoint][0]);
+        pointNode.setAttribute("name", mNames[iPoint].c_str());
 
         for(int iCoord = 0; iCoord < mDimension; ++iCoord)
         {
@@ -269,7 +270,7 @@ void Corpus::addElem(double* elem, std::string name)
 
     if((int)mNames.size() <= mSize)
         mNames.push_back(name);
-    else mNames[mSize] = name;
+    else mNames[mSize] = name; // should not occur
 
     mPool[mSize] = elem;
     mSize++;

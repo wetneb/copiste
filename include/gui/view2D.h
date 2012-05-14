@@ -25,25 +25,13 @@ class View2D;
 #include <stack>
 #include "algo/neuralnetwork.h"
 #include "algo/corpus.h"
+#include "gui/viewport.h"
 
 #define VIEW_OUTPUT_WIDTH 700
 #define VIEW_OUTPUT_HEIGHT 500
 #define POINT_0_PATH "img/point-0.png"
 #define POINT_1_PATH "img/point-1.png"
 #define CORPUS_EPSILON 0.0001
-
-/** \todo Include a BSP tree to display infoboxes when hovering points (with the labels of the corpus) */
-
-//! Internal struture used by View2D to keep in memory old views of a same network
-struct Viewport
-{
-    double x;
-    double y;
-    double scaleX;
-    double scaleY;
-    QPixmap img;
-};
-typedef struct Viewport Viewport;
 
 void plotHistory(double* history, int size, int corpusSize);
 
