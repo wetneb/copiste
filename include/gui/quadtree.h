@@ -18,10 +18,33 @@
 #ifndef INCLUDED_QUADTREEH
 #define INCLUDED_QUADTREEH
 
-#include "gui/viewport.h"
 #include "algo/corpus.h"
 
 #include <list>
+
+//! A node for the quadtree
+class QuadNode
+{
+    public:
+        //! Constructs a leaf
+        QuadNode(int e = -1);
+        //! Construct an internal node
+        QuadNode(QuadNode* a, QuadNode* b, QuadNode *c, QuadNode *d);
+
+        //! Destructs the node and its children (if any)
+        ~QuadNode();
+
+        //! Provided for convenience
+        bool isLeaf();
+
+        //! If it's a leaf : the index of the element (else, -1)
+        int elem;
+        //! Else, it's an internal node : the pointer to the children (else, 0)
+        QuadNode* hl;
+        QuadNode* hr;
+        QuadNode* ll;
+        QuadNode* lr;
+};
 
 class QuadTree
 {
@@ -32,41 +55,36 @@ class QuadTree
         //! Deletes the quadtree
         ~QuadTree();
 
-        //! Creates a new quadtree for a Corpus on a given Viewport
-        void create(Corpus *c, Viewport view);
+        //! A rectangle
+        struct rect
+        {
+            double x;
+            double y;
+            double w;
+            double h;
+        };
+        typedef struct rect rect;
+
+        //! Creates a new quadtree for a Corpus and a given rectangle
+        void create(Corpus *c, rect view);
 
         //! Returns the index of the nearest element
         int nearest(int x, int y);
 
+
     private:
-        //! A node for the quadtree
-        class QuadNode;
+        //! Filters the points in the list which are on the given rectangle
+        std::list<int> separate(std::list<int> l, QuadTree::rect view, Corpus *c);
 
-        class QuadNode
-        {
-            public:
-                //! Constructs a leaf
-                QuadNode(int e);
-                //! Construct an internal node
-                QuadNode(QuadNode* a, QuadNode* b, QuadNode *c, QuadNode *d);
+        //! Generates a node for the quadtree
+        QuadNode* createNode(std::list<int> points, QuadTree::rect view, Corpus *c);
 
-                //! Destructs the node and its children (if any)
-                ~QuadNode();
-
-                //! Provided for convenience
-                bool isLeaf();
-
-                //! If it's a leaf : the index of the element (else, -1)
-                int elem;
-                //! Else, it's an internal node : the pointer to the children (else, 0)
-                QuadNode* hl, hr, ll, lr;
-        };
 
         //! Root of the tree (0 if none)
         QuadNode* mRoot;
 
         //! The viewport used to build the tree
-        Viewport mViewport;
+        rect mViewport;
 };
 
 #endif
