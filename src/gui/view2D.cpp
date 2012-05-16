@@ -193,7 +193,9 @@ void View2D::mouseMoveEvent(QMouseEvent *event)
     {
         int elem = mViewport.tree.nearest(mViewport.x + mCurrentX*mViewport.scaleX, mViewport.y + mCurrentY*mViewport.scaleY);
         if(elem != -1)
+        {
             emitHoveringElement(mCorpus->name(elem));
+        }
         mLastUpdate = QTime::currentTime();
     }
 }

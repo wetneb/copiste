@@ -115,6 +115,7 @@ QuadNode* QuadTree::createNode(std::list<int> points, QuadTree::rect view)
 void QuadTree::create(Corpus *c, QuadTree::rect view)
 {
     mCorpus = c;
+    mViewport = view;
 
     if(c != 0)
     {

@@ -60,20 +60,21 @@ int main(int argc, char **argv)
     {
         LivePlayer lp;
         NeuralNetwork net;
-
-        if(vm.count("network"))
-        {
-            string network = "networks/" + (vm["network"].as< string >());
-            if(net.fromFile(network))
-                lp.setNetwork(&net);
-            else
-                cout << "Warning : Unable to load the network, disabling classification." << endl;
-        }
-
+        
         string pipeline = "pipeline/" + (vm["pipeline"].as< string >())+ ".xml";
         if(lp.setupPipeline(pipeline))
         {
             string filename = vm["input-file"].as< string >();
+
+            if(vm.count("network"))
+            {
+                string network = "networks/" + (vm["network"].as< string >());
+                if(net.fromFile(network))
+                    lp.setNetwork(&net);
+                else
+                    cout << "Warning : Unable to load the network, disabling classification." << endl;
+            }
+
             lp.show();
             lp.compute(filename);
 

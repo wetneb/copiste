@@ -100,7 +100,7 @@ bool Corpus::load(std::string filename, bool verbose)
                 if(mPool[nbPointsSet][0] < 0)
                     mPool[nbPointsSet][0] = 0;
 
-                mNames.push_back(node.toElement().attribute("name", "").toStdString());
+                mNames[nbPointsSet] = node.toElement().attribute("name", "").toStdString();
 
                 nbCoordsSet = 0;
                 QDomNode pointNode = node.firstChild();
