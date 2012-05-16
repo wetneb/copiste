@@ -16,7 +16,11 @@
  */
 
 #ifndef INCLUDED_VIEWPORTH
-#ifndef INCLUDED_VIEWPORTH
+#define INCLUDED_VIEWPORTH
+
+#include "gui/quadtree.h"
+
+#include <QWidget>
 
 //! Internal struture used by View2D to keep in memory old views of a same network
 struct Viewport
@@ -26,6 +30,7 @@ struct Viewport
     double scaleX;
     double scaleY;
     QPixmap img;
+    QuadTree tree;
 };
 typedef struct Viewport Viewport;
 

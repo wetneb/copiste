@@ -18,12 +18,9 @@
 
 #include "gui/view2D.h"
 
-#include <iostream>
-#include <QPaintEvent>
-#include <QPainter>
-
 View2D::View2D(QWidget *parent) : QWidget(parent), mCurrentPoint(false)
 {
+    mLastUpdate = QTime::currentTime();
     mViewport.x = 0;
     mViewport.y = 0;
     mViewport.scaleX = 1;
@@ -61,7 +58,7 @@ void View2D::renderToImage(std::string fileName, std::string format, int w, int 
 
 void View2D::renderScene()
 {
-    // Tells the user the rendering starts
+    // Tell the user the rendering starts
     emit rendering();
 
     QPainter painter;
@@ -80,7 +77,7 @@ void View2D::renderScene()
         std::vector<double> inputVec;
         inputVec.resize(2);
 
-        // Bulk draw : each pixel is computed exactly.
+        // "Brute force" draw : each pixel is computed exactly.
         //! \TODO : compute less points and interpolate between them.
         for(int x = 0; x != width(); ++x)
         {
@@ -102,10 +99,10 @@ void View2D::renderScene()
 
     mViewport.img = newPic;
 
-    // Backs up the rendered image
+    // Back up the rendered image
     mZoomHistory.push(mViewport);
 
-    // Tells the user rendering ended
+    // Tell the user rendering ended
     emit rendered();
 }
 
@@ -125,6 +122,7 @@ void View2D::setCorpus(Corpus *corpus)
         mViewport.scaleY = 1.2*sizeY/height();
         mViewport.x = bounds[0] - 0.1*sizeX;
         mViewport.y = bounds[2] - 0.1*sizeY;
+        updateQuadtree();
 
         renderScene();
         repaint();
@@ -132,9 +130,22 @@ void View2D::setCorpus(Corpus *corpus)
     else std::cerr << "Unable to draw a corpus of dimension "<<corpus->dimension()<<", sorry.\n";
 }
 
+void View2D::updateQuadtree()
+{
+    if(mCorpus != 0)
+    {
+        QuadTree::rect r;
+        r.x = mViewport.x;
+        r.y = mViewport.y;
+        r.w = mViewport.scaleX * width();
+        r.h = mViewport.scaleY * height();
+        mViewport.tree.create(mCorpus, r);
+    }
+}
+
 void View2D::paintEvent(QPaintEvent *event)
 {
-    // Displays the image onscreen
+    // Display the image onscreen
     QPainter painter;
     painter.begin(this);
     painter.drawPixmap(0,0,mViewport.img);
@@ -142,7 +153,8 @@ void View2D::paintEvent(QPaintEvent *event)
     if(mZooming)
     {
         painter.setPen(QColor(0,0,0));
-        int minX = std::min(mCurrentX, mStartX), minY = std::min(mCurrentY, mStartY), maxX = std::max(mCurrentX, mStartX), maxY = std::max(mCurrentY, mStartY);
+        int minX = std::min(mCurrentX, mStartX), minY = std::min(mCurrentY, mStartY),
+            maxX = std::max(mCurrentX, mStartX), maxY = std::max(mCurrentY, mStartY);
         painter.drawRect(minX, minY, maxX - minX, maxY - minY);
     }
 
@@ -162,7 +174,8 @@ void View2D::paintEvent(QPaintEvent *event)
             if(mCorpus->elem(index)[0] == 1)
                 img = &mPoint1;
 
-            painter.drawPixmap((mCorpus->elem(index)[1] - mViewport.x)/mViewport.scaleX - 5, (mCorpus->elem(index)[2]- mViewport.y)/mViewport.scaleY - 5, *img);
+            painter.drawPixmap((mCorpus->elem(index)[1] - mViewport.x)/mViewport.scaleX - 5,
+                               (mCorpus->elem(index)[2] - mViewport.y)/mViewport.scaleY - 5, *img);
         }
     }
 
@@ -173,7 +186,16 @@ void View2D::mouseMoveEvent(QMouseEvent *event)
 {
     mCurrentX = event->x();
     mCurrentY = event->y();
+
     repaint();
+
+    if(mCorpus != 0 && mLastUpdate.msecsTo(QTime::currentTime()) > TIME_BETWEEN_TWO_LABEL_UPDATES)
+    {
+        int elem = mViewport.tree.nearest(mViewport.x + mCurrentX*mViewport.scaleX, mViewport.y + mCurrentY*mViewport.scaleY);
+        if(elem != -1)
+            emitHoveringElement(mCorpus->name(elem));
+        mLastUpdate = QTime::currentTime();
+    }
 }
 
 void View2D::mousePressEvent(QMouseEvent *event)
@@ -205,6 +227,7 @@ void View2D::mouseReleaseEvent(QMouseEvent *event)
             newViewport.scaleY *= rect.height() / (double)height();
 
             mViewport = newViewport;
+            updateQuadtree();
 
             renderScene();
             repaint();
@@ -233,6 +256,7 @@ void View2D::handleKeyReleaseEvent(QKeyEvent *event)
         newViewport.scaleY *= 3;
 
         mViewport = newViewport;
+        updateQuadtree();
 
         renderScene();
         repaint();
@@ -257,12 +281,15 @@ void View2D::keyReleaseEvent(QKeyEvent *event)
     else event->ignore();
 }
 
+void View2D::emitHoveringElement(std::string name)
+{
+    emit hoveringElement(name);
+}
+
 void View2D::setNet(NeuralNetwork *net)
 {
     mNet = net;
 }
-
-#define MAX_WIDTH_HISTORY 2000
 
 void plotHistory(double* history, int size, int corpusSize)
 {
@@ -300,3 +327,4 @@ void View2D::setCurrentPoint(bool point)
 {
     mCurrentPoint = point;
 }
+

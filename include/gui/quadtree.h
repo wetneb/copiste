@@ -68,20 +68,28 @@ class QuadTree
         //! Creates a new quadtree for a Corpus and a given rectangle
         void create(Corpus *c, rect view);
 
-        //! Returns the index of the nearest element
-        int nearest(int x, int y);
+        //! Returns the index of the nearest element. Returns -1 if nothing is found
+        int nearest(double x, double y);
 
 
     private:
         //! Filters the points in the list which are on the given rectangle
-        std::list<int> separate(std::list<int> l, QuadTree::rect view, Corpus *c);
+        std::list<int> separate(std::list<int> l, QuadTree::rect view);
 
         //! Generates a node for the quadtree
-        QuadNode* createNode(std::list<int> points, QuadTree::rect view, Corpus *c);
+        QuadNode* createNode(std::list<int> points, QuadTree::rect view);
 
+        //! Is this point in this rectangle ?
+        bool isInRect(double x, double y, rect r);
+
+        //! Browse the tree
+        int nodeSearch(QuadNode *node, rect view, double x, double y);
 
         //! Root of the tree (0 if none)
         QuadNode* mRoot;
+
+        //! The corpus used to build the tree
+        Corpus* mCorpus;
 
         //! The viewport used to build the tree
         rect mViewport;

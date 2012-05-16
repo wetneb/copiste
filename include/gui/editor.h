@@ -55,7 +55,7 @@ class SettingsDialog : public QDialog
     private:
         QDoubleSpinBox mRate, mReg;
         QSpinBox mIter;
-	QCheckBox mDebug;
+	    QCheckBox mDebug;
 };
 
 //! The main class for the graphical network trainer
@@ -71,7 +71,7 @@ class Editor : public QMainWindow
         void setRegularization(double r);
         void setTrainingRate(double r);
         void setIter(int iter);
-	void setDebug(bool debug);
+	    void setDebug(bool debug);
 
     protected:
         void keyReleaseEvent(QKeyEvent *event);
@@ -79,6 +79,7 @@ class Editor : public QMainWindow
     public slots:
         void dispRendering();
         void dispRendered();
+        void dispMessage(std::string message);
         void handleRequest(QAction *action);
         void updateSettings(double rate, double reg, int iter, bool debug);
 
@@ -89,7 +90,7 @@ class Editor : public QMainWindow
         // Training parameters
         double mTrainingRate, mRegularization;
         int mIter;
-	bool mDebug;
+	    bool mDebug;
 };
 
 #endif

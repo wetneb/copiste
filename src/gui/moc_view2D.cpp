@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'view2D.h'
 **
-** Created: Tue May 8 13:18:07 2012
+** Created: Wed May 16 17:43:56 2012
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,22 +23,24 @@ static const uint qt_meta_data_View2D[] = {
        4,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       2,       // signalCount
+       3,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
        8,    7,    7,    7, 0x05,
       20,    7,    7,    7, 0x05,
+      31,    7,    7,    7, 0x05,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_View2D[] = {
     "View2D\0\0rendering()\0rendered()\0"
+    "hoveringElement(std::string)\0"
 };
 
 const QMetaObject View2D::staticMetaObject = {
@@ -72,9 +74,10 @@ int View2D::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         switch (_id) {
         case 0: rendering(); break;
         case 1: rendered(); break;
+        case 2: hoveringElement((*reinterpret_cast< std::string(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 2;
+        _id -= 3;
     }
     return _id;
 }
@@ -89,5 +92,12 @@ void View2D::rendering()
 void View2D::rendered()
 {
     QMetaObject::activate(this, &staticMetaObject, 1, 0);
+}
+
+// SIGNAL 2
+void View2D::hoveringElement(std::string _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 2, _a);
 }
 QT_END_MOC_NAMESPACE

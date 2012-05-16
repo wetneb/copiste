@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'editor.h'
 **
-** Created: Wed May 9 08:17:29 2012
+** Created: Wed May 16 18:02:33 2012
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -95,7 +95,7 @@ static const uint qt_meta_data_Editor[] = {
        4,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -105,14 +105,16 @@ static const uint qt_meta_data_Editor[] = {
  // slots: signature, parameters, type, tag, flags
        8,    7,    7,    7, 0x0a,
       24,    7,    7,    7, 0x0a,
-      46,   39,    7,    7, 0x0a,
-      90,   70,    7,    7, 0x0a,
+      47,   39,    7,    7, 0x0a,
+      79,   72,    7,    7, 0x0a,
+     123,  103,    7,    7, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Editor[] = {
     "Editor\0\0dispRendering()\0dispRendered()\0"
+    "message\0dispMessage(std::string)\0"
     "action\0handleRequest(QAction*)\0"
     "rate,reg,iter,debug\0"
     "updateSettings(double,double,int,bool)\0"
@@ -149,11 +151,12 @@ int Editor::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         switch (_id) {
         case 0: dispRendering(); break;
         case 1: dispRendered(); break;
-        case 2: handleRequest((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
-        case 3: updateSettings((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< double(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< bool(*)>(_a[4]))); break;
+        case 2: dispMessage((*reinterpret_cast< std::string(*)>(_a[1]))); break;
+        case 3: handleRequest((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
+        case 4: updateSettings((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< double(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< bool(*)>(_a[4]))); break;
         default: ;
         }
-        _id -= 4;
+        _id -= 5;
     }
     return _id;
 }

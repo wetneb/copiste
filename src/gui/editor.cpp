@@ -38,6 +38,7 @@ Editor::Editor(QWidget *parent) : QMainWindow(parent)
 
     connect(&mView, SIGNAL(rendering()), this, SLOT(dispRendering()));
     connect(&mView, SIGNAL(rendered()), this, SLOT(dispRendered()));
+    connect(&mView, SIGNAL(hoveringElement(std::string)), this, SLOT(dispMessage(std::string)));
     connect(menuBar(), SIGNAL(triggered(QAction*)), this, SLOT(handleRequest(QAction*)));
     connect(mToolbar, SIGNAL(actionTriggered(QAction*)), this, SLOT(handleRequest(QAction*)));
 }
@@ -147,6 +148,11 @@ void Editor::dispRendering()
 void Editor::dispRendered()
 {
     statusBar()->showMessage("Ready.");
+}
+
+void Editor::dispMessage(std::string message)
+{
+    statusBar()->showMessage(message.c_str());
 }
 
 void Editor::updateSettings(double rate, double reg, int iter, bool debug)

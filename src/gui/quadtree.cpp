@@ -43,7 +43,7 @@ bool QuadNode::isLeaf()
 }
 
 
-QuadTree::QuadTree()
+QuadTree::QuadTree() : mRoot(0), mCorpus(0)
 {
     ;
 }
@@ -55,15 +55,15 @@ QuadTree::~QuadTree()
 }
 
 //! Filters the points in the list which are on the given rectangle
-std::list<int> QuadTree::separate(std::list<int> l, QuadTree::rect view, Corpus *c)
+std::list<int> QuadTree::separate(std::list<int> l, QuadTree::rect view)
 {
     std::list<int> res;
     for(std::list<int>::iterator i = l.begin(); i != l.end(); i++)
     {
-        if(*i < (int)c->size())
+        if(*i < (int)mCorpus->size())
         {
-            double px = c->elem(*i)[1];
-            double py = c->elem(*i)[2];
+            double px = mCorpus->elem(*i)[1];
+            double py = mCorpus->elem(*i)[2];
 
             if(px >= view.x && px <= view.x + view.w &&
                py >= view.y && py <= view.y + view.h)
@@ -74,9 +74,9 @@ std::list<int> QuadTree::separate(std::list<int> l, QuadTree::rect view, Corpus 
 }
 
 //! Generates a node for the quadtree
-QuadNode* QuadTree::createNode(std::list<int> points, QuadTree::rect view, Corpus *c)
+QuadNode* QuadTree::createNode(std::list<int> points, QuadTree::rect view)
 {
-    std::list<int> visible = separate(points, view, c);
+    std::list<int> visible = separate(points, view);
     QuadNode *result;
     if(visible.empty()) // if the size is 0
         result = 0;
@@ -92,19 +92,19 @@ QuadNode* QuadTree::createNode(std::list<int> points, QuadTree::rect view, Corpu
         // High left
         r.x = view.x;
         r.y = view.y;
-        n->hl = createNode(visible, r, c);
+        n->hl = createNode(visible, r);
 
         // High right
         r.x += r.w;
-        n->hr = createNode(visible, r, c);
+        n->hr = createNode(visible, r);
 
         //! Low right
         r.y += r.h;
-        n->lr = createNode(visible, r, c);
+        n->lr = createNode(visible, r);
 
         //! Low left
         r.x -= r.w;
-        n->ll = createNode(visible, r, c);
+        n->ll = createNode(visible, r);
 
         result = n;
     }
@@ -114,11 +114,65 @@ QuadNode* QuadTree::createNode(std::list<int> points, QuadTree::rect view, Corpu
 
 void QuadTree::create(Corpus *c, QuadTree::rect view)
 {
-    //! Create the initial list of all elements
-    std::list<int> points;
-    for(unsigned int i = c->size()-1; i >= 0; i--)
-        points.push_front(i);
+    mCorpus = c;
 
-    //! Recurse
-    mRoot = createNode(points, view, c);
+    if(c != 0)
+    {
+        //! Create the initial list of all elements
+        std::list<int> points;
+        for(int i = c->size()-1; i >= 0; i--)
+            points.push_front(i);
+
+        //! Recurse
+        mRoot = createNode(points, view);
+    }
 }
+
+bool QuadTree::isInRect(double x, double y, rect r)
+{
+    return (x >= r.x && y >= r.y && x <= r.x + r.w && y <= r.y + r.h);
+}
+
+int QuadTree::nodeSearch(QuadNode *node, QuadTree::rect view, double x, double y)
+{
+    int result = -1;
+    if(node != 0)
+    {
+        if(node->elem != -1 && isInRect(mCorpus->elem(node->elem)[1], mCorpus->elem(node->elem)[2], view))
+            result = node->elem;
+        else
+        {
+            rect r;
+            r.w = view.w / 2;
+            r.h = view.h / 2;
+
+            // High left
+            r.x = view.x;
+            r.y = view.y;
+            if(isInRect(x, y, r))
+                result = nodeSearch(node->hl, r, x, y);
+
+            // High right
+            r.x += r.w;
+            if(isInRect(x, y, r))
+                result = nodeSearch(node->hr, r, x, y);
+
+            //! Low right
+            r.y += r.h;
+            if(isInRect(x, y, r))
+                result = nodeSearch(node->lr, r, x, y);
+
+            //! Low left
+            r.x -= r.w;
+            if(isInRect(x, y, r))
+                result = nodeSearch(node->ll, r, x, y);
+        }
+    }
+    return result;   
+}
+
+int QuadTree::nearest(double x, double y)
+{
+    return nodeSearch(mRoot, mViewport, x, y);
+}
+
