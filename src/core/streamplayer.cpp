@@ -64,7 +64,7 @@ StreamPlayer::~StreamPlayer()
 
     libvlc_release(mVlcInstance);
 
-    delete mAudioData;
+    delete [] mAudioData;
 }
 
 // Start "playing" a stream (actually, start reading it and send it to the algorithms)
@@ -117,7 +117,7 @@ void prepareRender( void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int s
     if(sp->mAudioDataSize < size)
     {
         if(sp->mAudioData != 0)
-            delete sp->mAudioData;
+            delete [] sp->mAudioData;
         sp->mAudioData = new char[size]; // Deleted in the destructor
     }
     *pp_pcm_buffer = (uint8_t*)(sp->mAudioData);
@@ -155,7 +155,7 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
             sp->mBufferSize = 0;
         }
     }
-    delete temp;
+    delete [] temp;
 
     // Update the frequency if needed
     if(rate != sp->mFrequency)

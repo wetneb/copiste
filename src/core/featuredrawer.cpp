@@ -232,9 +232,9 @@ void FeatureDrawer::computeMinMax(int startingPoint)
     if(mMinMaxSize != realDimension())
     {
         if(mMin)
-           delete mMin;
+           delete [] mMin;
         if(mMax)
-           delete mMax;
+           delete [] mMax;
         mMin = new double[realDimension()]; // deleted in the destructor
         mMax = new double[realDimension()]; // deleted in the destructor
         mMinMaxSize = realDimension();

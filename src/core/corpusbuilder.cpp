@@ -128,7 +128,7 @@ void CorpusBuilder::compute()
         // Clean the previous results
         for(unsigned int i = 0; i < mResults.size(); i++)
             if(mResults[i])
-                delete mResults[i];
+                delete [] mResults[i];
         mResults.clear();
 
         // Loop through files

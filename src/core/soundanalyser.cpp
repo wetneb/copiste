@@ -171,9 +171,9 @@ void SoundAnalyser::clearFeatures()
             for(unsigned int j = 0; j < mExtr.size(); ++j)
             {
                 if(mFeatures[i][j])
-                    delete mFeatures[i][j];
+                    delete [] mFeatures[i][j];
             }
-            delete mFeatures[i];
+            delete [] mFeatures[i];
         }
     }
     mFeatures.clear();

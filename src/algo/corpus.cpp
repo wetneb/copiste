@@ -229,8 +229,8 @@ void Corpus::erase(int dimension)
     if(mPool)
     {
         for(int i = 0; i != mSize; ++i)
-            delete mPool[i];
-        delete mPool;
+            delete [] mPool[i];
+        delete [] mPool;
         mPool = 0;
         mPoolSize = 0;
     }
@@ -258,7 +258,7 @@ void Corpus::addElem(double* elem, std::string name)
             double** newPool = new double*[mPoolSize];
             for(int i = 0; i < mPoolSize/2; ++i)
                 newPool[i] = mPool[i];
-            delete mPool;
+            delete [] mPool;
             mPool = newPool;
         }
         else
