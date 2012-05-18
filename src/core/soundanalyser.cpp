@@ -157,8 +157,8 @@ void SoundAnalyser::resetExtractors()
 //! Destructor.
 SoundAnalyser::~SoundAnalyser()
 {
-    resetExtractors();
     clearFeatures();
+    resetExtractors();
 }
 
 //! Clears the features
@@ -168,10 +168,9 @@ void SoundAnalyser::clearFeatures()
     {
         if(mFeatures[i])
         {
-            for(unsigned int j = 0; j < mExtr.size(); ++j)
+            for(unsigned int j = 0; j < mExtr.size(); j++)
             {
-                if(mFeatures[i][j])
-                    delete [] mFeatures[i][j];
+                delete [] mFeatures[i][j];
             }
             delete [] mFeatures[i];
         }
@@ -184,6 +183,11 @@ void SoundAnalyser::cleanOldFeatures(unsigned int newestCount)
 {
     if(nbSamples() > newestCount)
     {
+        for(unsigned int i = 0; i < mFeatures.size() - newestCount; i++)
+        {
+            for(unsigned int j = 0; j < mExtr.size(); j++)
+                delete [] mFeatures[i][j];
+        }
         mFeatures.erase(mFeatures.begin(), mFeatures.end() - newestCount);
     }
 }
