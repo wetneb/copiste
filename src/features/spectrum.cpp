@@ -178,8 +178,7 @@ void SpectrumExtr::reallocate()
 
 void SpectrumExtr::createWindowCache()
 {
-    if(mWindowCache != 0)
-        delete mWindowCache;
+    delete mWindowCache;
     mWindowCache = new float[mSize];
 
     for(int i = 0; i < mSize; i++)
@@ -274,10 +273,9 @@ inline int SpectrumExtr::pow2(int n)
 
 SpectrumExtr::~SpectrumExtr()
 {
-    if(mResults)
-        delete mResults;
-    if(mButterfly)
-        delete mButterfly;
+    delete mResults;
+    delete mButterfly;
+    delete mWindowCache;
 }
 
 void SpectrumExtr::setWindow(FTWindow win)
