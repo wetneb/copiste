@@ -30,7 +30,7 @@ bool STEExtr::extract(uint16_t* data, int size)
         if(mSquare)
         {
             for(int i = 0; i < size; i++)
-                mSTE += ((int)data[i] - zero) * ((int)data[i] - zero);
+                mSTE += ((int)data[i] - zero) * ((int)data[i] - zero) / size;
         }
         else
         {
@@ -38,7 +38,7 @@ bool STEExtr::extract(uint16_t* data, int size)
                 mSTE += fabs(data[i]);
         }
     }
-    return size;
+    return (size != 0);
 }
 
 //! Set a int parameter (available : "square", which is 0 or 1)

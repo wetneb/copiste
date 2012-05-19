@@ -33,13 +33,16 @@ class MemoryFilter : public Filter
 
         //! Returns the number of available features : n*m (where m is the number of input features)
         int size() { return mN*mM; }
+        //! Lower bound for outputted values
+        float min();
+        //! Higher bound for outputted values
+        float max();
 
         //! Get the result (index = i*n + j where i is the feature and j the frame)
         float value(int index = 0);
 
         //! Set a int parameter : "depth", the n parameter (depth of the memory)
         void setInt(string key, int value);
-
         //! Get a int parameter : "depth"
         int getInt(string key);
 

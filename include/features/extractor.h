@@ -40,21 +40,28 @@ class FeatureExtractor
         //! Run the algorithm and store the results
         virtual bool extract(uint16_t* data, int size) = 0;
 
-        //! Retrive the results (from the index). The values are usually between -1 and 1
+        //! Retrieve the results (from the index). Some values may be out of bounds.
         virtual float value(int index = 0) = 0;
+        //! Retrieve the results, with the bounds respected (we apply a min / max)
+        virtual float safeValue(int index = 0)
+        {  return std::min(max(), std::max(min(), value(index))); }
+        //! Retrieve the results, with other bounds
+        virtual float value(int index, float low, float high)
+        { return low + (high-low)*(value(index) - min())/(max() - min()); }
 
         //! Get the number of available values
         virtual int size() = 0;
+        //! Get the minimum value outputted (we assume that each value from a single extractor is about as big as the others)
+        virtual float min() { return -1; }
+        //! Get the maximum value outputted
+        virtual float max() { return 1; }
 
         //! Set a float parameter
         virtual void setFloat(string key, float value) { ; }
-
         //! Set a int parameter
         virtual void setInt(string key, int value) { ; }
-
         //! Get a float parameter
         virtual float getFloat(string key) { return 0; }
-
         //! Get a int parameter
         virtual int getInt(string key) { return 0; }
 

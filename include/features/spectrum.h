@@ -91,6 +91,11 @@ class SpectrumExtr : public FeatureExtractor
         uint16_t* spectrum();
         //! Get the number of available values
         int size();
+        //! Lower bound on outputted values
+        float min() { return 0; }
+        //! Upper bound on outputted values
+        float max() { return (uint16_t)(-1); }
+
         //! Set a float parameter (available : none)
         void setFloat(string key, float value) { ; }
         //! Set a int parameter (available : "bound")

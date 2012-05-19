@@ -31,3 +31,9 @@ void CentroidFilter::transform(vector<float> data)
 
     mCentroid = mean / weightsSum;
 }
+
+float CentroidFilter::max()
+{
+    return (mExtr ? mExtr->max() : 0);
+}
+

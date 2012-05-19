@@ -74,30 +74,38 @@ class SoundAnalyser : private StreamPlayer
 
         //! Set up the extractors from an XML file
         bool setupPipeline(string filename);
+        //! Set up unified bounds for all features
+        void setNormalization(float min, float max);
 
         //! Compute the features of a given file
         bool compute(string url);
         //! Wait up to the end of the computation
         void waitComputed();
 
-        /// Features management
+        /// Features management : sizes
 
         //! Return the number of different features we computed
         unsigned int nbFeatures() { return mExtr.size(); }
         //! Return the number of elements of the nth feature
         unsigned int nbElems(unsigned int n);
-        //! Return the array of features for the nth sample
-        double** features(unsigned int n);
         //! Return the number of sample we've been computing
         unsigned int nbSamples() { return mFeatures.size(); }
-        //! Clears the features
-        void clearFeatures();
-        //! Removes the old features so that the newest remain
-        void cleanOldFeatures(unsigned int newestCount);
         //! Get the dimension : sum of all the nbElems(i)
         unsigned int dimension() { return mDimension; }
         //! Get the real dimension : sum of all the nbElems we care (the values which are actually used for detection)
         unsigned int realDimension() { return mRealDimension; }
+
+        // Features management : data
+
+        //! Return the array of features for the nth sample
+        double** features(unsigned int n);
+        //! Clears the features
+        void clearFeatures();
+        //! Removes the old features so that the newest remain
+        void cleanOldFeatures(unsigned int newestCount);
+
+        /// Features management : individual properties
+
         //! Is this feature used for detection ?
         bool isUsed(unsigned int index);
         //! Get the name of the nth feature
@@ -105,11 +113,12 @@ class SoundAnalyser : private StreamPlayer
         //! Get the id of the feature named so (-1 if not found)
         int getFeatureByName(string name);
 
+        /// Callbacks
+
         //! Handle audio chunks
         void useBuffer();
         //! End the computation
         void sequenceEnds();
-
         //! Callback called when the buffer has been used (the features are ready to be used)
         virtual void useFeatures() { ; }
 
@@ -128,6 +137,10 @@ class SoundAnalyser : private StreamPlayer
         int mDimension;
         int mRealDimension;
         int mUsedExtractors;
+
+        bool mNormalize;
+        float mMinFeature;
+        float mMaxFeature;
 
         boost::mutex mSwitchLock;
         bool mComputed;

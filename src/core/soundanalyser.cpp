@@ -23,6 +23,9 @@ SoundAnalyser::SoundAnalyser(bool live) : StreamPlayer(live),
                                 mDimension(0),
                                 mRealDimension(0),
                                 mUsedExtractors(0),
+                                mNormalize(false),
+                                mMinFeature(0),
+                                mMaxFeature(0),
                                 mComputed(false)
 {
     mLastUpdateTime = 0;
@@ -145,6 +148,14 @@ bool SoundAnalyser::setupPipeline(string filename)
     return true;
 }
 
+//! Enable feature normalization
+void SoundAnalyser::setNormalization(float min, float max)
+{
+    mMinFeature = min;
+    mMaxFeature = max;
+    mNormalize = true;
+}  
+
 //! Unregisters all the extractors
 void SoundAnalyser::resetExtractors()
 {
@@ -183,6 +194,7 @@ void SoundAnalyser::cleanOldFeatures(unsigned int newestCount)
 {
     if(nbSamples() > newestCount)
     {
+        std::cout << std::endl << "cleanOldFeatures()" << std::endl << std::endl;
         for(unsigned int i = 0; i < mFeatures.size() - newestCount; i++)
         {
             for(unsigned int j = 0; j < mExtr.size(); j++)
@@ -247,8 +259,16 @@ void SoundAnalyser::useBuffer()
             // Compute
             FeatureExtractor *extr = mExtr[i].second;
             extr->extract(mBuffer, AUDIO_CHUNK_SIZE);
-            for(int j = 0; j < extr->size(); j++)
-                featureArray[i][j] = extr->value(j);
+            if(mNormalize)
+            {
+                for(int j = 0; j < extr->size(); j++)
+                    featureArray[i][j] = extr->value(j, mMinFeature, mMaxFeature);
+            }
+            else
+            {
+                for(int j = 0; j < extr->size(); j++)
+                    featureArray[i][j] = extr->value(j);
+            }
         }
         mFeatures.push_back(featureArray);
 

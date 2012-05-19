@@ -50,18 +50,19 @@ class HighLowRatioFilter : public Filter
 
         //! Set a float parameter (available : bound)
         void setFloat(string key, float value);
-
         //! Set a int parameter (available : high, windowSize)
         void setInt(string key, int value);
-
         //! Get a float parameter (available : bound)
         float getFloat(string key);
-
         //! Get a int parameter (available : high, windowSize)
         virtual int getInt(string key);
 
         //! Returns the size of the results (which is the size of the upstream feature)
         int size() { return mResults.size(); }
+        //! Lower bound for outputted values
+        float min() { return 0; }
+        //! Higher bound for outputted values
+        float max() { return 1; }
 
     private:
         void reallocate(unsigned int newSize);

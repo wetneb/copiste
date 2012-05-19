@@ -137,8 +137,6 @@ double NeuralNetwork::train(Corpus &c, double rate, double regularization, int n
 
     std::vector<ublas::matrix<double> > grad;
 
-    std::cout << rate << ", " << regularization << ", " << nbIter << std::endl;
-
     for(int i = 0; i < nbIter; i++)
     {
         grad = gradient(dataset, targetVec, regularization);
@@ -146,7 +144,8 @@ double NeuralNetwork::train(Corpus &c, double rate, double regularization, int n
         if(debug)
 	    {
 	       	std::vector<ublas::matrix<double> > gradCheck =
-		    gradientChecking(dataset, targetVec, regularization, 0.000001); // 0.001 is epsilon
+		    gradientChecking(dataset, targetVec, regularization, 0.000001);
+            // the last value is epsilon, used to compute the slope
 
         	for(unsigned int k = 0; k < nbLayers(); k++)
         	{
@@ -159,10 +158,7 @@ double NeuralNetwork::train(Corpus &c, double rate, double regularization, int n
             mLayers[j] -= rate * grad[j];
     }
 
-    for(unsigned int i = 0; i < nbLayers(); i++)
-	    pmatrix(mLayers[i], "Poids");
-
-    return costFunction(dataset, targetVec, regularization);
+    return 0; // costFunction(dataset, targetVec, regularization);
 }
 
 double genRandom(double /*input*/)
@@ -297,8 +293,7 @@ std::vector< ublas::matrix<double> > NeuralNetwork::gradient(ublas::matrix<doubl
         	error[i] = element_prod(prod(removeOnes(trans(mLayers[i])), error[i+1]),
 			                 elementWise(removeOnes(activation[i]), d_sigmoid));
 
-        delta[i-1].resize(mLayers[i-1].size1(), mLayers[i-1].size2());
-        delta[i-1] *= 0;
+        delta[i-1] = ublas::zero_matrix<double>(mLayers[i-1].size1(), mLayers[i-1].size2());
 	
         for(unsigned int j = 0; j < error[i].size2(); j++) // Loop through the samples of the dataset
             delta[i-1] += prod(jthCol(error[i],j), trans (jthCol(activation[i-1],j)));

@@ -34,15 +34,18 @@ class AverageFilter : public Filter
         //! Run the algorithm and store the results
         void transform(vector<float> data);
 
-        //! Retrive the results (from the index). The values are usually between -1 and 1
+        //! Retrieve the results (from the index).
         float value(int index = 0);
+        //! Lower bound for outputted values (same as the parent)
+        float min();
+        //! Higher bound for outputted values (same as the parent)
+        float max();
 
         //! Get the number of available values
         int size();
 
         //! Set a int parameter (available : size)
         void setInt(string key, int value);
-
         //! Get a int parameter  (available : size)
         int getInt(string key);
 

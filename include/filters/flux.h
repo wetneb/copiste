@@ -39,6 +39,11 @@ class FluxFilter : public Filter
         //! Return the asked value (indices are the same as in the original feature)
         float value(int index = 0);
 
+        //! Lower bound for outputted values : 0
+        float min() { return 0; }
+        //! Higher bound for outputted values
+        float max();
+
     private:
         vector<float> mLastVect;
         vector<float> mResult;

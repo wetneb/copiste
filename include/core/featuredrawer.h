@@ -23,6 +23,7 @@
 #include <QImage>
 #include <QColor>
 #include <QPainter>
+#include <QTime> // delete me \todo
 
 #include "core/soundanalyser.h"
 #include "algo/neuralnetwork.h"

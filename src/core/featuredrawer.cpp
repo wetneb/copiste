@@ -32,6 +32,9 @@ void FeatureDrawer::setImageSize(int width, int height)
     mOut = QImage(width, height, QImage::Format_RGB32);
     mOut.fill((unsigned int)(-1));
 
+    //if((int)nbSamples() >= 2*mOut.width())
+    //    cleanOldFeatures(mOut.width());
+
     if(mDrawn)
         draw();
 }

@@ -33,6 +33,10 @@ class CentroidFilter : public Filter
 
         //! Size is 1
         int size() { return 1; }
+        //! Lower bound for outputted values : 0
+        float min() { return 0; } 
+        //! Higher bound for outputted values : the same as of the parent
+        float max();
 
     private:
         float mCentroid;

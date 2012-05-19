@@ -74,3 +74,13 @@ int MemoryFilter::getInt(string key)
         result = mN;
     return result;
 }
+
+float MemoryFilter::min()
+{
+    return (mExtr ? mExtr->min() : 0);
+}
+
+float MemoryFilter::max()
+{
+    return (mExtr ? mExtr->max() : 0);
+}

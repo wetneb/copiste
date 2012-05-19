@@ -58,8 +58,7 @@ AverageFilter::~AverageFilter()
         delete mHistory;
     }
 
-    if(mAverage != 0)
-        delete mAverage;
+    delete mAverage;
 }
 
 //! Retrive the results (from the index). The values are usually between -1 and 1
@@ -91,6 +90,16 @@ int AverageFilter::getInt(string key)
     if(key == "size")
         result = mSize;
     return result;
+}
+
+float AverageFilter::min()
+{
+    return (mExtr ? mExtr->min() : 0);
+}
+
+float AverageFilter::max()
+{
+    return (mExtr ? mExtr->max() : 1);
 }
 
 void AverageFilter::parentChanged()

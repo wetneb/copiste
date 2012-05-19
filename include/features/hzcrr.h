@@ -51,21 +51,22 @@ class HZCRRExtr : public FeatureExtractor
         //! Run the algorithm and store the results
         bool extract(uint16_t* data, int size);
 
-        //! Retrive the results (from the index). The values are usually between -1 and 1
+        //! Retrieve the results (from the index). The values are usually between -1 and 1
         float value(int index = 0) { return mHZCRR; };
 
         //! Get the number of available values
         int size() { return 1; }
+        //! Lower bound on outputted values
+        float min() { return 0; }
+        //! Upper bound on outputted values
+        float max() { return 1; }
 
         //! Set a float parameter (available : "bound")
         void setFloat(string key, float value);
-
         //! Set a int parameter (available : "chunksNumber")
         void setInt(string key, int value);
-
         //! Get a float parameter (available : "bound")
         float getFloat(string key);
-
         //! Get a int parameter (available : "chunksNumber")
         int getInt(string key);
 

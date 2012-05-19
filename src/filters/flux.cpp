@@ -32,7 +32,6 @@ void FluxFilter::transform(vector<float> data)
         {
             mResult[i] = (log(data[i] + 1) - log(mLastVect[i] + 1) + FLUX_EPSILON);
             mResult[i] *= mResult[i];
-            //mResult[i] = 0.42;
         }
     }
 
@@ -57,4 +56,10 @@ float FluxFilter::value(int index)
     if((unsigned int)index < mResult.size())
         result = mResult[index];
     return result;
+}
+
+//! Bounds : \todo could be refined
+float FluxFilter::max()
+{
+    return (unsigned int)(-1);
 }

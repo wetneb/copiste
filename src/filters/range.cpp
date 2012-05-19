@@ -22,7 +22,7 @@
 void RangeFilter::transform(vector<float> data)
 {
     float sum = 0;
-    for(int i = max(mStart, 0); i < min((int)data.size(), mEnd); i++)
+    for(int i = std::max(mStart, 0); i < std::min((int)data.size(), mEnd); i++)
         sum += data[i];
     mAverage = sum / (mEnd - mStart);
 }
@@ -46,3 +46,14 @@ int RangeFilter::getInt(string key)
         result = mEnd;
     return result;
 }
+
+float RangeFilter::min()
+{
+    return (mExtr ? mExtr->min() : 0);
+}
+
+float RangeFilter::max()
+{
+    return (mExtr ? mExtr->max() : 1);
+}
+

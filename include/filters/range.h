@@ -30,13 +30,16 @@ class RangeFilter : public Filter
 
         //! Returns the number of available features : 1
         int size() { return 1; }
+        //! Lower bound : the same as parent's
+        float min();
+        //! Higher bound : the same as parent's
+        float max();
 
         //! Get the result (only one available, i.e. index = 0)
         float value(int index = 0) { return mAverage; }
 
         //! Set a int parameter
         void setInt(string key, int value);
-
         //! Get a int parameter
         int getInt(string key);
 

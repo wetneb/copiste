@@ -33,12 +33,22 @@ StreamPlayer::StreamPlayer(bool live, bool verbose) : mVerbose(verbose),
 
     if(live)
     {
-        sprintf(smemOptions, "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",// "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",
-                           (long long int)(intptr_t)(void*)&handleStream, (long long int)(intptr_t)(void*)&prepareRender, (long long int)(intptr_t)(void*)this);
+        sprintf(smemOptions, "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem"
+         "{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",
+                           (long long int)(intptr_t)(void*)&handleStream,
+                           (long long int)(intptr_t)(void*)&prepareRender, 
+                           (long long int)(intptr_t)(void*)this);
+         // "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem
+         // {audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",
     }
     else
-        sprintf(smemOptions, "#transcode{acodec=s16l}:smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}",// "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",
-                           (long long int)(intptr_t)(void*)&handleStream, (long long int)(intptr_t)(void*)&prepareRender, (long long int)(intptr_t)(void*)this);
+        sprintf(smemOptions, "#transcode{acodec=s16l}:smem"
+                "{audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}", 
+                (long long int)(intptr_t)(void*)&handleStream,
+                (long long int)(intptr_t)(void*)&prepareRender,
+                (long long int)(intptr_t)(void*)this);
+        // "#transcode{acodec=s16l}:duplicate{dst=display,dst=smem
+        // {audio-postrender-callback=%lld,audio-prerender-callback=%lld,audio-data=%lld}}",
 
     const char stringSout[] = "--sout", stringNoSoutSmemTimeSync[] = "--no-sout-smem-time-sync";
     const char * const vlcArgs[] = {
@@ -46,13 +56,13 @@ StreamPlayer::StreamPlayer(bool live, bool verbose) : mVerbose(verbose),
         smemOptions,
         stringNoSoutSmemTimeSync };
 
-    mVlcInstance = libvlc_new((live ? 2 : 3), vlcArgs);
+    mVlcInstance = libvlc_new((live ? 2 : 3), vlcArgs); // deleted in the destructor
 
-    mMp = libvlc_media_player_new(mVlcInstance);
+    mMp = libvlc_media_player_new(mVlcInstance); // deleted in the destructor
     libvlc_audio_set_volume (mMp,80);
 
     // Init data extraction
-    mBuffer = new uint16_t[AUDIO_CHUNK_SIZE];
+    mBuffer = new uint16_t[AUDIO_CHUNK_SIZE]; // deleted in the destructor
     mBufferSize = 0;
 }
 
@@ -65,6 +75,7 @@ StreamPlayer::~StreamPlayer()
     libvlc_release(mVlcInstance);
 
     delete [] mAudioData;
+    delete [] mBuffer;
 }
 
 // Start "playing" a stream (actually, start reading it and send it to the algorithms)
@@ -116,8 +127,7 @@ void prepareRender( void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int s
 
     if(sp->mAudioDataSize < size)
     {
-        if(sp->mAudioData != 0)
-            delete [] sp->mAudioData;
+        delete [] sp->mAudioData;
         sp->mAudioData = new char[size]; // Deleted in the destructor
     }
     *pp_pcm_buffer = (uint8_t*)(sp->mAudioData);
@@ -186,7 +196,7 @@ void StreamPlayer::watch()
     sequenceEnds();
 }
 
-// Rewrite data
+// Rewrite data. The returned array has to be deleted by the user
 uint16_t* StreamPlayer::convert8to16(const uint8_t* source, int size)
 {
     uint16_t* dest = new uint16_t[size/2];
@@ -211,42 +221,6 @@ void StreamPlayer::addOffset(uint16_t* source, uint16_t* dest, int size, int off
     for(int i = 0; i != size; ++i)
     {
         dest[i] = source[i] + offset;
-    }
-}
-
-// Reduces the length of the array by computing local averages on it (kind of basic resampling)
-uint16_t* StreamPlayer::average(uint16_t* source, int size, int passes, int scale)
-{
-    int factor = pow2(passes) * scale;
-    uint16_t* dest = new uint16_t[(int)(size/factor)]; // Has to be deleted by the user
-
-    for(int i = 0; i != size/factor; i++)
-    {
-        dest[i] = 0;
-        for(int j = 0; j != factor; j++)
-            dest[i] += source[i*factor+j];
-        dest[i] /= factor;
-    }
-
-    return dest;
-}
-
-// Another basic resampling
-void StreamPlayer::reduce(uint16_t* source, uint16_t* dest, int size, int passes, int scale)
-{
-    unsigned int chunkSize = pow2(passes);
-    uint16_t min = pow2(16)-1, max = 0;
-    for(unsigned int i = 0; i != size/chunkSize; ++i)
-    {
-        for(unsigned int j = 0; j != chunkSize; ++j)
-        {
-            if(source[i*chunkSize + j] > max)
-                max = source[i*chunkSize + j];
-            if(source[i*chunkSize + j] < min)
-                min = source[i*chunkSize + j];
-        }
-        dest[2*i] = max/scale;
-        dest[2*i + 1] = max/scale;
     }
 }
 

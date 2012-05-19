@@ -35,23 +35,21 @@ class STEExtr : public FeatureExtractor
         //! Run the algorithm and store the results
         bool extract(uint16_t* data, int size);
 
-        //! Retrive the results (from the index). The values are usually between -1 and 1
+        //! Retrive the results (from the index).
         float value(int index = 0) { return mSTE; };
 
         //! Get the number of available values
         int size() { return 1; }
-
-        //! Set a float parameter (available : none)
-        void setFloat(string key, float value) { ; }
+        //! Lower bound on outputted values
+        float min() { return 0; }
+        //! Upper bound on outputted values (about 2^30)
+        float max() { return ((unsigned int)(-1))*((unsigned int)(-1))/4; }
 
         //! Set a int parameter (available : "square", which is 0 or 1)
         void setInt(string key, int value);
-
-        //! Get a float parameter (available : none)
-        float getFloat(string key) { return 0; }
-
         //! Get a int parameter (available : "square", which is 0 or 1)
         int getInt(string key);
+
     private:
         float mSTE;
         bool mSquare;
