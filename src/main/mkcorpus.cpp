@@ -32,10 +32,7 @@ using namespace std; // A supprimer
  * - Normaliser les données audio : rendre les mesures indépendantes de la fréquence d'échantillonnage
  *   (devrait pouvoir se faire en interne dans VLC, en spécifiant explicitement un resampler)
  * - Calibrer correctement les features, donner une mesure logarithmique du spectre
- * - Créer d'autres features : spectrum flux, high/low frequencies (not hard, but needs some time)
- * - optimiser la pipeline (traquer les new sans delete, optimiser les boucles…)
  * - Créer un corpus audio consistant (il manque des pubs)
- * - Si j'ai du courage, un jour, écrire les parseurs XML en utilisant du Boost plutôt que du Qt !
  */
 
  /**
@@ -60,7 +57,7 @@ int main(int argc, char **argv)
         ("input-file", "The target file defining the corpus.")
         ("output-file,o", po::value<string>()->default_value("corpus/output.xml"), "The file where the XML corpus will be written.")
         ("element-length,l", po::value<int>()->default_value(0), "The length (in seconds) of each element which will be written in the corpus (0 : the whole file)")
-        ("computing-offset", po::value<int>()->default_value(0), "The time (in seconds) that should be considered as the starting point of the computation (to remove the first values)")
+        ("computing-offset", po::value<int>()->default_value(0), "The time (in seconds) that should be considered as the starting point of the computation (to remove the first values). The same offset is applied at the end of the file.")
         ("help,h", "Display this message");
 
     po::positional_options_description p;

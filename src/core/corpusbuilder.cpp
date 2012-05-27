@@ -155,7 +155,7 @@ void CorpusBuilder::compute()
             const int length = ((mElemLength == 0) ? (nbSamples() - startingPoint - 1) : (mElemLength * samplingFrequency() / AUDIO_CHUNK_SIZE));
 
             double *mCurrentResults = 0;
-            for(unsigned int k = startingPoint; k < nbSamples(); k++) // Loop through samples
+            for(unsigned int k = startingPoint; k < nbSamples() - startingPoint; k++) // Loop through samples
             {
                 if(((k - startingPoint) % length) == 0 // If we reached the end of a sequence
                                     || k == nbSamples() - 1) // or if we reached the end of the file
