@@ -23,7 +23,7 @@ FeatureDrawer::FeatureDrawer(bool live) : SoundAnalyser(live),
             mCaption("img/legende.png"),
             mDrawn(false), mNet(0), mDrawSpectrum(true), mMin(0), mMax(0), mMinMaxSize(0)
 {
-    ;
+    setNormalization(0,1);
 }
 
 //! Changes the size of the output. Redraws if needed.
@@ -31,9 +31,6 @@ void FeatureDrawer::setImageSize(int width, int height)
 {
     mOut = QImage(width, height, QImage::Format_RGB32);
     mOut.fill((unsigned int)(-1));
-
-    //if((int)nbSamples() >= 2*mOut.width())
-    //    cleanOldFeatures(mOut.width());
 
     if(mDrawn)
         draw();
@@ -76,9 +73,6 @@ void FeatureDrawer::draw(string filename, bool live)
         mDrawSpectrum = (getFeatureByName(FEATURE_DRAWER_SPECTRUM_NAME) != -1);
     }
 
-    // Compute the ranges
-    computeMinMax(plotStart);
-
     // Draw lines
 
     // Seconds
@@ -104,10 +98,6 @@ void FeatureDrawer::draw(string filename, bool live)
         {
             for(unsigned int e = 0; e < nbElems(f); e++)
             {
-                int realOffset = offset  - (mDrawSpectrum ? 1 : 0);
-                if(mMax[realOffset] == mMin[realOffset])
-                    mMax[realOffset] = mMin[realOffset] + 0.01;
-                double scale = (mMax[realOffset] - mMin[realOffset]) / chunk;
                 double orig = mOut.height() - bottom - chunk*offset;
 
                 painter.setPen(colors[offset%8]);
@@ -116,13 +106,10 @@ void FeatureDrawer::draw(string filename, bool live)
                 for(int i = plotStart; i - plotStart < mOut.width() && i < (int)nbSamples(); ++i)
                 {
                     double val = features(i)[f][e];
-                    if(val > mMax[realOffset])
-                        val = mMax[realOffset];
-                    //val = (i % 2) ? mMax[offset] : mMin[offset];
 
                     if(i != plotStart)
-                        painter.drawLine(lastPoint, QPoint(i - plotStart, orig - (val - mMin[realOffset])/scale));
-                    lastPoint = QPoint(i - plotStart, orig - (val - mMin[realOffset])/scale);
+                        painter.drawLine(lastPoint, QPoint(i - plotStart, orig - val*chunk));
+                    lastPoint = QPoint(i - plotStart, orig - val*chunk);
                 }
 
                 offset++;
@@ -130,18 +117,18 @@ void FeatureDrawer::draw(string filename, bool live)
         }
         else if(name(f) == "_spectrum" && mDrawSpectrum)
         {
-            int nbFrequenciesPerPixel = 0.5 * nbElems(f) / chunk;
+            int nbFrequenciesPerPixel =  nbElems(f) / (3*chunk);
             double orig = mOut.height() - bottom - chunk*offset;
             for(int i = plotStart; i - plotStart < mOut.width() && i < (int)nbSamples(); ++i)
             {
-                int currentValue = 0;
-                for(unsigned int e = 0; e < nbElems(f)/2 && (e / nbFrequenciesPerPixel) < chunk; e++)
+                float currentValue = 0;
+                for(unsigned int e = 0; e < nbElems(f)/3 && (e / nbFrequenciesPerPixel) < chunk; e++)
                 {
                     currentValue += features(i)[f][e];
                     if((e+1) % nbFrequenciesPerPixel == 0)
                     {
                         currentValue /= nbFrequenciesPerPixel;
-                        currentValue /= 5;
+                        currentValue *= 512;
                         currentValue = ((currentValue >= 256) ? 255 : currentValue);
                         painter.setPen(QColor(currentValue, currentValue, currentValue));
                         painter.drawPoint(i - plotStart, orig - (e / nbFrequenciesPerPixel));
@@ -216,7 +203,8 @@ void FeatureDrawer::draw(string filename, bool live)
                 painter.setPen(colors[offset%8]);
                 painter.drawLine(origH - 150, origV - 0.5*chunk, origH - 135, origV - 0.5*chunk);
                 painter.setPen(QColor(255,255,255));
-                painter.drawText(origH - 130, origV - 0.5*chunk - 20, 120, 40, Qt::AlignLeft | Qt::AlignVCenter, name(f).c_str());
+                painter.drawText(origH - 130, origV - 0.5*chunk - 20, 120, 40,
+                              Qt::AlignLeft | Qt::AlignVCenter, name(f).c_str());
 
                 offset++;
             }
@@ -228,43 +216,6 @@ void FeatureDrawer::draw(string filename, bool live)
     }
 
     painter.end();
-}
-
-void FeatureDrawer::computeMinMax(int startingPoint)
-{
-    if(mMinMaxSize != realDimension())
-    {
-        if(mMin)
-           delete [] mMin;
-        if(mMax)
-           delete [] mMax;
-        mMin = new double[realDimension()]; // deleted in the destructor
-        mMax = new double[realDimension()]; // deleted in the destructor
-        mMinMaxSize = realDimension();
-    }
-
-    int offset = 0;
-    for(unsigned int f = 0;  f < nbFeatures(); f++)
-    {
-        if(isUsed(f))
-        {
-            for(unsigned int e = 0; e < nbElems(f); e++)
-            {
-                mMin[offset] = features(startingPoint)[f][e];
-                mMax[offset] = features(startingPoint)[f][e];
-
-                for(unsigned int i = startingPoint + 1; i < nbSamples(); i++)
-                {
-                    if(features(i)[f][e] < mMin[offset])
-                        mMin[offset] = features(i)[f][e];
-                    if(features(i)[f][e] > mMax[offset])
-                        mMax[offset] = features(i)[f][e];
-                }
-
-                offset++;
-            }
-        }
-    }
 }
 
 //! Save the drawn image to a file
@@ -292,11 +243,5 @@ void FeatureDrawer::setNetwork(NeuralNetwork *net)
 
 FeatureDrawer::~FeatureDrawer()
 {
-	//! \TODO :  all this
-    cout << "~FeatureDrawer" << endl; /*
-    if(mMin)
-       delete mMin;
-    if(mMax)
-       delete mMax; */
-    cout << "~FeatureDrawer()" << endl;
+    ;
 }
