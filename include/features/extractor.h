@@ -39,6 +39,8 @@ class FeatureExtractor
 
         //! Run the algorithm and store the results
         virtual bool extract(uint16_t* data, int size) = 0;
+        //! Idem, but the buffer starts at index start instead (circular buffer)
+        bool extract(uint16_t* data, int size, size_t start); //! \todo TO BE CONTINUED
 
         //! Retrieve the results (from the index). Some values may be out of bounds.
         virtual float value(int index = 0) = 0;

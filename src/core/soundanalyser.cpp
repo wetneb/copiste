@@ -24,6 +24,7 @@ SoundAnalyser::SoundAnalyser(bool live) : StreamPlayer(live),
                                 mRealDimension(0),
                                 mUsedExtractors(0),
                                 mNormalize(false),
+                                mOverlapping(0),
                                 mMinFeature(0),
                                 mMaxFeature(0),
                                 mComputed(false)
@@ -154,7 +155,7 @@ void SoundAnalyser::setNormalization(float min, float max)
     mMinFeature = min;
     mMaxFeature = max;
     mNormalize = true;
-}  
+}
 
 //! Unregisters all the extractors
 void SoundAnalyser::resetExtractors()

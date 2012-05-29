@@ -55,6 +55,32 @@ using namespace std;
 /**
  * \class SoundAnalyser
  * \brief Main class that sets up and runs a pipeline
+ *
+ * A pipeline is a network of features and filters connected to the input stream.
+ * 
+ * Some explanations about the behaviour of the class :
+ *
+ * ## Features, elements ##
+ *
+ * A feature is a set of values computed by an algorithm. The number of values it outputs
+ * on a single audio chunk is the number of elements.
+ *
+ * ## Used features, Dimension vs real dimension ##
+ *
+ * In the pipeline, some features are labelled as "used" : it means they are sent
+ * to the application to be used for classification, visualization, etc. The others
+ * are not outputted directly and can only be used as input for filters.
+ * The "real dimension" is the number of used features (x their number of elements).
+ * The "dimension" is the number of computed features and filters (again, x their number
+ * of elements).
+ *
+ * Note : the feature named _spectrum is usually not labelled as "used" but is displayed
+ * by FeatureDrawer.
+ *
+ * ## Normalization ##
+ *
+ * Forces the outputs of the features (and filters) to be in a given range.
+ *
  */
 class SoundAnalyser : private StreamPlayer
 {
@@ -63,6 +89,9 @@ class SoundAnalyser : private StreamPlayer
         SoundAnalyser(bool live = false);
         //! Destructor.
         ~SoundAnalyser();
+
+        /// Extractors management
+
         //! Unregisters all the extractors
         void resetExtractors();
         //! Clean the data in the extractors
@@ -72,11 +101,12 @@ class SoundAnalyser : private StreamPlayer
         //! Find an extractor
         FeatureExtractor* getExtractor(string name);
 
+        /// Setup
+
         //! Set up the extractors from an XML file
         bool setupPipeline(string filename);
         //! Set up unified bounds for all features
         void setNormalization(float min, float max);
-
         //! Compute the features of a given file
         bool compute(string url);
         //! Wait up to the end of the computation
@@ -139,6 +169,7 @@ class SoundAnalyser : private StreamPlayer
         int mUsedExtractors;
 
         bool mNormalize;
+        float mOverlapping;
         float mMinFeature;
         float mMaxFeature;
 

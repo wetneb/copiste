@@ -51,6 +51,11 @@ void prepareRender(void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int si
  * This class is intended to be rewritten for more specific usages (spectrum analysis, feature extraction, aso.).
  * Its the interface between libVLC (which reads the media, decodes, resamples, and does all the hard DSP) and
  * the using of the data.
+ *
+ * ## Overlapping ##
+ *
+ * When using overlapping, two audio chunks have some audio data in common :
+ * their size time the overlapping factor.
  */
 class StreamPlayer
 {
@@ -65,6 +70,8 @@ class StreamPlayer
         string url() { return mUrl; }
         //! Defines the URL of the stream to play
         void setUrl(string url) { mUrl = url; }
+        //! Turns on / off audio chunk overlapping
+        void setOverlapping(float factor);        
 
         //! Plays the media
         void play();
@@ -108,6 +115,15 @@ class StreamPlayer
         //! Watching thread
         void watch();
 
+        //! Buffer acces (for the user)
+        inline uint16_t buffer(size_t i);
+        //! Current buffer size (internal)
+        inline size_t bufferSize();
+        //! Fill buffer with a new value (internal)
+        inline void fillBuffer(uint16_t value);
+        //! Flush buffer (just keep the overlapping part)
+        inline void flushBuffer();
+
         //! Feature extraction : those variables need to be public (I know, I can write accessors...)
         uint16_t* mBuffer;
         int mBufferSize;
@@ -122,10 +138,15 @@ class StreamPlayer
         bool mVerbose;
 
     private:
-        // Paramètres
+        // Parameters
         string mUrl;
         bool mPlaying;
         bool mLive;
+        float mOverlapping;
+        
+        size_t mBufferStart;
+        size_t mBufferEnd;
+        size_t mFramesOverlap;
 
         // VLC
         libvlc_instance_t *mVlcInstance;

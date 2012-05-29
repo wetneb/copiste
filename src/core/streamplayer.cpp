@@ -21,7 +21,14 @@
 #include <iostream>
 using namespace std;
 
+
+// This class is just a small hack, everything is hardcoded
+
 StreamPlayer::StreamPlayer(bool live, bool verbose) : mVerbose(verbose),
+                                                      mOverlapping(0),
+                                                      mBufferStart(0),
+                                                      mBufferEnd(0),
+                                                      mFramesOverlap(0),
                                                       mMp(0),
                                                       mMedia(0)
 {
@@ -63,7 +70,6 @@ StreamPlayer::StreamPlayer(bool live, bool verbose) : mVerbose(verbose),
 
     // Init data extraction
     mBuffer = new uint16_t[AUDIO_CHUNK_SIZE]; // deleted in the destructor
-    mBufferSize = 0;
 }
 
 // Cleans up everything
@@ -85,7 +91,9 @@ void StreamPlayer::play()
         libvlc_media_release(mMedia);
     mMedia = libvlc_media_new_path (mVlcInstance, mUrl.c_str());
 
-    mBufferSize = 0;
+    mBufferStart = 0;
+    mBufferEnd = 0;
+    mFramesOverlap = mOverlapping * AUDIO_CHUNK_SIZE;
 
     libvlc_media_player_set_media (mMp, mMedia);
 
@@ -141,6 +149,7 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
 
     // The data is sent to us as bytes, but encoded on 2 bytes
     // TODO: dynamicly check that this is the case and that we're not mishandling the data
+    // TODO: stereo support
     uint16_t* temp = StreamPlayer::convert8to16(p_pcm_buffer, size);
     size /= 2;
 
@@ -148,21 +157,21 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
     // of the same size (a power of two) so that the algorithms can handle it in the right way
     while(remaining < size)
     {
+        // \todo Faudrait-il plutôt utiliser memcpy & co ? J'y connais rien à ces trucs-là…
         // Filling buffer
-        while(sp->mBufferSize < AUDIO_CHUNK_SIZE && remaining < size)
+        while(sp->bufferSize() < AUDIO_CHUNK_SIZE && remaining < size)
         {
-            sp->mBuffer[sp->mBufferSize] = temp[remaining];
-            sp->mBufferSize++;
+            sp->fillBuffer(temp[remaining]);
             remaining += channels;
         }
 
-        if(sp->mBufferSize == AUDIO_CHUNK_SIZE)
+        if(sp->bufferSize() == AUDIO_CHUNK_SIZE)
         {
             // The buffer is sent to the "user"
             sp->useBuffer();
 
             // Emptying buffer
-            sp->mBufferSize = 0;
+            sp->flushBuffer();
         }
     }
     delete [] temp;
@@ -221,6 +230,39 @@ void StreamPlayer::addOffset(uint16_t* source, uint16_t* dest, int size, int off
     for(int i = 0; i != size; ++i)
     {
         dest[i] = source[i] + offset;
+    }
+}
+
+uint16_t StreamPlayer::buffer(size_t i)
+{
+    return mBuffer[(mBufferStart + i) % AUDIO_CHUNK_SIZE];
+}
+
+size_t StreamPlayer::bufferSize()
+{
+    return mBufferEnd - mBufferStart;
+}
+
+void StreamPlayer::fillBuffer(uint16_t value)
+{
+    mBuffer[mBufferEnd] = value;
+    mBufferEnd = (mBufferEnd + 1) % AUDIO_CHUNK_SIZE;
+}
+
+void StreamPlayer::flushBuffer()
+{
+    mBufferStart = (mBufferStart + AUDIO_CHUNK_SIZE - mFramesOverlap) % AUDIO_CHUNK_SIZE;
+}
+
+void StreamPlayer::setOverlapping(float factor)
+{
+    if(0 <= factor && factor <= 0.99)
+        mOverlapping = factor;
+    else
+    {
+        mOverlapping = 0;
+        std::cerr << "Warning : invalid overlapping factor (" << factor << ")"
+                    ", overlapping disabled." << std::endl;
     }
 }
 
