@@ -19,18 +19,18 @@
 #include "features/zcr.h"
 
 //! Run the algorithm and store the results
-bool ZCRExtr::extract(uint16_t* data, int size)
+bool ZCRExtr::extract(std::deque<uint16_t> data, int size)
 {
-    if(size && (data[0] != mLastFirstValue))
+    if(size && (data.at(0) != mLastFirstValue))
     {
         int crossingsCount = 0;
         uint16_t zero = (-1);
         zero >>= 1;
-        bool higher = data[0] > zero;
+        bool higher = data.at(0) > zero;
 
         for(int i = 1; i < size; i++)
         {
-            if(higher != (data[i] > zero))
+            if(higher != (data.at(i) > zero))
             {
                 higher = !higher;
                 crossingsCount++;
@@ -38,7 +38,7 @@ bool ZCRExtr::extract(uint16_t* data, int size)
         }
 
         mZCR = (float)crossingsCount / size;
-        mLastFirstValue = data[0];
+        mLastFirstValue = data.at(0);
     }
     return size;
 }

@@ -116,17 +116,16 @@ class StreamPlayer
         void watch();
 
         //! Buffer acces (for the user)
-        inline uint16_t buffer(size_t i);
+        inline uint16_t buffer(int i);
         //! Current buffer size (internal)
-        inline size_t bufferSize();
+        inline int bufferSize();
         //! Fill buffer with a new value (internal)
         inline void fillBuffer(uint16_t value);
         //! Flush buffer (just keep the overlapping part)
         inline void flushBuffer();
 
         //! Feature extraction : those variables need to be public (I know, I can write accessors...)
-        uint16_t* mBuffer;
-        int mBufferSize;
+        std::deque<uint16_t> mBuffer;
         QMutex mLock;
 
         // Prerender callback
@@ -144,9 +143,7 @@ class StreamPlayer
         bool mLive;
         float mOverlapping;
         
-        size_t mBufferStart;
-        size_t mBufferEnd;
-        size_t mFramesOverlap;
+        int mFramesOverlap;
 
         // VLC
         libvlc_instance_t *mVlcInstance;

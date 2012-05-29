@@ -53,7 +53,7 @@ ZCRExtr* HZCRRExtr::setZCRExtractor(ZCRExtr* extr)
  * each frame and update the HZCRR. The history is a
  * circular buffer.
  */
-bool HZCRRExtr::extract(uint16_t* data, int size)
+bool HZCRRExtr::extract(std::deque<uint16_t> data, int size)
 {
     // If no external ZCR extractor has been set, use a new one
     if(mZcrExtr == 0)

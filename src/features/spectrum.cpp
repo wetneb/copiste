@@ -22,7 +22,7 @@
 
 // In this file, the most important functions are shown at first (we don't follow the order of the header)
 
-bool SpectrumExtr::extract(uint16_t* data, int size)
+bool SpectrumExtr::extract(std::deque<uint16_t> data, int size)
 {
     // Size checks : if the size changed, we have to reallocate the buffer
     size = regularSize(size);
@@ -39,7 +39,7 @@ bool SpectrumExtr::extract(uint16_t* data, int size)
     for(int i = 0; i < mSize; i++)
     {
         int j = mButterfly[i];
-        re[i] = mWindowCache[j]*data[j];
+        re[i] = mWindowCache[j] * data.at(j);
         im[i] = 0;
     }
 

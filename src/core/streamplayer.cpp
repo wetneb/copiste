@@ -26,8 +26,6 @@ using namespace std;
 
 StreamPlayer::StreamPlayer(bool live, bool verbose) : mVerbose(verbose),
                                                       mOverlapping(0),
-                                                      mBufferStart(0),
-                                                      mBufferEnd(0),
                                                       mFramesOverlap(0),
                                                       mMp(0),
                                                       mMedia(0)
@@ -67,9 +65,6 @@ StreamPlayer::StreamPlayer(bool live, bool verbose) : mVerbose(verbose),
 
     mMp = libvlc_media_player_new(mVlcInstance); // deleted in the destructor
     libvlc_audio_set_volume (mMp,80);
-
-    // Init data extraction
-    mBuffer = new uint16_t[AUDIO_CHUNK_SIZE]; // deleted in the destructor
 }
 
 // Cleans up everything
@@ -81,7 +76,6 @@ StreamPlayer::~StreamPlayer()
     libvlc_release(mVlcInstance);
 
     delete [] mAudioData;
-    delete [] mBuffer;
 }
 
 // Start "playing" a stream (actually, start reading it and send it to the algorithms)
@@ -91,10 +85,8 @@ void StreamPlayer::play()
         libvlc_media_release(mMedia);
     mMedia = libvlc_media_new_path (mVlcInstance, mUrl.c_str());
 
-    mBufferStart = 0;
-    mBufferEnd = 0;
     mFramesOverlap = mOverlapping * AUDIO_CHUNK_SIZE;
-
+    std::cout << std::endl << "FramesOverlap : " << mFramesOverlap << std::endl << std::endl;
     libvlc_media_player_set_media (mMp, mMedia);
 
     libvlc_media_player_play (mMp);
@@ -104,7 +96,7 @@ void StreamPlayer::play()
     watchThread.detach();
 }
 
-// Time we've been playing this file, in ms (useful to evaluate how far did we compute)
+// Time we've been playing this file, in ms (useful to evaluate how far we computed)
 libvlc_time_t StreamPlayer::playingTime()
 {
     return libvlc_media_player_get_time(mMp);
@@ -150,6 +142,7 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
     // The data is sent to us as bytes, but encoded on 2 bytes
     // TODO: dynamicly check that this is the case and that we're not mishandling the data
     // TODO: stereo support
+    // TODO: allocate temp only once and send the address to convert8to16
     uint16_t* temp = StreamPlayer::convert8to16(p_pcm_buffer, size);
     size /= 2;
 
@@ -165,7 +158,7 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
             remaining += channels;
         }
 
-        if(sp->bufferSize() == AUDIO_CHUNK_SIZE)
+        if(sp->bufferSize() >= AUDIO_CHUNK_SIZE)
         {
             // The buffer is sent to the "user"
             sp->useBuffer();
@@ -233,25 +226,24 @@ void StreamPlayer::addOffset(uint16_t* source, uint16_t* dest, int size, int off
     }
 }
 
-uint16_t StreamPlayer::buffer(size_t i)
+uint16_t StreamPlayer::buffer(int i)
 {
-    return mBuffer[(mBufferStart + i) % AUDIO_CHUNK_SIZE];
+    return mBuffer.at(i);
 }
 
-size_t StreamPlayer::bufferSize()
+int StreamPlayer::bufferSize()
 {
-    return mBufferEnd - mBufferStart;
+    return mBuffer.size();
 }
 
 void StreamPlayer::fillBuffer(uint16_t value)
 {
-    mBuffer[mBufferEnd] = value;
-    mBufferEnd = (mBufferEnd + 1) % AUDIO_CHUNK_SIZE;
+    mBuffer.push_back(value);
 }
 
 void StreamPlayer::flushBuffer()
 {
-    mBufferStart = (mBufferStart + AUDIO_CHUNK_SIZE - mFramesOverlap) % AUDIO_CHUNK_SIZE;
+    mBuffer.erase(mBuffer.begin(), mBuffer.begin() + (AUDIO_CHUNK_SIZE - mFramesOverlap));
 }
 
 void StreamPlayer::setOverlapping(float factor)

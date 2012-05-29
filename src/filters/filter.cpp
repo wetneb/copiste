@@ -27,7 +27,7 @@ FeatureExtractor* Filter::bind(FeatureExtractor* extr)
 }
 
 //! Extract data
-bool Filter::extract(uint16_t* dat, int size)
+bool Filter::extract(std::deque<uint16_t> dat, int size)
 {
     if(mExtr)
     {

@@ -49,7 +49,7 @@ class HZCRRExtr : public FeatureExtractor
         ZCRExtr* setZCRExtractor(ZCRExtr* extr);
 
         //! Run the algorithm and store the results
-        bool extract(uint16_t* data, int size);
+        bool extract(std::deque<uint16_t> data, int size);
 
         //! Retrieve the results (from the index). The values are usually between -1 and 1
         float value(int index = 0) { return mHZCRR; };

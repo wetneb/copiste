@@ -42,7 +42,7 @@ class Filter : public FeatureExtractor
          * The given parameters are ignored : the data is drawn from the upstream extractor without
          * taking care of the raw data.
          */
-        bool extract(uint16_t* data = 0, int size = 0);
+        bool extract(std::deque<uint16_t> data, int size = 0);
 
         //! Do the actual computation on the features
         virtual void transform(vector<float> data) = 0;
