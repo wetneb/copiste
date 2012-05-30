@@ -53,6 +53,9 @@ bool SoundAnalyser::setupPipeline(string filename)
 
     if(node.toElement().tagName() == "pipeline")
     {
+        if(node.toElement().attribute("overlapping", "0").toFloat() != 0)
+            setOverlapping(node.toElement().attribute("overlapping", "0").toFloat());
+
         node = node.firstChild();
 
         while(!node.isNull())
@@ -195,7 +198,6 @@ void SoundAnalyser::cleanOldFeatures(unsigned int newestCount)
 {
     if(nbSamples() > newestCount)
     {
-        std::cout << std::endl << "cleanOldFeatures()" << std::endl << std::endl;
         for(unsigned int i = 0; i < mFeatures.size() - newestCount; i++)
         {
             for(unsigned int j = 0; j < mExtr.size(); j++)

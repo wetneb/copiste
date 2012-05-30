@@ -1,4 +1,4 @@
-<pipeline>
+<pipeline overlapping="0.5">
 	<feature type="Spectrum"
 		 name="_spectrum"
 		 used="no" />

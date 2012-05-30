@@ -86,7 +86,6 @@ void StreamPlayer::play()
     mMedia = libvlc_media_new_path (mVlcInstance, mUrl.c_str());
 
     mFramesOverlap = mOverlapping * AUDIO_CHUNK_SIZE;
-    std::cout << std::endl << "FramesOverlap : " << mFramesOverlap << std::endl << std::endl;
     libvlc_media_player_set_media (mMp, mMedia);
 
     libvlc_media_player_play (mMp);
