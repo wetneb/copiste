@@ -24,10 +24,10 @@ class HZCRRExtr;
 
 #include "features/extractor.h"
 #include "features/zcr.h"
-#include "core/streamplayer.h" // for AUDIO_CHUNK_SIZE
+#include "core/streamplayer.h" // for DEFAULT_AUDIO_CHUNK_SIZE 
 
 #define DEFAULT_ZCR_BOUND 2.0
-#define DEFAULT_HZCRR_CHUNKS_NUMBER (44100 / AUDIO_CHUNK_SIZE)
+#define DEFAULT_HZCRR_CHUNKS_NUMBER (44100 / DEFAULT_AUDIO_CHUNK_SIZE)
 
 /**
  * \class HZCRRExtr

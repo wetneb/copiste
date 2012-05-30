@@ -21,8 +21,7 @@
 
 #include <vlc/vlc.h>
 
-//! TODO Remove these dependencies from Qt (QFile shouldn't be a problem, and VLC implements mutexes)
-#include <QFile> // to be removed !
+//! TODO Remove this dependency from Qt (VLC implements mutexes, boost too)
 #include <QMutex>
 
 #include <boost/thread.hpp>
@@ -34,7 +33,7 @@
 
 #include "features/spectrum.h"
 
-#define AUDIO_CHUNK_SIZE 1024 
+#define DEFAULT_AUDIO_CHUNK_SIZE 1024 
 
 using namespace std;
 
@@ -71,7 +70,11 @@ class StreamPlayer
         //! Defines the URL of the stream to play
         void setUrl(string url) { mUrl = url; }
         //! Turns on / off audio chunk overlapping
-        void setOverlapping(float factor);        
+        void setOverlapping(float factor);
+        //! Changes the audio chunk size
+        void setChunkSize(int size);
+        //! Get the current chunk size
+        int chunkSize() { return mChunkSize; }
 
         //! Plays the media
         void play();
@@ -143,6 +146,7 @@ class StreamPlayer
         bool mLive;
         float mOverlapping;
         
+        int mChunkSize;
         int mFramesOverlap;
 
         // VLC

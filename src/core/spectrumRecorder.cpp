@@ -65,7 +65,7 @@ void SpectrumRecorder::useBuffer()
     // libvlc_media_player_get_length/time
     if(mCurrentRow < mMaxHeight)
     {
-        mExtr.extract(mBuffer, AUDIO_CHUNK_SIZE);
+        mExtr.extract(mBuffer, chunkSize());
         mExtr.normalize(255);
         for(int i = 0; i < mWindowSize / 2; ++i)
         {

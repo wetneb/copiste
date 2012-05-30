@@ -158,6 +158,8 @@ class SoundAnalyser : private StreamPlayer
         unsigned int samplingFrequency() { return mFrequency; }
         //! Get the playing time
         unsigned int getPlayingTime() { return playingTime(); }
+        //! Get the audio chunk size
+        int getChunkSize() { return chunkSize(); }
 
     private:
         vector<pair<string, FeatureExtractor* > > mExtr; // TODO : it could be an hashtable

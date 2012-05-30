@@ -76,7 +76,7 @@ void FeatureDrawer::draw(string filename, bool live)
     // Draw lines
 
     // Seconds
-    double a_second = samplingFrequency() / AUDIO_CHUNK_SIZE;
+    double a_second = ((double)samplingFrequency()) / getChunkSize();
     painter.setPen(QColor(30,30,30));
     int linesStart = plotStart % (int)a_second;
     for(int i = 1; linesStart + a_second * i < mOut.width() && linesStart + a_second * i <= nbSamples(); i++)

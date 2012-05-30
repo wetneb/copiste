@@ -55,6 +55,7 @@ bool SoundAnalyser::setupPipeline(string filename)
     {
         if(node.toElement().attribute("overlapping", "0").toFloat() != 0)
             setOverlapping(node.toElement().attribute("overlapping", "0").toFloat());
+        setChunkSize(node.toElement().attribute("chunk_size", "DEFAULT_AUDIO_CHUNK_SIZE").toInt());
 
         node = node.firstChild();
 
@@ -68,15 +69,15 @@ bool SoundAnalyser::setupPipeline(string filename)
             if(elem.tagName() == "feature" && type != "unknown")
             {
                 if(type == "ZCR")
-                    extr = new ZCRExtr(AUDIO_CHUNK_SIZE);
+                    extr = new ZCRExtr(chunkSize());
                 else if(type == "STE")
-                    extr = new STEExtr(AUDIO_CHUNK_SIZE);
+                    extr = new STEExtr(chunkSize());
                 else if(type == "Spectrum")
-                    extr = new SpectrumExtr(AUDIO_CHUNK_SIZE);
+                    extr = new SpectrumExtr(chunkSize());
                 else if(type == "HZCRR")
-                    extr = new HZCRRExtr(AUDIO_CHUNK_SIZE);
+                    extr = new HZCRRExtr(chunkSize());
                 else if(type == "LSTER")
-                    extr = new LSTERExtr(AUDIO_CHUNK_SIZE);
+                    extr = new LSTERExtr(chunkSize());
             }
             else if(elem.tagName() == "filter" && type != "unknown")
             {
@@ -261,7 +262,7 @@ void SoundAnalyser::useBuffer()
         {
             // Compute
             FeatureExtractor *extr = mExtr[i].second;
-            extr->extract(mBuffer, AUDIO_CHUNK_SIZE);
+            extr->extract(mBuffer, chunkSize());
             if(mNormalize)
             {
                 for(int j = 0; j < extr->size(); j++)

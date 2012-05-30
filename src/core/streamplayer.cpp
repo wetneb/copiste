@@ -26,6 +26,7 @@ using namespace std;
 
 StreamPlayer::StreamPlayer(bool live, bool verbose) : mVerbose(verbose),
                                                       mOverlapping(0),
+                                                      mChunkSize(DEFAULT_AUDIO_CHUNK_SIZE),
                                                       mFramesOverlap(0),
                                                       mMp(0),
                                                       mMedia(0)
@@ -85,7 +86,7 @@ void StreamPlayer::play()
         libvlc_media_release(mMedia);
     mMedia = libvlc_media_new_path (mVlcInstance, mUrl.c_str());
 
-    mFramesOverlap = mOverlapping * AUDIO_CHUNK_SIZE;
+    mFramesOverlap = mOverlapping * mChunkSize;
     libvlc_media_player_set_media (mMp, mMedia);
 
     libvlc_media_player_play (mMp);
@@ -151,13 +152,13 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
     {
         // \todo Faudrait-il plutôt utiliser memcpy & co ? J'y connais rien à ces trucs-là…
         // Filling buffer
-        while(sp->bufferSize() < AUDIO_CHUNK_SIZE && remaining < size)
+        while(sp->bufferSize() < sp->chunkSize() && remaining < size)
         {
             sp->fillBuffer(temp[remaining]);
             remaining += channels;
         }
 
-        if(sp->bufferSize() >= AUDIO_CHUNK_SIZE)
+        if(sp->bufferSize() >= sp->chunkSize())
         {
             // The buffer is sent to the "user"
             sp->useBuffer();
@@ -242,7 +243,7 @@ void StreamPlayer::fillBuffer(uint16_t value)
 
 void StreamPlayer::flushBuffer()
 {
-    mBuffer.erase(mBuffer.begin(), mBuffer.begin() + (AUDIO_CHUNK_SIZE - mFramesOverlap));
+    mBuffer.erase(mBuffer.begin(), mBuffer.begin() + (mChunkSize - mFramesOverlap));
 }
 
 void StreamPlayer::setOverlapping(float factor)
@@ -254,6 +255,16 @@ void StreamPlayer::setOverlapping(float factor)
         mOverlapping = 0;
         std::cerr << "Warning : invalid overlapping factor (" << factor << ")"
                     ", overlapping disabled." << std::endl;
+    }
+}
+
+void StreamPlayer::setChunkSize(int size)
+{
+    if(size >= 1)
+    {
+        mBuffer.clear();
+        mChunkSize = size;
+        mFramesOverlap = size * mOverlapping;
     }
 }
 
