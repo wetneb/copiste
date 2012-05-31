@@ -127,8 +127,7 @@ void CorpusBuilder::compute()
 
         // Clean the previous results
         for(unsigned int i = 0; i < mResults.size(); i++)
-            if(mResults[i])
-                delete [] mResults[i];
+            delete [] mResults[i];
         mResults.clear();
 
         // Loop through files
@@ -152,7 +151,9 @@ void CorpusBuilder::compute()
 
             // Save the features
             const int startingPoint = mCompOffset * samplingFrequency() / getChunkSize();
-            const int length = ((mElemLength == 0) ? (nbSamples() - startingPoint - 1) : (mElemLength * samplingFrequency() / getChunkSize()));
+            const int length = ((mElemLength == 0) ?
+                                     (nbSamples() - startingPoint - 1)
+                                   : (mElemLength * samplingFrequency() / getChunkSize()));
 
             double *mCurrentResults = 0;
             for(unsigned int k = startingPoint; k < nbSamples() - startingPoint; k++) // Loop through samples
@@ -234,5 +235,12 @@ bool CorpusBuilder::write(Corpus *corpus)
     }
     //mSwitchLock.unlock();
     return true;
+}
+
+CorpusBuilder::~CorpusBuilder()
+{
+    for(unsigned int i = 0; i < mResults.size(); i++)
+        delete [] mResults[i];
+    mResults.clear();
 }
 

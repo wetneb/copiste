@@ -32,6 +32,8 @@ class CorpusBuilder : private SoundAnalyser
     public:
         //! Constructor
         CorpusBuilder();
+        //! Destructor
+        ~CorpusBuilder();
 
         //! Set what length (in seconds) should be used as training element length (0 : use the whole files)
         void setElementLength(int sec) { mElemLength = sec; }
