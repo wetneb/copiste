@@ -82,7 +82,7 @@ using namespace std;
  * Forces the outputs of the features (and filters) to be in a given range.
  *
  */
-class SoundAnalyser : private StreamPlayer
+class SoundAnalyser : protected StreamPlayer
 {
     public:
         //! Sets up a new sound analyser
@@ -156,10 +156,6 @@ class SoundAnalyser : private StreamPlayer
 
         //! Get the sampling frequency
         unsigned int samplingFrequency() { return mFrequency; }
-        //! Get the playing time
-        unsigned int getPlayingTime() { return playingTime(); }
-        //! Get the audio chunk size
-        int getChunkSize() { return chunkSize(); }
 
     private:
         vector<pair<string, FeatureExtractor* > > mExtr; // TODO : it could be an hashtable

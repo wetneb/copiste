@@ -39,13 +39,13 @@ LivePlayer::LivePlayer(QWidget *parent) : QWidget(parent),
 
 void LivePlayer::useFeatures()
 {
-    if(mLastUpdate < getPlayingTime() - 500)
+    if(mLastUpdate < playingTime() - 500)
     {
         draw("Live stream", true);
         writeToDevice(&mLastImage);
 
         update();
-        mLastUpdate = getPlayingTime();
+        mLastUpdate = playingTime();
 
         if(nbSamples() >= 4*LIVE_PLAYER_WIDTH)
             cleanOldFeatures(LIVE_PLAYER_WIDTH*1.1);
@@ -60,3 +60,19 @@ void LivePlayer::paintEvent(QPaintEvent *event)
     painter.drawImage(0,0,mLastImage);
     painter.end();
 }
+
+void LivePlayer::keyReleaseEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Plus)
+    {
+        if(volume() < 100)
+            setVolume(std::min(100, volume() + 5));
+    }
+    else if(event->key() == Qt::Key_Minus)
+    {
+        if(volume() > 0)
+            setVolume(std::max(0, volume() - 5));
+    }
+
+}
+

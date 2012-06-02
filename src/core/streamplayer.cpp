@@ -268,6 +268,16 @@ void StreamPlayer::setChunkSize(int size)
     }
 }
 
+void StreamPlayer::setVolume(int vol)
+{
+    libvlc_audio_set_volume (mMp,vol);
+}
+
+int StreamPlayer::volume()
+{
+     return libvlc_audio_get_volume(mMp);
+}
+
 // Power of two
 inline int StreamPlayer::pow2(int n) { return (1 << n); }
 

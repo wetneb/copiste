@@ -86,6 +86,10 @@ class StreamPlayer
         void stop();
         //! Are we playing a live stream ?
         bool isLive() { return mLive; }
+        //! Changes the volume (between 0 and 100)
+        void setVolume(int vol);
+        //! Gets the current volume
+        int volume();
 
         // Computing functions : designed to be overloaded by the user
 

@@ -20,6 +20,7 @@
 #define INCLUDED_LIVEPLAYERH
 
 #include <QWidget>
+#include <QKeyEvent>
 #include <QImage>
 #include <boost/thread.hpp>
 #include "core/featuredrawer.h"
@@ -42,6 +43,8 @@ class LivePlayer : public QWidget, public FeatureDrawer
     protected:
         //! Event handling function (redraws the scene)
         void paintEvent(QPaintEvent *event);
+        //! Key handling (volume)
+        void keyReleaseEvent(QKeyEvent *event);
 
     private:
         QImage mLastImage;
@@ -51,3 +54,4 @@ class LivePlayer : public QWidget, public FeatureDrawer
 };
 
 #endif
+

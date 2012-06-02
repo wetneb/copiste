@@ -150,10 +150,10 @@ void CorpusBuilder::compute()
             waitComputed();
 
             // Save the features
-            const int startingPoint = mCompOffset * samplingFrequency() / getChunkSize();
+            const int startingPoint = mCompOffset * samplingFrequency() / chunkSize();
             const int length = ((mElemLength == 0) ?
                                      (nbSamples() - startingPoint - 1)
-                                   : (mElemLength * samplingFrequency() / getChunkSize()));
+                                   : (mElemLength * samplingFrequency() / chunkSize()));
 
             double *mCurrentResults = 0;
             for(unsigned int k = startingPoint; k < nbSamples() - startingPoint; k++) // Loop through samples
