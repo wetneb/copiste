@@ -1,5 +1,5 @@
 #!/bin/sh
 
-./live hzcrr-lster --network=music-speech http://broadcast.infomaniak.net:80/tsfjazz-high.mp3
+./live hzcrr-lster-spec-sm  --network=from-huge http://tsfjazz.ice.infomaniak.ch:80/tsfjazz-high
 
 

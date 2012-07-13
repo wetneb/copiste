@@ -1,3 +1,5 @@
 #!/bin/sh
 
-./live hzcrr-lster-spec --network=from-huge http://broadcast.infomaniak.net:80/radioclassique-high.mp3
+./live hzcrr-lster-spec-sm  --network=from-huge http://radioclassique.ice.infomaniak.ch:80/radioclassique-high
+
+
