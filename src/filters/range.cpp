@@ -18,13 +18,25 @@
 
 #include "filters/range.h"
 
+RangeFilter::RangeFilter()
+{
+    mStart = 0;
+    mEnd = 1;
+    mBlockSize = -1;
+}
+
 //! Do the actual computation on the features
 void RangeFilter::transform(vector<float> data)
 {
-    float sum = 0;
-    for(int i = std::max(mStart, 0); i < std::min((int)data.size(), mEnd); i++)
-        sum += data[i];
-    mAverage = sum / (mEnd - mStart);
+    mAverage.resize(size());
+    for(int i = 0; i < size(); i++)
+    {
+        int blocksize = (mBlockSize == -1 ? data.size() : mBlockSize);
+        int end = std::min((int)data.size(), (i+1)*blocksize);
+        for(int j = i*blocksize; j < end; j++)
+                mAverage[i] += data[i];
+        mAverage[i] /= (end - i*blocksize);
+    }
 }
 
 //! Set a int parameter (available : start, end)
@@ -34,6 +46,8 @@ void RangeFilter::setInt(string key, int value)
         mStart = value;
     else if(key == "end")
         mEnd = value;
+    else if(key == "blocksize")
+        mBlockSize = value;
 }
 
 //! Get a int parameter (available : start, end)
@@ -44,7 +58,21 @@ int RangeFilter::getInt(string key)
         result = mStart;
     else if(key == "end")
         result = mEnd;
+    else if(key == "blocksize")
+        result = mBlockSize;
     return result;
+}
+
+int RangeFilter::size()
+{
+    int res = 0;
+    if(mBlockSize == -1)
+        res = 1;
+    else if(mExtr->size() % mBlockSize)
+        res = mExtr->size() / mBlockSize + 1;
+    else
+        res = mExtr->size() / mBlockSize;
+    return res;
 }
 
 float RangeFilter::min()
@@ -55,5 +83,13 @@ float RangeFilter::min()
 float RangeFilter::max()
 {
     return (mExtr ? mExtr->max() : 1);
+}
+
+float RangeFilter::value(int index)
+{
+    float res = 0;
+    if(index >= 0 && index < size())
+        res = mAverage[index];
+    return res;
 }
 

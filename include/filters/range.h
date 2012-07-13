@@ -21,32 +21,38 @@
 
 #include "filters/filter.h"
 
+#include <vector>
+
 //! A class for computing the average between a set of features (usually for the spectrum)
 class RangeFilter : public Filter
 {
     public:
+        RangeFilter();
+
         //! Do the actual computation on the features
         void transform(vector<float> data);
 
-        //! Returns the number of available features : 1
-        int size() { return 1; }
+        //! Returns the number of available features : parent->size() / blocksize (+ 1)
+        int size();
         //! Lower bound : the same as parent's
         float min();
         //! Higher bound : the same as parent's
         float max();
 
-        //! Get the result (only one available, i.e. index = 0)
-        float value(int index = 0) { return mAverage; }
+        //! Get the result (the index points to the desired block)
+        float value(int index); 
 
-        //! Set a int parameter
+        //! Set a int parameter (available : start, end, blocksize)
         void setInt(string key, int value);
-        //! Get a int parameter
+        //! Get a int parameter (available : start, end, blocksize)
         int getInt(string key);
 
     private:
         int mStart;
         int mEnd;
-        float mAverage;
+        int mBlockSize;
+        std::vector<float> mAverage;
 };
 
 #endif
+

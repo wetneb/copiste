@@ -57,7 +57,7 @@ void MemoryFilter::parentChanged()
 		mMem[i].resize(mM, 0);
 }
 
-//! Set a int parameter (available : start, end)
+//! Set a int parameter (available : depth, chunks)
 void MemoryFilter::setInt(string key, int value)
 {
     if(key == "depth") // don't update if the filter has been running
@@ -68,14 +68,21 @@ void MemoryFilter::setInt(string key, int value)
             mMem[i].resize(mM);
         mCurr = mCurr % mN;
     }
+    else if(key == "chunks")
+    {
+        mChunks = value;
+        mAgg = mAgg % mChunks;
+    }
 }
 
-//! Get a int parameter (available : start, end)
+//! Get a int parameter (available : depth, chunks)
 int MemoryFilter::getInt(string key)
 {
     int result = 0;
     if(key == "depth")
         result = mN;
+    else if(key == "chunks")
+        result = mChunks;
     return result;
 }
 
