@@ -89,6 +89,7 @@ specdraw_files = audio_analysis_files + [ 'src/core/spectrumRecorder.cpp',
 live_files = neurones_files + audio_analysis_files + ['src/main/live.cpp',
   'src/core/liveplayer.cpp', 'src/core/featuredrawer.cpp' ]
 
+fingerprint_files = audio_analysis_files + ['src/core/fingerprinter.cpp', 'src/main/fingerprint.cpp']
 
 env.Program('nnat', nnat_files)
 env.Program('mkcorpus', mkcorpus_files)
@@ -96,3 +97,5 @@ env.Program('featdraw', featdraw_files)
 env.Program('specdraw', specdraw_files)
 env.Program('classify', classify_files)
 env.Program('live', live_files)
+env.Program('fingerprint', fingerprint_files)
+
