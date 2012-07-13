@@ -67,6 +67,10 @@ class FeatureExtractor
         virtual float getFloat(string key) { return 0; }
         //! Get a int parameter
         virtual int getInt(string key) { return 0; }
+        //! Set a string parameter
+        virtual void setString(string key, string value) { ; }
+        //! Get a string parameter
+        virtual string getString(string key) { return ""; }
 
         //! Clear the memory of the extractor (so that the previously computed results don't infer to the next ones)
         virtual void clear() { ; }

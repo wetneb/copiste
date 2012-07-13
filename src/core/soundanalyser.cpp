@@ -93,8 +93,10 @@ bool SoundAnalyser::setupPipeline(string filename)
                     flt = new CentroidFilter;
                 else if(type == "HighLowRatio")
                     flt = new HighLowRatioFilter;
-		else if(type == "Memory")
-	            flt = new MemoryFilter;
+		        else if(type == "Memory")
+	                flt = new MemoryFilter;
+                else if(type == "Compare")
+                    flt = new CompareFilter;
 
                 if(flt != 0)
                 {
@@ -135,6 +137,7 @@ bool SoundAnalyser::setupPipeline(string filename)
                     {
                         extr->setInt(attr.name().toStdString(), attr.value().toInt());
                         extr->setFloat(attr.name().toStdString(), attr.value().toFloat());
+                        extr->setString(attr.name().toStdString(), attr.value().toStdString());
                     }
                 }
 
