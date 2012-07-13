@@ -41,7 +41,8 @@ class MemoryFilter : public Filter
         //! Get the result (index = i*n + j where i is the feature and j the frame)
         float value(int index = 0);
 
-        //! Set a int parameter : "depth", the n parameter (depth of the memory)
+        //! Set a int parameter : "depth", the n parameter (depth of the memory) and "chunks", the number of chunks
+        //! to gather in order to make one row of values
         void setInt(string key, int value);
         //! Get a int parameter : "depth"
         int getInt(string key);
@@ -55,10 +56,14 @@ class MemoryFilter : public Filter
         unsigned int mN;
 	    //! The number of features
 	    unsigned int mM;
+        //! The number of chunks per row
+        unsigned int mChunks;
 	    //! The memory
 	    vector< vector<float> > mMem;
 	    //! Current index where to fill data
 	    unsigned int mCurr;
+        //! Current number of aggregated data in the last row
+        unsigned int mAgg;
 };
 
 #endif

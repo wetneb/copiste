@@ -23,17 +23,21 @@ MemoryFilter::MemoryFilter() : Filter()
 {
 	mN = 0;
 	mM = 1;
+    mAgg = 1;
 	mCurr = 0;
 }
 
 //! Do the actual computation on the features
 void MemoryFilter::transform(vector<float> data)
 {
-
 	if(mM == data.size())
 	{
-		mMem[mCurr] = data;
-		mCurr = (mCurr + 1) % mN;
+        for(unsigned int i = 0; i < mM; i++)
+            mMem[mCurr][i] += data[i] / mChunks;
+        mAgg++;
+        if(mAgg == mChunks)
+            mCurr = (mCurr + 1) % mN;
+        mAgg = mAgg % mChunks;
 	}
 }
 
