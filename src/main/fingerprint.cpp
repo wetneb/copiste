@@ -18,11 +18,17 @@
 
 #include <program_options.hpp>
 #include <boost/numeric/ublas/io.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
 
 namespace po = boost::program_options;
 
 #include <iostream>
-using namespace std;
+
+using namespace std; // todo : delete me
 
 #include "core/fingerprinter.h"
 
@@ -68,7 +74,16 @@ int main(int argc, char **argv)
 
             if(vm.count("verbose") == 0)
                 cout << "\e[F\e[K";
-            cout << cl.getFingerprint() << endl;
+            ublas::vector<int> fgp = cl.getFingerprint();
+            ublas::matrix<int> mat(fgp.size(), 1);
+            ublas::matrix_column<ublas::matrix<int> > mr(mat, 0);
+            mr = fgp;
+
+            boost::archive::text_oarchive ar(std::cout);
+            mat = ublas::trans(mat);
+            ar & mat;
+
+            std::cout << std::endl;
         }
         else
             cout << "Failed to load the pipeline." << endl;

@@ -6,14 +6,14 @@
         type="Range"
         blocksize="64"
         start="0"
-        end="2048"
+        end="1024"
         used="no">
         <ref name="_spectrum" />
     </filter>
     <filter name="fingerprint"
         type="Memory"
         depth="8"
-        chunks="16">
+        chunks="64">
         <ref name="specreduced" />
     </filter>
 </pipeline>

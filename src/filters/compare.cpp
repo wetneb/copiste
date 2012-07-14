@@ -55,13 +55,13 @@ void CompareFilter::transform(vector<float> data)
     float tmp = 0;
     for(unsigned int i = 0; i < mPatterns.size1(); i++)
     {
-        mResult[i] = 0;
+        float sum = 0;
         for(unsigned int j = 0; j < mPatterns.size2(); j++)
         {
             tmp = (mPatterns(i,j) - data[j]);
-            mResult[i] += (tmp * tmp);
+            sum += (tmp * tmp);
         }
-        mResult[i] /= 100*mPatterns.size2();
+        mResult[i] = sum / mPatterns.size2();
     }
 }
 

@@ -23,7 +23,7 @@ MemoryFilter::MemoryFilter() : Filter()
 {
 	mN = 0;
 	mM = 1;
-    mAgg = 1;
+    mAgg = 0;
 	mCurr = 0;
 }
 
@@ -36,8 +36,12 @@ void MemoryFilter::transform(vector<float> data)
             mMem[mCurr][i] += data[i] / mChunks;
         mAgg++;
         if(mAgg == mChunks)
+        {
             mCurr = (mCurr + 1) % mN;
-        mAgg = mAgg % mChunks;
+            mAgg = 0;
+            for(unsigned int i = 0; i < mM; i++)
+                mMem[mCurr][i] = 0;
+        }
 	}
 }
 
@@ -45,7 +49,7 @@ float MemoryFilter::value(int index)
 {
 	unsigned int i = index / mN, j = index % mN;
 	float result = 0;
-	if(0 <= i && i < mMem.size())
+	if(0 <= i && i < mM)
 		result = mMem[(mCurr - j) % mN][i];
     return result;	
 }
