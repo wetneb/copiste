@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'view2D.h'
 **
-** Created: Wed May 16 17:43:56 2012
-**      by: The Qt Meta Object Compiler version 62 (Qt 4.6.3)
+** Created: Sat Jul 14 20:21:59 2012
+**      by: The Qt Meta Object Compiler version 63 (Qt 4.8.2)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -10,8 +10,8 @@
 #include "../../include/gui/view2D.h"
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'view2D.h' doesn't include <QObject>."
-#elif Q_MOC_OUTPUT_REVISION != 62
-#error "This file was generated using the moc from 4.6.3. It"
+#elif Q_MOC_OUTPUT_REVISION != 63
+#error "This file was generated using the moc from 4.8.2. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -20,7 +20,7 @@ QT_BEGIN_MOC_NAMESPACE
 static const uint qt_meta_data_View2D[] = {
 
  // content:
-       4,       // revision
+       6,       // revision
        0,       // classname
        0,    0, // classinfo
        3,   14, // methods
@@ -43,9 +43,27 @@ static const char qt_meta_stringdata_View2D[] = {
     "hoveringElement(std::string)\0"
 };
 
+void View2D::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        Q_ASSERT(staticMetaObject.cast(_o));
+        View2D *_t = static_cast<View2D *>(_o);
+        switch (_id) {
+        case 0: _t->rendering(); break;
+        case 1: _t->rendered(); break;
+        case 2: _t->hoveringElement((*reinterpret_cast< std::string(*)>(_a[1]))); break;
+        default: ;
+        }
+    }
+}
+
+const QMetaObjectExtraData View2D::staticMetaObjectExtraData = {
+    0,  qt_static_metacall 
+};
+
 const QMetaObject View2D::staticMetaObject = {
     { &QWidget::staticMetaObject, qt_meta_stringdata_View2D,
-      qt_meta_data_View2D, 0 }
+      qt_meta_data_View2D, &staticMetaObjectExtraData }
 };
 
 #ifdef Q_NO_DATA_RELOCATION
@@ -71,12 +89,8 @@ int View2D::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        switch (_id) {
-        case 0: rendering(); break;
-        case 1: rendered(); break;
-        case 2: hoveringElement((*reinterpret_cast< std::string(*)>(_a[1]))); break;
-        default: ;
-        }
+        if (_id < 3)
+            qt_static_metacall(this, _c, _id, _a);
         _id -= 3;
     }
     return _id;

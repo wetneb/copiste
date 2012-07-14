@@ -86,7 +86,7 @@ bool CorpusBuilder::setup(string fileName)
             if(boost::filesystem::is_regular_file(iter->status()))
             {
 #if BOOST_VERSION <= 104200
-		string filename = iter->path().filename();
+		        string filename = iter->path().filename();
 #else
                 string filename = iter->path().filename().string();
 #endif
@@ -99,7 +99,7 @@ bool CorpusBuilder::setup(string fileName)
                 if(prefixId < rules.size())
                 {
 #if BOOST_VERSION <= 104200
-		    mFiles.push_back(string("file://" + boost::filesystem::system_complete(iter->path()).string()));
+		            mFiles.push_back(string("file://" + boost::filesystem::system_complete(iter->path()).string()));
 #else
                     mFiles.push_back(string("file://" + boost::filesystem::absolute(iter->path()).string()));
 #endif

@@ -65,7 +65,7 @@ StreamPlayer::StreamPlayer(bool live, bool verbose) : mVerbose(verbose),
     mVlcInstance = libvlc_new((live ? 2 : 3), vlcArgs); // deleted in the destructor
 
     mMp = libvlc_media_player_new(mVlcInstance); // deleted in the destructor
-    libvlc_audio_set_volume (mMp,80);
+    libvlc_audio_set_volume (mMp,VLC_DEFAULT_VOLUME);
 }
 
 // Cleans up everything

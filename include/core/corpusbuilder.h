@@ -23,6 +23,7 @@ class CorpusBuilder;
 
 // Needed to read directories
 #include <boost/filesystem.hpp>
+#include <boost/version.hpp>
 
 #include "core/soundanalyser.h"
 

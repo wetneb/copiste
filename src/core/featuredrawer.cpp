@@ -53,8 +53,7 @@ void FeatureDrawer::draw(string filename, bool live)
                         Qt::blue,
                         Qt::cyan,
                         Qt::magenta,
-                        Qt::yellow,
-                        Qt::gray };
+                        Qt::yellow };
     int bottom = 25, top = 25;
     if(mNet == 0)
         top = 0;

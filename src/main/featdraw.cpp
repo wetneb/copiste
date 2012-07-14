@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 #if BOOST_VERSION <= 104200 //! \TODO : find at what version did the change happen	    
             string output("output/"+(boost::filesystem::path(filename).filename())+"-features.png");
 #else
-	    string output("output/"+(boost::filesystem::path(filename).filename().string()+"-features.png");
+	    string output("output/"+(boost::filesystem::path(filename).filename().string()+"-features.png"));
 #endif
             if(vm.count("output-file"))
                 output = vm["input-file"].as< string >();
@@ -111,3 +111,4 @@ int main(int argc, char **argv)
 
     return 0;
 }
+

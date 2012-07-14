@@ -1,0 +1,25 @@
+<pipeline overlapping="0.5" chunk_size="1024">
+	<feature name="_spectrum"
+		type="Spectrum"
+        used="no" />
+    <filter name="specreduced"
+        type="Range"
+        blocksize="64"
+        start="0"
+        end="2048"
+        used="no">
+        <ref name="_spectrum" />
+    </filter>
+    <filter name="fingerprint"
+        type="Memory"
+        depth="8"
+        chunks="16"
+        used="no">
+        <ref name="specreduced" />
+    </filter>
+    <filter name="Diff"
+        type="Compare"
+        profile="mfp1">
+        <ref name="fingerprint" />
+    </filter>
+</pipeline>
