@@ -47,10 +47,10 @@ void MemoryFilter::transform(vector<float> data)
 
 float MemoryFilter::value(int index)
 {
-	unsigned int i = index / mN, j = index % mN;
+	unsigned int i = index % mM, j = index / mM;
 	float result = 0;
 	if(0 <= i && i < mM)
-		result = mMem[(mCurr - 1 - j) % (mN + 1)][i];
+		result = mMem[(mCurr + mN - j) % (mN + 1)][i];
     return result;	
 }
 

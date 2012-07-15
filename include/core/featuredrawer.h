@@ -20,6 +20,8 @@
 #define INCLUDED_FEATUREDRAWERH
 
 #include <iostream>
+#include <sstream>
+
 #include <QImage>
 #include <QColor>
 #include <QPainter>

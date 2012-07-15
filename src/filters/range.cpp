@@ -32,7 +32,7 @@ void RangeFilter::transform(vector<float> data)
     for(int i = 0; i < size(); i++)
     {
         int blocksize = (mBlockSize == -1 ? data.size() : mBlockSize);
-        int end = std::min((int)data.size(), (i+1)*blocksize);
+        int end = std::min(mEnd, std::min((int)data.size(), (i+1)*blocksize));
         for(int j = i*blocksize; j < end; j++)
                 mAverage[i] += data[i];
         mAverage[i] /= (end - i*blocksize);
@@ -69,9 +69,9 @@ int RangeFilter::size()
     if(mBlockSize == -1)
         res = 1;
     else if(mExtr->size() % mBlockSize)
-        res = mExtr->size() / mBlockSize + 1;
+        res = (std::min(mEnd, mExtr->size()) - mStart) / mBlockSize + 1;
     else
-        res = mExtr->size() / mBlockSize;
+        res = (std::min(mEnd, mExtr->size()) - mStart) / mBlockSize;
     return res;
 }
 

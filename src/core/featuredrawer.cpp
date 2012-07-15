@@ -117,7 +117,7 @@ void FeatureDrawer::draw(string filename, bool live)
                 {
                     for(int i = plotStart; i - plotStart < mOut.width() && i < (int)nbSamples(); ++i)
                     {
-                        int shade = features(i)[f][e] * 255;
+                        int shade = std::min(255, (int)(features(i)[f][e] * 255));
                         painter.fillRect(i - plotStart, orig - chunk, 1, chunk, QColor(shade,shade,shade));
                     }
                 }
@@ -207,16 +207,23 @@ void FeatureDrawer::draw(string filename, bool live)
         {
             for(unsigned int e = 0; e < nbElems(f); e++)
             {
-                double origV = mOut.height() - bottom - chunk*offset;
-                int origH = (live ? 160 : mOut.width());
+                if(isDrawnWithLines(offset))
+                {
+                    double origV = mOut.height() - bottom - chunk*offset;
+                    int origH = (live ? 160 : mOut.width());
+                    std::stringstream displayedName;
+                    displayedName << name(f);
+                    if(nbElems(f) > 1)
+                        displayedName << " (" << e+1 <<")";
 
-                painter.setPen(colors[offset%8]);
-                painter.drawLine(origH - 150, origV - 0.5*chunk, origH - 135, origV - 0.5*chunk);
-                painter.setPen(QColor(255,255,255));
-                painter.drawText(origH - 130, origV - 0.5*chunk - 20, 120, 40,
-                              Qt::AlignLeft | Qt::AlignVCenter, name(f).c_str());
+                    painter.setPen(colors[offset%8]);
+                    painter.drawLine(origH - 150, origV - 0.5*chunk, origH - 135, origV - 0.5*chunk);
+                    painter.setPen(QColor(255,255,255));
+                    painter.drawText(origH - 130, origV - 0.5*chunk - 20, 120, 40,
+                                  Qt::AlignLeft | Qt::AlignVCenter, displayedName.str().c_str());
 
-                offset++;
+                    offset++;
+                }
             }
         }
         else if(name(f) == "_spectrum" && mDrawSpectrum)

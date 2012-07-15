@@ -6,20 +6,22 @@
         type="Range"
         blocksize="64"
         start="0"
-        end="1024"
-        used="no">
+        end="512"
+        used="yes"
+        draw="colors">
         <ref name="_spectrum" />
     </filter>
     <filter name="fingerprint"
         type="Memory"
         depth="8"
-        chunks="64"
-        used="no">
+        chunks="32"
+        used="no"
+        draw="colors">
         <ref name="specreduced" />
     </filter>
-    <filter name="Diff"
+    <!--    <filter name="Diff"
         type="Compare"
         profile="mfp1">
         <ref name="fingerprint" />
-    </filter>
+    </filter> -->
 </pipeline>

@@ -13,7 +13,7 @@
     <filter name="fingerprint"
         type="Memory"
         depth="8"
-        chunks="64">
+        chunks="32">
         <ref name="specreduced" />
     </filter>
 </pipeline>
