@@ -37,7 +37,7 @@ void MemoryFilter::transform(vector<float> data)
         mAgg++;
         if(mAgg == mChunks)
         {
-            mCurr = (mCurr + 1) % mN;
+            mCurr = (mCurr + 1) % (mN + 1);
             mAgg = 0;
             for(unsigned int i = 0; i < mM; i++)
                 mMem[mCurr][i] = 0;
@@ -50,7 +50,7 @@ float MemoryFilter::value(int index)
 	unsigned int i = index / mN, j = index % mN;
 	float result = 0;
 	if(0 <= i && i < mM)
-		result = mMem[(mCurr - j) % mN][i];
+		result = mMem[(mCurr - 1 - j) % (mN + 1)][i];
     return result;	
 }
 
@@ -67,10 +67,10 @@ void MemoryFilter::setInt(string key, int value)
     if(key == "depth") // don't update if the filter has been running
     {
         mN = value;
-        mMem.resize(mN);
-        for(unsigned int i = 0; i < mN; i++)
+        mMem.resize(mN+1);
+        for(unsigned int i = 0; i < mN+1; i++)
             mMem[i].resize(mM);
-        mCurr = mCurr % mN;
+        mCurr = mCurr % (mN+1);
     }
     else if(key == "chunks")
     {
