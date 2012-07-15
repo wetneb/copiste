@@ -98,7 +98,7 @@ class SoundAnalyser : protected StreamPlayer
         //! Clean the data in the extractors
         void cleanExtractors();
         //! Adds a new extractor
-        void registerExtractor(string name, FeatureExtractor* extr, bool used = true);
+        void registerExtractor(string name, FeatureExtractor* extr, bool used = true, bool drawLines = true);
         //! Find an extractor
         FeatureExtractor* getExtractor(string name);
 
@@ -139,6 +139,8 @@ class SoundAnalyser : protected StreamPlayer
 
         //! Is this feature used for detection ?
         bool isUsed(unsigned int index);
+        //! Should this feature be drawn as a lines or a shade of grey ?
+        bool isDrawnWithLines(unsigned int index);
         //! Get the name of the nth feature
         string name(unsigned int n);
         //! Get the id of the feature named so (-1 if not found)
@@ -161,6 +163,7 @@ class SoundAnalyser : protected StreamPlayer
     private:
         vector<pair<string, FeatureExtractor* > > mExtr; // TODO : it could be an hashtable
         vector<bool> mUsed;
+        vector<bool> mDrawLines;
         vector<double**> mFeatures;
 
         int mDimension;

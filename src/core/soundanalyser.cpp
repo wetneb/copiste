@@ -66,6 +66,7 @@ bool SoundAnalyser::setupPipeline(string filename)
 
             string name = elem.attribute("name", "unknown").toStdString();
             string type = elem.attribute("type", "unknown").toStdString();
+
             if(elem.tagName() == "feature" && type != "unknown")
             {
                 if(type == "ZCR")
@@ -133,7 +134,8 @@ bool SoundAnalyser::setupPipeline(string filename)
                 for(int i = 0; i < attributes.size(); i++)
                 {
                     QDomAttr attr = attributes.item(i).toAttr();
-                    if(attr.name() != "type" && attr.name() != "name")
+                    if(attr.name() != "type" && attr.name() != "name"
+                            && attr.name() != "draw" && attr.name() != "used")
                     {
                         extr->setInt(attr.name().toStdString(), attr.value().toInt());
                         extr->setFloat(attr.name().toStdString(), attr.value().toFloat());
@@ -141,7 +143,8 @@ bool SoundAnalyser::setupPipeline(string filename)
                     }
                 }
 
-                registerExtractor(name, extr, elem.attribute("used", "yes") == "yes");
+                registerExtractor(name, extr, elem.attribute("used", "yes") == "yes",
+                                              elem.attribute("draw", "lines") == "lines");
             }
 
             node = node.nextSibling();
@@ -284,12 +287,13 @@ void SoundAnalyser::useBuffer()
 }
 
 //! Adds a new extractor
-void SoundAnalyser::registerExtractor(string name, FeatureExtractor* extr, bool used)
+void SoundAnalyser::registerExtractor(string name, FeatureExtractor* extr, bool used, bool drawLines)
 {
     if(extr)
     {
         mExtr.push_back(make_pair(name, extr));
         mUsed.push_back(used);
+        mDrawLines.push_back(drawLines);
 
         // Update the dimension
         mDimension += extr->size();
@@ -323,6 +327,13 @@ bool SoundAnalyser::isUsed(unsigned int index)
 {
     if(index < mUsed.size())
         return mUsed[index];
+    return false;
+}
+
+bool SoundAnalyser::isDrawnWithLines(unsigned int index)
+{
+    if(index < mDrawLines.size())
+        return mDrawLines[index];
     return false;
 }
 

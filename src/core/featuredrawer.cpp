@@ -98,17 +98,28 @@ void FeatureDrawer::draw(string filename, bool live)
             for(unsigned int e = 0; e < nbElems(f); e++)
             {
                 double orig = mOut.height() - bottom - chunk*offset;
-
-                painter.setPen(colors[offset%8]);
-
-                QPoint lastPoint(0,0);
-                for(int i = plotStart; i - plotStart < mOut.width() && i < (int)nbSamples(); ++i)
+                
+                if(isDrawnWithLines(f))
                 {
-                    double val = features(i)[f][e];
+                    painter.setPen(colors[offset%6]);
 
-                    if(i != plotStart)
-                        painter.drawLine(lastPoint, QPoint(i - plotStart, orig - val*chunk));
-                    lastPoint = QPoint(i - plotStart, orig - val*chunk);
+                    QPoint lastPoint(0,0);
+                    for(int i = plotStart; i - plotStart < mOut.width() && i < (int)nbSamples(); ++i)
+                    {
+                        double val = features(i)[f][e];
+
+                        if(i != plotStart)
+                            painter.drawLine(lastPoint, QPoint(i - plotStart, orig - val*chunk));
+                        lastPoint = QPoint(i - plotStart, orig - val*chunk);
+                    }
+                }
+                else
+                {
+                    for(int i = plotStart; i - plotStart < mOut.width() && i < (int)nbSamples(); ++i)
+                    {
+                        int shade = features(i)[f][e] * 255;
+                        painter.fillRect(i - plotStart, orig - chunk, 1, chunk, QColor(shade,shade,shade));
+                    }
                 }
 
                 offset++;
