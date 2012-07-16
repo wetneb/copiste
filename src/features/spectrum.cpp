@@ -47,11 +47,11 @@ bool SpectrumExtr::extract(std::deque<uint16_t> data, int size)
 
     // Declared outside the loop (to speed up the code)
     int stepSize = 2; // The current size of the recursion
-    float pulse = 0; // The current pulsation (2*Pi/p)
+    double pulse = 0; // The current pulsation (2*Pi/p)
     int reP = 0, reQ = 0, imP = 0, imQ = 0; // The real and imaginary parts of the sub results of the D&C steps
-    float cosOmega = 0, sinOmega = 0; // The cosine and sine of pulse*i
-    float qOmegaRe = 0, qOmegaIm = 0; // The common term in the computations
-    //float reduceFactor = 0.1;
+    double cosOmega = 0, sinOmega = 0; // The cosine and sine of pulse*i
+    double qOmegaRe = 0, qOmegaIm = 0; // The common term in the computations
+    //double reduceFactor = 0.1;
 
     // Loop through the power of 2, size of the "recursion"
     for(int p = 1; p <= n; ++p)
@@ -98,7 +98,7 @@ bool SpectrumExtr::extract(std::deque<uint16_t> data, int size)
 // #               #
 // #               #
 // #               #
-inline float SpectrumExtr::rectangularWin(int i, int maxSize)
+inline double SpectrumExtr::rectangularWin(int i, int maxSize)
 {
     return (i >= 0 && i < maxSize) ? 1.0 : 0;
 }
@@ -109,7 +109,7 @@ inline float SpectrumExtr::rectangularWin(int i, int maxSize)
 //     #       #
 //   #           #
 // #               #
-inline float SpectrumExtr::triangularWin(int i, int maxSize)
+inline double SpectrumExtr::triangularWin(int i, int maxSize)
 {
     return (i >= 0 && i < maxSize) ? (i <= maxSize/2 ? (2.0*i/maxSize) : (1 - 2.0*(i - maxSize/2)/maxSize)) : 0;
 }
@@ -121,7 +121,7 @@ inline float SpectrumExtr::triangularWin(int i, int maxSize)
 //     #             #
 // # #                 # #
 //
-inline float SpectrumExtr::hammingWin(int i, int maxSize)
+inline double SpectrumExtr::hammingWin(int i, int maxSize)
 {
     return (i >= 0 && i < maxSize) ? (0.54 - 0.46*cos(2*M_PI*i/maxSize)) : 0;
 }
@@ -133,12 +133,12 @@ inline float SpectrumExtr::hammingWin(int i, int maxSize)
 //     #              #
 //   #                  #
 // #                      #
-inline float SpectrumExtr::blackmanHarrisWin(int i, int maxSize)
+inline double SpectrumExtr::blackmanHarrisWin(int i, int maxSize)
 {
     return 0.35875  - 0.48829*cos(2*M_PI*i/(maxSize - 1)) + 0.14128*cos(4*M_PI*i/(maxSize - 1)) + 0.0106411*cos(6*M_PI*i/(maxSize-1));
 }
 
-SpectrumExtr::SpectrumExtr(int size) : mResults(0), mButterfly(0), mWindowCache(0), mCurrentWindow(WINDOW_RECTANGULAR), mSize(size), mBound((1 << 31))
+SpectrumExtr::SpectrumExtr(int size) : mResults(0), mButterfly(0), mWindowCache(0), mCurrentWindow(WINDOW_HAMMING), mSize(size), mBound((1 << 31))
 {
     reallocate();
 }
@@ -179,7 +179,7 @@ void SpectrumExtr::reallocate()
 void SpectrumExtr::createWindowCache()
 {
     delete mWindowCache;
-    mWindowCache = new float[mSize];
+    mWindowCache = new double[mSize];
 
     for(int i = 0; i < mSize; i++)
     {
@@ -207,7 +207,7 @@ void SpectrumExtr::normalize(int bound)
             max = mResults[i];
 
     // Divide
-    float ratio = ((float) bound) / max;
+    double ratio = ((double) bound) / max;
     for(int i = 0; i < mSize; i++)
         mResults[i] *= ratio;
 
@@ -234,7 +234,7 @@ void SpectrumExtr::setInt(string key, int value)
 //! Get a int parameter (available : "bound")
 int SpectrumExtr::getInt(string key)
 {
-    int ret = 0;
+    float ret = 0;
     if(key == "bound")
         ret = mBound;
     return ret;

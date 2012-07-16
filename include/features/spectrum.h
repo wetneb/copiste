@@ -63,13 +63,13 @@ class SpectrumExtr : public FeatureExtractor
         // as expected, but a large wave with some noise.
 
         //! Rectangular
-        static float rectangularWin(int i, int maxSize);
+        static double rectangularWin(int i, int maxSize);
         //! Linear
-        static float triangularWin(int i, int maxSize);
+        static double triangularWin(int i, int maxSize);
         //! Hamming
-        static float hammingWin(int i, int maxSize);
+        static double hammingWin(int i, int maxSize);
         //! Blackman - Harris
-        static float blackmanHarrisWin(int i, int maxSize);
+        static double blackmanHarrisWin(int i, int maxSize);
 
         //! Updates the window cache
         void createWindowCache();
@@ -96,11 +96,11 @@ class SpectrumExtr : public FeatureExtractor
         //! Upper bound on outputted values
         float max() { return (uint16_t)(-1); }
 
-        //! Set a float parameter (available : none)
+        //! Set a double parameter (available : none)
         void setFloat(string key, float value) { ; }
         //! Set a int parameter (available : "bound")
         void setInt(string key, int value);
-        //! Get a float parameter (available : none)
+        //! Get a double parameter (available : none)
         float getFloat(string key) { return 0; }
         //! Get a int parameter (available : "bound")
         int getInt(string key);
@@ -125,7 +125,7 @@ class SpectrumExtr : public FeatureExtractor
     private:
         uint16_t* mResults;
         int* mButterfly;
-        float* mWindowCache;
+        double* mWindowCache;
         FTWindow mCurrentWindow;
         int mSize;
         int mBound;

@@ -127,7 +127,10 @@ void FeatureDrawer::draw(string filename, bool live)
         }
         else if(name(f) == "_spectrum" && mDrawSpectrum)
         {
-            int nbFrequenciesPerPixel =  nbElems(f) / (3*chunk);
+            int nbFrequenciesPerPixel = nbElems(f) / (3*chunk);
+            if(nbFrequenciesPerPixel == 0)
+                 nbFrequenciesPerPixel = 1;
+
             double orig = mOut.height() - bottom - chunk*offset;
             for(int i = plotStart; i - plotStart < mOut.width() && i < (int)nbSamples(); ++i)
             {
