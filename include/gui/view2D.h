@@ -33,13 +33,13 @@ class View2D;
 #include <iostream>
 #include <stack>
 
-#define VIEW_OUTPUT_WIDTH 700
-#define VIEW_OUTPUT_HEIGHT 500
-#define POINT_0_PATH "img/point-0.png"
-#define POINT_1_PATH "img/point-1.png"
-#define CORPUS_EPSILON 0.0001
-#define MAX_WIDTH_HISTORY 2000
-#define TIME_BETWEEN_TWO_LABEL_UPDATES 500 // in milliseconds
+const int VIEW_OUTPUT_WIDTH = 700;
+const int VIEW_OUTPUT_HEIGHT = 500;
+const char POINT_0_PATH[16] = "img/point-0.png";
+const char POINT_1_PATH[16] = "img/point-1.png";
+const float CORPUS_EPSILON = 0.0001;
+const int MAX_WIDTH_HISTORY = 2000;
+const int TIME_BETWEEN_TWO_LABEL_UPDATES = 500; // in milliseconds
 
 void plotHistory(double* history, int size, int corpusSize);
 

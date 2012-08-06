@@ -56,6 +56,7 @@ bool CorpusBuilder::setup(string fileName)
     // Read the contents
     QDomNode node = doc.documentElement();
 
+    // \todo Fix coding style (tpop, 15 / 26)
     if(node.toElement().tagName() == "target")
     {
         mBasePath = node.toElement().attribute("corpus", "").toStdString();

@@ -21,7 +21,7 @@
 
 #include "filters/filter.h"
 
-#define DEFAULT_HIGH_LOW_WINDOW_SIZE 100
+const int DEFAULT_HIGH_LOW_WINDOW_SIZE = 100;
 
 /**
  * \brief Counts the number of high or low values on a given feature

@@ -30,9 +30,9 @@
 #include "core/soundanalyser.h"
 #include "algo/neuralnetwork.h"
 
-#define FEATURE_DRAWER_DEFAULT_WIDTH 1600
-#define FEATURE_DRAWER_DEFAULT_HEIGHT 600
-#define FEATURE_DRAWER_SPECTRUM_NAME "_spectrum"
+const int FEATURE_DRAWER_DEFAULT_WIDTH = 1600;
+const int FEATURE_DRAWER_DEFAULT_HEIGHT = 600;
+const char FEATURE_DRAWER_SPECTRUM_NAME[10] = "_spectrum";
 
 using namespace std;
 

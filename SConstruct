@@ -34,9 +34,12 @@ flags = ['-Wall']
 # End of the configuration section
 
 env = Environment(LIBPATH=libpath, CPPPATH = cpppath, LIBS=libs, CPPFLAGS = flags,
+	          TOOLS = ['default', 'qt'],
+		  TOOLPATH = ['.'],
                   ENV = {'PATH' : os.environ['PATH'],
                          'HOME' : os.environ['HOME'],
                          'TERM' : os.environ['TERM'],
+			 'QTDIR' : '/usr',
    })
 neurones_files = [ 'src/algo/corpus.cpp',
      'src/algo/neuralnetwork.cpp',
@@ -67,8 +70,8 @@ filters_files = [ 'src/filters/filter.cpp',
 audio_analysis_files = sound_analyser_files + features_files + filters_files
 
 nnat_files = neurones_files + ['src/gui/editor.cpp',
-      'src/gui/moc_editor.cpp',
-      'src/gui/moc_view2D.cpp',
+      'include/gui/moc_editor.cc',
+      'include/gui/moc_view2D.cc',
       'src/gui/view2D.cpp',
       'src/gui/quadtree.cpp',
       'src/main/nnat.cpp',
@@ -90,6 +93,10 @@ live_files = neurones_files + audio_analysis_files + ['src/main/live.cpp',
   'src/core/liveplayer.cpp', 'src/core/featuredrawer.cpp' ]
 
 fingerprint_files = audio_analysis_files + ['src/core/fingerprinter.cpp', 'src/main/fingerprint.cpp']
+
+env.Moc('include/gui/view2D.h')
+env.Moc('include/gui/editor.h')
+
 
 env.Program('nnat', nnat_files)
 env.Program('mkcorpus', mkcorpus_files)

@@ -16,7 +16,7 @@
  */
 
 
-#include "core/spectrumRecorder.h"
+#include "core/spectrumrecorder.h"
 
 //! Default constructor. Sets up the computation.
 SpectrumRecorder::SpectrumRecorder(int windowSize, int sampleFrequency, int maxHeight, int scale) :

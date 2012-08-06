@@ -23,7 +23,7 @@ namespace po = boost::program_options;
 #include <iostream>
 using namespace std; // A supprimer (ou pas)
 
-#include "core/spectrumRecorder.h"
+#include "core/spectrumrecorder.h"
 
 /**
  * \brief Main function for computing a graphical representation of spectrum

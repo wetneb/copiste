@@ -24,8 +24,8 @@ class LSTERExtr;
 #include "features/extractor.h"
 #include "features/ste.h"
 
-#define DEFAULT_STE_BOUND 0.5
-#define DEFAULT_LSTER_CHUNK_SIZE 40
+const float DEFAULT_STE_BOUND = 0.5;
+const int DEFAULT_LSTER_CHUNK_SIZE = 40;
 
 /**
  * \class LSTERExtr

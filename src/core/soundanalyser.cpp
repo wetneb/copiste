@@ -82,6 +82,8 @@ bool SoundAnalyser::setupPipeline(string filename)
             }
             else if(elem.tagName() == "filter" && type != "unknown")
             {
+		//! \todo Coding style to be fixed (see tpop, 15 / 26)
+		
                 Filter *flt = 0;
 
                 if(type == "Average")
@@ -99,6 +101,7 @@ bool SoundAnalyser::setupPipeline(string filename)
                 else if(type == "Compare")
                     flt = new CompareFilter;
 
+		
                 if(flt != 0)
                 {
                     QDomElement child = node.firstChildElement();
