@@ -1,0 +1,13 @@
+Source: copiste
+Maintainer: Antonin Delpeuch <antonin@delpeuch.eu>
+Section: misc
+Priority: optional
+Standards-Version: 3.9.2
+Build-Depends: debhelper (>= 8) libqt4-dev libvlc-dev scons
+
+Package: copiste
+Architecture: any
+Depends: libqt4-core libqt4-gui libvlc5 libboost-filesystem libboost-thread libboost-pa
+Description: A radio ripper using machine learning to detect the category of the broadcasted sound.
+
+à continuer sur http://wiki.debian.org/IntroDebianPackaging
