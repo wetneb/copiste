@@ -2,4 +2,10 @@
 	<feature name="_spectrum"
 		type="Spectrum"
         used="no" />
+	<filter name="Mel scale"
+		type="Mel"
+		draw="colors"
+		>
+		<ref name="_spectrum" />
+	</filter>
 </pipeline>

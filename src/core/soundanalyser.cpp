@@ -96,11 +96,12 @@ bool SoundAnalyser::setupPipeline(string filename)
                     flt = new CentroidFilter;
                 else if(type == "HighLowRatio")
                     flt = new HighLowRatioFilter;
-		        else if(type == "Memory")
-	                flt = new MemoryFilter;
+		else if(type == "Memory")
+	            flt = new MemoryFilter;
                 else if(type == "Compare")
                     flt = new CompareFilter;
-
+		else if(type == "Mel")
+		    flt = new MelFilter;
 		
                 if(flt != 0)
                 {

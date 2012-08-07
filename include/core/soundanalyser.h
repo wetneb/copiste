@@ -49,6 +49,8 @@ class SoundAnalyser;
 #include "filters/centroid.h"
 #include "filters/memory.h"
 #include "filters/compare.h"
+#include "filters/mel.h"
+
 
 using namespace std;
 
