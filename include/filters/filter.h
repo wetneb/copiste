@@ -47,6 +47,18 @@ class Filter : public FeatureExtractor
         //! Do the actual computation on the features
         virtual void transform(vector<float> data) = 0;
 
+	//! Default min is the min of the parent
+	virtual float min()
+	{
+		return (mExtr ? mExtr->min() : 0);
+	}
+
+	//! Default max is the max of the parent
+	virtual float max()
+	{
+		return (mExtr ? mExtr->max() : 1);
+	}
+
     protected:
         //! Callback called when the upstream extractor changes
         virtual void parentChanged() { ; }
@@ -56,3 +68,4 @@ class Filter : public FeatureExtractor
 };
 
 #endif
+
