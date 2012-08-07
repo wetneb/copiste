@@ -1,7 +1,5 @@
-<pipeline>
-	<feature type="STE" name="mySTE" />
-	<feature type="ZCR" name="myZCR" />
-	<filter type="Average" name="avZCR" size="1000">
-		<ref name="myZCR" />
-	</filter> 
+<pipeline overlapping="0.5" chunk_size="1024">
+	<feature name="_spectrum"
+		type="Spectrum"
+        used="no" />
 </pipeline>
