@@ -65,6 +65,7 @@ filters_files = [ 'src/filters/filter.cpp',
     'src/filters/memory.cpp',
     'src/filters/compare.cpp',
     'src/filters/mel.cpp',
+    'src/filters/distance.cpp',
                 ]
 
 

@@ -50,7 +50,7 @@ class SoundAnalyser;
 #include "filters/memory.h"
 #include "filters/compare.h"
 #include "filters/mel.h"
-
+#include "filters/distance.h"
 
 using namespace std;
 
