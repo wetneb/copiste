@@ -42,6 +42,7 @@ int main(int argc, char **argv)
     desc.add_options()
         ("input-file", "The file. The one.")
         ("pipeline,p", "The pipeline that should be used (it will be loaded from pipeline/$PIPELINE.xml)")
+        ("matrix", "Save the fingerprint as a matrix rather than as a vector")
         ("verbose", "Be verbose.")
         ("help,h", "Display this message");
 
@@ -75,14 +76,19 @@ int main(int argc, char **argv)
             if(vm.count("verbose") == 0)
                 cout << "\e[F\e[K";
             ublas::vector<int> fgp = cl.getFingerprint();
-            ublas::matrix<int> mat(fgp.size(), 1);
-            ublas::matrix_column<ublas::matrix<int> > mr(mat, 0);
-            mr = fgp;
 
             boost::archive::text_oarchive ar(std::cout);
-            mat = ublas::trans(mat);
-            ar & mat;
+            if(vm.count("matrix") != 0)
+            {
+                ublas::matrix<int> mat(fgp.size(), 1);
+                ublas::matrix_column<ublas::matrix<int> > mr(mat, 0);
+                mr = fgp;
 
+                mat = ublas::trans(mat);
+                ar & mat;
+            }
+            else
+                ar & fgp;
             std::cout << std::endl;
         }
         else
