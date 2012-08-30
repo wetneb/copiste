@@ -98,6 +98,8 @@ bool SoundAnalyser::setupPipeline(string filename)
 	                flt = new MemoryFilter;
                 else if(type == "Compare")
                     flt = new CompareFilter;
+                else if(type == "Distance")
+                    flt = new DistanceFilter;
 
                 if(flt != 0)
                 {
