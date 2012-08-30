@@ -1,19 +1,22 @@
 <pipeline overlapping="0.5" chunk_size="1024">
-	<feature name="_spectrum"
+	<feature name="spectrum"
 		type="Spectrum"
         used="no" />
     <filter name="specreduced"
         type="Range"
-        blocksize="64"
+        blocksize="8"
         start="0"
-        end="1024"
-        used="no">
-        <ref name="_spectrum" />
+        end="512"
+        used="no"
+        draw="colors">
+        <ref name="spectrum" />
     </filter>
     <filter name="fingerprint"
         type="Memory"
-        depth="8"
-        chunks="32">
+        depth="5"
+        chunks="16"
+        used="yes"
+        draw="colors">
         <ref name="specreduced" />
     </filter>
 </pipeline>
