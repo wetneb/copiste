@@ -36,6 +36,15 @@ bool CompareFilter::loadProfile(string filename)
             boost::archive::text_iarchive ar(ifs);
             ar & mPatterns;
             status = true;
+
+            mEnergy.resize(mPatterns.size1());
+            for(unsigned int i = 0; i < mPatterns.size1(); i++)
+            {
+                int sum = 0;
+                for(unsigned int j = 0; j < mPatterns.size2(); j++)
+                    sum += mPatterns(i,j) * mPatterns(i,j);
+                mEnergy[i] = std::max(sum,1);
+            }
         }
         catch(boost::archive::archive_exception ex)
         {
@@ -61,10 +70,11 @@ void CompareFilter::transform(vector<float> data)
             float sum = 0;
             for(unsigned int j = 0; j < mPatterns.size2(); j++)
             {
-                tmp = (mPatterns(i,j) - (data[j] - min)*255.0/(max - min));
+                float in = (data[j] - min)*255.0/(max - min);
+                tmp = (mPatterns(i,j) - in);
                 sum += (tmp * tmp);
             }
-            mResult[i] = sum / mPatterns.size2();
+            mResult[i] = sum / mEnergy[i];
         }
     }
 }
@@ -73,7 +83,7 @@ float CompareFilter::value(int idx)
 {
     float res = 0;
     if(idx >= 0 && idx < (int)mResult.size())
-        res = mResult[idx];
+        res = std::min(mResult[idx], max());
     return res;
 }
 
@@ -98,6 +108,6 @@ float CompareFilter::min()
 
 float CompareFilter::max()
 {
-    return 255*64; // \todo justify this ?
+    return 2; // when it's higher than 2, the samples clearly differ, we don't need more info
 }
 

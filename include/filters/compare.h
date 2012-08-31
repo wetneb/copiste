@@ -58,6 +58,7 @@ class CompareFilter : public Filter
         float max();
     private:
         ublas::matrix<int> mPatterns;
+        vector<int> mEnergy;
         string mFilename;
         vector<float> mResult;        
 };
