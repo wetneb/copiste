@@ -21,7 +21,7 @@
     </filter>
     <filter name="Diff"
         type="Compare"
-        profile="mfp2-mat"
+        profile="mfp4"
         draw="lines"
         used="yes">
         <ref name="fingerprint" />

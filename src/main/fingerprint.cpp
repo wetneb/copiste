@@ -16,7 +16,8 @@
  */
 
 
-#include <program_options.hpp>
+#include <boost/program_options.hpp>
+#include <boost/any.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
@@ -28,32 +29,30 @@ namespace po = boost::program_options;
 
 #include <iostream>
 
-using namespace std; // todo : delete me
-
 #include "core/fingerprinter.h"
 
 /**
  * \brief Main function for fingerprinting an audio file
- * Nothing interesting here : parses arguments.
+ * Nothing interestring here : parses arguments.
  */
 int main(int argc, char **argv)
 {
     po::options_description desc("Usage");
     desc.add_options()
-        ("input-file", "The file. The one.")
-        ("pipeline,p", "The pipeline that should be used (it will be loaded from pipeline/$PIPELINE.xml)")
-        ("matrix", "Save the fingerprint as a matrix rather than as a vector")
+        ("input-files", po::value< std::vector<std::string> >(), "The input files.")
+        ("pipeline,p", po::value< std::string >(), "The pipeline that should be used (it will be loaded from pipeline/$PIPELINE.xml)")
+        ("vector", "Save the fingerprint as a vector rather than as a matrix.")
         ("verbose", "Be verbose.")
         ("help,h", "Display this message");
 
     po::positional_options_description p;
-    p.add("pipeline", 1).add("input-file", 1);
+    p.add("pipeline", 1).add("input-files", -1);
 
         po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).
               options(desc).positional(p).run(), vm);
     po::notify(vm);
-
+    
     if(vm.count("help"))
     {
         std::cout << "Fingerprint extractor.\n\nExample:" << std::endl;
@@ -63,41 +62,47 @@ int main(int argc, char **argv)
     }
 
     Fingerprinter cl(vm.count("verbose"));
-    
-    if(vm.count("input-file"))
+
+    if(vm.count("input-files") && vm.count("pipeline"))
     {
-        string pipeline = "pipeline/" + (vm["pipeline"].as< string >()) + ".xml";
+        std::string pipeline = "pipeline/" + (vm["pipeline"].as< std::string >()) + ".xml";
 
         if(cl.setupPipeline(pipeline))
         {
-            cout << "Starting…" << endl;
-            cl.compute(vm["input-file"].as< string >());
+            std::vector< std::string > inputFiles = vm["input-files"].as< std::vector<std::string> >();
 
-            if(vm.count("verbose") == 0)
-                cout << "\e[F\e[K";
-            ublas::vector<int> fgp = cl.getFingerprint();
-
+            ublas::matrix<int> mat(cl.realDimension(), inputFiles.size());
             boost::archive::text_oarchive ar(std::cout);
-            if(vm.count("matrix") != 0)
-            {
-                ublas::matrix<int> mat(fgp.size(), 1);
-                ublas::matrix_column<ublas::matrix<int> > mr(mat, 0);
-                mr = fgp;
 
-                mat = ublas::trans(mat);
-                ar & mat;
+            for(unsigned int i = 0; i < inputFiles.size(); i++)
+            {
+                cl.compute(inputFiles[i]);
+
+                ublas::vector<int> fgp = cl.getFingerprint();
+
+                if(vm.count("vector") == 0)
+                {
+                    ublas::matrix_column<ublas::matrix<int> > mr(mat, i);
+                    mr = fgp;
+                }
+                else
+                {
+                    ar & fgp;
+                    std::cout << std::endl;
+                }
             }
-            else
-                ar & fgp;
-            std::cout << std::endl;
+
+            mat = ublas::trans(mat);
+            ar & mat;
         }
         else
             cout << "Failed to load the pipeline." << endl;
     }
     else
     {
-        cout << "No input file has been set. Use --help for more info."<<endl;
+        cout << "No input file or no pipeline has been set. Use --help for more info."<<endl;
     }
 
     return 0;
 }
+

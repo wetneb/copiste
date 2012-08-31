@@ -98,6 +98,6 @@ float CompareFilter::min()
 
 float CompareFilter::max()
 {
-    return 255*255;
+    return 255*64; // \todo justify this ?
 }
 
