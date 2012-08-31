@@ -52,16 +52,20 @@ void CompareFilter::transform(vector<float> data)
         std::cerr << "Warning, profile and stream sizes don't match : " << mPatterns.size2() << " vs " << data.size() << " (CompareFilter)" << std::endl;
     
     mResult.resize(mPatterns.size1());
-    float tmp = 0;
-    for(unsigned int i = 0; i < mPatterns.size1(); i++)
+    float min = mExtr->min(), max = mExtr->max();
+    if(max - min > 0)
     {
-        float sum = 0;
-        for(unsigned int j = 0; j < mPatterns.size2(); j++)
+        float tmp = 0;
+        for(unsigned int i = 0; i < mPatterns.size1(); i++)
         {
-            tmp = (mPatterns(i,j) - data[j]);
-            sum += (tmp * tmp);
+            float sum = 0;
+            for(unsigned int j = 0; j < mPatterns.size2(); j++)
+            {
+                tmp = (mPatterns(i,j) - (data[j] - min)*255.0/(max - min));
+                sum += (tmp * tmp);
+            }
+            mResult[i] = sum / mPatterns.size2();
         }
-        mResult[i] = sum / mPatterns.size2();
     }
 }
 
@@ -94,6 +98,6 @@ float CompareFilter::min()
 
 float CompareFilter::max()
 {
-    return (mExtr ? (mExtr->max() - mExtr->min()) * (mExtr->max() - mExtr->min()) : 1);
+    return 255*255;
 }
 

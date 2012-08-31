@@ -51,12 +51,13 @@ void DistanceFilter::transform(vector<float> data)
     if(data.size() != mPattern.size())
         std::cerr << "Warning, profile and stream sizes don't match : " << mPattern.size() << " vs " << data.size() << " (DistanceFilter)" << std::endl;
     else
-    { 
-        mResult.resize(mPattern.size());
-        for(unsigned int i = 0; i < mPattern.size(); i++)
-        {
-            mResult[i] = abs(mPattern(i) - data[i]);
-        }
+    {
+       float min = mExtr->min(), max = mExtr->max(); 
+       mResult.resize(mPattern.size());
+       for(unsigned int i = 0; i < mPattern.size(); i++)
+       {
+           mResult[i] = abs(mPattern(i) - (data[i] - min)*255.0/(max - min));
+       }
     }
 }
 
@@ -89,6 +90,6 @@ float DistanceFilter::min()
 
 float DistanceFilter::max()
 {
-    return (mExtr ? (mExtr->max() - mExtr->min()) : 1);
+    return 255;
 }
 

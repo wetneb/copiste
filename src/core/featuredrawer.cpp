@@ -90,7 +90,7 @@ void FeatureDrawer::draw(string filename, bool live)
     // Draw the features
     offset = 0;
     int nbChunks = realDimension() + (mDrawSpectrum ? 1 : 0);
-    double chunk = (mOut.height() - bottom - top) / nbChunks;
+    double chunk = ((nbChunks > 0) ? ((mOut.height() - bottom - top) / nbChunks) : 0);
     for(unsigned int f = 0; f < nbFeatures(); f++)
     {
         if(isUsed(f))

@@ -15,15 +15,15 @@
         type="Memory"
         depth="5"
         chunks="16"
-        used="yes"
+        used="no"
         draw="colors">
         <ref name="specreduced" />
     </filter>
     <filter name="Diff"
-        type="Distance"
-        profile="mfp2"
-        draw="colors"
-        used="no">
+        type="Compare"
+        profile="mfp2-mat"
+        draw="lines"
+        used="yes">
         <ref name="fingerprint" />
     </filter>  
 </pipeline>
