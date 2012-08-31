@@ -100,11 +100,24 @@ env.Moc('include/gui/view2D.h')
 env.Moc('include/gui/editor.h')
 
 
-env.Program('nnat', nnat_files)
-env.Program('mkcorpus', mkcorpus_files)
-env.Program('featdraw', featdraw_files)
-env.Program('specdraw', specdraw_files)
-env.Program('classify', classify_files)
-env.Program('live', live_files)
-env.Program('fingerprint', fingerprint_files)
+nnatProg = env.Program('nnat', nnat_files)
+mkcorpusProg = env.Program('mkcorpus', mkcorpus_files)
+featdrawProg = env.Program('featdraw', featdraw_files)
+specdrawProg = env.Program('specdraw', specdraw_files)
+classifyProg = env.Program('classify', classify_files)
+liveProg = env.Program('live', live_files)
+fingerprintProg = env.Program('fingerprint', fingerprint_files)
 
+Default(nnatProg)
+Default(mkcorpusProg)
+Default(featdrawProg)
+Default(specdrawProg)
+Default(classifyProg)
+Default(liveProg)
+Default(fingerprintProg)
+
+otherInstallFiles = Dir('pipeline')
+
+env.Install('/tmp', [nnatProg, mkcorpusProg, pipeline])
+env.Alias('install', '/tmp')
+# TBC with http://scons.org/doc/HTML/scons-user/
