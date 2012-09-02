@@ -1,0 +1,92 @@
+<pipeline>
+	<!-- Spectrum and flux -->
+	<feature type="Spectrum"
+		 name="Spectrum"
+		 used="no" />
+	<filter type="Flux"
+		name="_flux"
+		used="no">
+		<ref name="Spectrum" />
+	</filter>
+	<filter type="Range"
+		name="Spectrum flux"
+		start="0"
+		end="2048"
+		used="no">
+		<ref name="_flux" />
+	</filter>
+	<filter type="Range"
+		name="Band 0 - 128"
+		start="0"
+		end="128">
+		<ref name="Spectrum" />
+	</filter>
+	<filter type="Range"
+		name="Band 128 - 256"
+		start="128"
+		end="256">
+		<ref name="Spectrum" />
+	</filter>
+	<filter type="Range"
+		name="Band 256 - 384"
+		start="256"
+		end="384">
+		<ref name="Spectrum" />
+	</filter>
+
+	<filter type="Range"
+		name="Band 384 - 512"
+		start="384"
+		end="512">
+		<ref name="Spectrum" />
+	</filter>
+	<filter type="Range"
+		name="Band 512 - 640"
+		start="512"
+		end="640" >
+		<ref name="Spectrum" />
+	</filter>
+	<filter type="Range"
+		name="Band 640 - 768"
+		start="640"
+		end="768" >
+		<ref name="Spectrum" />
+	</filter>
+	 <filter type="Range"
+		name="Band 768 - 896"
+		start="768"
+		end="896" >
+		<ref name="Spectrum" />
+	</filter>
+  
+	<!-- Frequencies bands -->
+
+	<filter type="Average"
+		name="Spectrum flux"
+		size="100">
+		<ref name="Spectrum flux" />
+	</filter>
+
+	<!-- HZCRR / LSTER -->
+	<feature name="HZCRR"
+		type="HZCRR"
+		bound="2.0"
+		chunksNumber="80"
+		used="no" />
+	<feature name="LSTER"
+		type="LSTER"
+		bound="0.45"
+		size="100"
+		used="no" />
+	<filter name="Average HZCRR"
+		type="Average"
+		size="100">
+		<ref name="HZCRR" />
+	</filter>
+	<filter name="Average LSTER"
+		type="Average"
+		size="100">
+		<ref name="LSTER" />
+	</filter>
+
+</pipeline>

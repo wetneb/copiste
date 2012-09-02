@@ -1,0 +1,43 @@
+<pipeline>
+	<feature type="Spectrum"
+		 name="_spectrum"
+		 used="no" />
+	<filter type="Flux"
+		name="_flux"
+		used="no">
+		<ref name="_spectrum" />
+	</filter>
+	<filter type="Range"
+		name="_flux_r"
+		start="0"
+		end="2048"
+		used="no">
+		<ref name="_flux" />
+	</filter>
+	<filter type="Average"
+		name="Spectrum flux"
+		size="100">
+		<ref name="_flux_r" />
+	</filter>
+	<feature name="HZCRR"
+		type="HZCRR"
+		bound="2.0"
+		chunksNumber="80"
+		used="no" />
+	<feature name="LSTER"
+		type="LSTER"
+		bound="0.45"
+		size="100"
+		used="no" />
+	<filter name="Average HZCRR"
+		type="Average"
+		size="50">
+		<ref name="HZCRR" />
+	</filter>
+	<filter name="Average LSTER"
+		type="Average"
+		size="50">
+		<ref name="LSTER" />
+	</filter>
+
+</pipeline>

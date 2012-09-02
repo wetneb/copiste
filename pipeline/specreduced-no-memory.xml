@@ -1,0 +1,58 @@
+<pipeline overlapping="0.5">
+	<feature type="Spectrum"
+		 name="_spectrum"
+		 used="no" />
+
+	<!-- Bands -->
+	<filter type="Range"
+		name="_0_128"
+		start="0"
+		end="128">
+		<ref name="_spectrum" />
+	</filter>
+	<filter type="Range"
+		name="_128_256"
+		start="128"
+		end="256">
+		<ref name="_spectrum" />
+	</filter>
+	<filter type="Range"
+		name="_256_384"
+		start="256"
+		end="384">
+		<ref name="_spectrum" />
+	</filter>
+
+	<filter type="Range"
+		name="_384_512"
+		start="384"
+		end="512">
+		<ref name="_spectrum" />
+	</filter>
+	<filter type="Range"
+		name="_512_640"
+		start="512"
+		end="640" >
+		<ref name="_spectrum" />
+	</filter>
+	<filter type="Range"
+		name="_640_768"
+		start="640"
+		end="768" >
+		<ref name="_spectrum" />
+	</filter>
+	 <filter type="Range"
+		name="_768_896"
+		start="768"
+		end="896" >
+		<ref name="_spectrum" />
+	</filter>
+    <filter type="Range"
+		name="_896_1024"
+		start="896"
+		end="1024" >
+		<ref name="_spectrum" />
+	</filter>
+    <!-- Memories -->
+    
+</pipeline>

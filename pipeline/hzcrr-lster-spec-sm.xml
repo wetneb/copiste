@@ -1,0 +1,16 @@
+<pipeline overlapping="0.5" chunk_size="1024">
+	<feature name="_spectrum"
+		type="Spectrum"
+         used="no" />
+	<feature name="HZCRR"
+		type="HZCRR"
+		bound="2.0"
+		chunksNumber="80"
+		 />
+	<feature name="LSTER"
+		type="LSTER"
+		bound="0.45"
+		size="100"
+		 />
+
+</pipeline>
