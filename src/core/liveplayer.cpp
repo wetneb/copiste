@@ -73,6 +73,5 @@ void LivePlayer::keyReleaseEvent(QKeyEvent *event)
         if(volume() > 0)
             setVolume(std::max(0, volume() - 5));
     }
-
 }
 

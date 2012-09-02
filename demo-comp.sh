@@ -1,5 +1,5 @@
 #!/bin/sh
 
-./live cfp http://tsfjazz.ice.infomaniak.ch:80/tsfjazz-high #tsf/texte-55.mp3 
+./live cfp rtl-inter/dump_court.mp3 
 
 

@@ -118,6 +118,7 @@ Default(fingerprintProg)
 
 otherInstallFiles = Dir('pipeline')
 
-env.Install('/tmp', [nnatProg, mkcorpusProg, pipeline])
+env.Install('/tmp', [nnatProg, mkcorpusProg, otherInstallFiles])
 env.Alias('install', '/tmp')
 # TBC with http://scons.org/doc/HTML/scons-user/
+# the programs have to be designed to be installed (relative paths, aso)
