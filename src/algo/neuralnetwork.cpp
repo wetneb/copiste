@@ -184,7 +184,7 @@ void NeuralNetwork::randomize()
 }
 
 //! Get the output of the network on a given input
-double NeuralNetwork::classify(std::vector<double> input)
+double NeuralNetwork::predict(std::vector<double> input)
 {
     double result = 0;
     if(input.size() == dimension())
@@ -199,6 +199,11 @@ double NeuralNetwork::classify(std::vector<double> input)
     else
 	    std::cerr << "Warning, trying to classify a sample with a wrong dimension." << std::endl;
     return result;
+}
+
+int NeuralNetwork::classify(std::vector<double> input, int lastClass)
+{
+    return classify(input);
 }
 
 //! Get the output of the network on a given set of inputs

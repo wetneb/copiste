@@ -36,7 +36,7 @@ namespace po = boost::program_options;
  * - add the ability to specify only a directory, as in mkcorpus. Maybe with the help of a 'target.xml'-like ?
  * - add the ability to give names to the outputs (right now it only depends on the order of computation…)
  *   it may require to add a "name(i)" field in FeatureExtractor (and so, to delete them from SoundAnalyser)
- * /
+ */
 
 /**
  * \brief Main function for fingerprinting an audio file

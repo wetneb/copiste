@@ -18,7 +18,7 @@
 #ifndef INCLUDEDNEURALNETWORKH
 #define INCLUDEDNEURALNETWORKH
 
-#include <string>
+#include "algo/abstractclassifier.h"
 
 // Math functions
 #include <cmath>
@@ -35,16 +35,12 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
 
-// Temporaire
-#include "corpus.h"
-
-
 using namespace boost::numeric;
 
 double sigmoid(double x);
 
 //! A slightly better neural network
-class NeuralNetwork
+class NeuralNetwork : public AbstractClassifier
 {
     public:
        //! Loads a neural network from a file if specified
@@ -66,12 +62,12 @@ class NeuralNetwork
        //! Train the network on a corpus
        double train(Corpus &c, double rate, double regularization, int nbIter, bool debug = false);
 
-       //! Get the output of the network on a given input
-       double classify(std::vector<double> input);
-
-       //! See how well the network does on a given corpus (between 0, not accurate, and 1, accurate)
+       //! Get the output of the network on a given input. 
+       double predict(std::vector<double> input);
+       //! Implement the method from Classifier (just round the output of classify() )
+       int classify(std::vector<double> input, int lastClass = 0);
+       //! Compute the proportion of well classified samples in the corpus
        double accuracy(Corpus &c);
-
        //! Randomize the weights of the network
        void randomize();
 
