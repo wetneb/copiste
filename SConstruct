@@ -43,6 +43,7 @@ env = Environment(LIBPATH=libpath, CPPPATH = cpppath, LIBS=libs, CPPFLAGS = flag
    })
 neurones_files = [ 'src/algo/corpus.cpp',
      'src/algo/neuralnetwork.cpp',
+     'src/algo/compare.cpp', # TODO : delete me
 ]
 
 sound_analyser_files = [ 'src/core/soundanalyser.cpp',
@@ -63,7 +64,6 @@ filters_files = [ 'src/filters/filter.cpp',
     'src/filters/centroid.cpp',
     'src/filters/highlowratio.cpp',
     'src/filters/memory.cpp',
-    'src/filters/compare.cpp',
     'src/filters/mel.cpp',
     'src/filters/distance.cpp',
                 ]

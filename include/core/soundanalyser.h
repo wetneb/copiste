@@ -48,7 +48,6 @@ class SoundAnalyser;
 #include "filters/highlowratio.h"
 #include "filters/centroid.h"
 #include "filters/memory.h"
-#include "filters/compare.h"
 #include "filters/mel.h"
 #include "filters/distance.h"
 

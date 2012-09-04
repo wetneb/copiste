@@ -270,6 +270,8 @@ void StreamPlayer::setChunkSize(int size)
 
 void StreamPlayer::setVolume(int vol)
 {
+    if(vol % 20 == 0)
+        std::cout << "\nVol set to " << vol << std::endl;
     libvlc_audio_set_volume (mMp,vol);
 }
 

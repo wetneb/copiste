@@ -85,7 +85,7 @@ class NeuralNetwork : public AbstractClassifier
        double gradientDescent(ublas::matrix<double> &ds, ublas::vector<double> &tv, double rate, unsigned int steps);
 
        //! Get the output of the network on a given set of inputs
-       ublas::matrix<double> classify(ublas::matrix<double> input);
+       ublas::matrix<double> classifyMat(ublas::matrix<double> input);
 
         //! Gradient of the cost function
        std::vector< ublas::matrix<double> > gradient(ublas::matrix<double> &ds, ublas::vector<double> &tv, double regularization = 0);

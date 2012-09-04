@@ -192,7 +192,7 @@ double NeuralNetwork::predict(std::vector<double> input)
         ublas::matrix<double> newInput(input.size(),1);
         for(unsigned int i = 0; i < input.size(); i++)
 	        newInput(i,0) = input[i];
-        ublas::matrix<double> activation = classify(newInput);
+        ublas::matrix<double> activation = classifyMat(newInput);
      
         result = activation(0,0);
     }
@@ -203,11 +203,11 @@ double NeuralNetwork::predict(std::vector<double> input)
 
 int NeuralNetwork::classify(std::vector<double> input, int lastClass)
 {
-    return classify(input);
+    return 0;
 }
 
 //! Get the output of the network on a given set of inputs
-ublas::matrix<double> NeuralNetwork::classify(ublas::matrix<double> input)
+ublas::matrix<double> NeuralNetwork::classifyMat(ublas::matrix<double> input)
 {
     std::vector<ublas::matrix<double> > activation(nbLayers() + 1);
     activation[0] = addOne(input);
@@ -222,7 +222,7 @@ ublas::matrix<double> NeuralNetwork::classify(ublas::matrix<double> input)
 double NeuralNetwork::accuracy(Corpus &c)
 {
     ublas::matrix<double> ds = createDataset(c);
-    ublas::matrix<double> response = classify(ds);
+    ublas::matrix<double> response = classifyMat(ds);
     ublas::vector<double> tv = createTargetVector(c);
     int nbCorrect = 0;
     for(unsigned int i = 0; i < c.size(); i++)
@@ -320,7 +320,7 @@ std::vector< ublas::matrix<double> > NeuralNetwork::gradient(ublas::matrix<doubl
 //! Cost function computation
 double NeuralNetwork::costFunction(ublas::matrix<double> &ds, ublas::vector<double> &tv, double regularization)
 {
-    ublas::matrix<double> finalActivations = classify(ds);
+    ublas::matrix<double> finalActivations = classifyMat(ds);
 
     double sum = 0;
     for(unsigned int i = 0; i < finalActivations.size2(); i++)

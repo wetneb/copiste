@@ -16,51 +16,50 @@
  */
 
 
-#ifndef INCLUDED_COMPAREH
-#define INCLUDED_COMPAREH
+#ifndef INCLUDED_FINGERPRINTCOMPAREH
+#define INCLUDED_FINGERPRINTCOMPAREH
 
-#include <filters/filter.h>
+#include "algo/abstractclassifier.h"
 
 #include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
 
 #include <fstream>
+#include <QtXml>
 
 using namespace boost::numeric;
 
+double DEFAULT_PATTERN_COMPARE_THRESHOLD = 0.05;
+
 //! Compares the values of a feature to a set of known patterns
-class CompareFilter : public Filter
+class FingerprintCompare : public AbstractClassifier
 {
     public:
-        CompareFilter();
+        FingerprintCompare();
 
         //! Load a profile of patterns
-        bool loadProfile(string filename);
+        bool fromFile(string filename);
+        //! Save to a file
+        bool toFile(string filename);
 
-        //! Compute the differences
-        void transform(vector<float> data);
+        //! Predict the class of a sample
+        int classify(std::vector<double> input, int lastClass);
 
-        //! Number of results : the number of patterns compared
-        int size() { return mPatterns.size1(); }
-        //! Retrieve the results
-        float value(int idx);
-        
-        //! Overloaded from FeatureExtractor
-        void setString(string key, string value);
-        //! Overloaded from FeatureExtractor
-        string getString(string key);
+        //! Compute the differences. We assume that the data is between 0 and 255 !
+        void transform(vector<double> data);
        
-        //! Get the minimum value outputted
-        float min();
-        //! Get the maximum value outputted
-        float max();
     private:
         ublas::matrix<int> mPatterns;
+        std::vector<int> mTargetClass;
+        double mThreshold;
+
         vector<int> mEnergy;
+        vector<double> mResult;        
+
         string mFilename;
-        vector<float> mResult;        
 };
 
 #endif
