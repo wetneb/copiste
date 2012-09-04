@@ -21,7 +21,7 @@
 FeatureDrawer::FeatureDrawer(bool live) : SoundAnalyser(live),
             mOut(FEATURE_DRAWER_DEFAULT_WIDTH, FEATURE_DRAWER_DEFAULT_HEIGHT, QImage::Format_RGB32),
             mCaption("img/legende.png"),
-            mDrawn(false), mNet(0), mDrawSpectrum(true), mMin(0), mMax(0), mMinMaxSize(0)
+            mDrawn(false), mClassifier(0), mDrawSpectrum(true), mMin(0), mMax(0), mMinMaxSize(0)
 {
     setNormalization(0,1);
 }
@@ -55,7 +55,7 @@ void FeatureDrawer::draw(string filename, bool live)
                         Qt::magenta,
                         Qt::yellow };
     int bottom = 25, top = 25;
-    if(mNet == 0)
+    if(mClassifier == 0)
         top = 0;
 
     // Where should we start plotting ?
@@ -154,13 +154,13 @@ void FeatureDrawer::draw(string filename, bool live)
     }
 
     // Draw the response of the network
-    if(mNet)
+    if(mClassifier)
     {
-        double currentClass = 0;
+        int currentClass = 0;
         int lastChange = 0;
         for(int i = plotStart; i - plotStart < mOut.width() && i - plotStart < (int)nbSamples(); ++i)
         {
-            double response = 0;
+            int response = 0;
             // Create the input vector
             vector<double> inputVector;
             for(unsigned int k = 0; k < nbFeatures(); k++)
@@ -173,7 +173,7 @@ void FeatureDrawer::draw(string filename, bool live)
             }
 
             // Send the input vector to the network
-            response = mNet->classify(inputVector);
+            response = mClassifier->classify(inputVector, currentClass);
 
             // Draw the class
             if((currentClass - 0.5) * (response - 0.5) <= 0 ||
@@ -201,7 +201,7 @@ void FeatureDrawer::draw(string filename, bool live)
     painter.drawText(0, mOut.height() - bottom, mOut.width(), bottom, Qt::AlignCenter, filename.c_str());
 
     // Draw the caption
-    if(mNet != 0)
+    if(mClassifier != 0)
         painter.drawImage(QPoint(mOut.width() - mCaption.width(), mOut.height() - bottom), mCaption);
     offset = 0;
     for(unsigned int f = 0; f < nbFeatures(); f++)
@@ -251,13 +251,13 @@ void FeatureDrawer::writeToDevice(QPaintDevice *device)
     painter.drawImage(0, 0, mOut);
 }
 
-void FeatureDrawer::setNetwork(NeuralNetwork *net)
+void FeatureDrawer::setClassifier(AbstractClassifier *cl)
 {
-    if(net->dimension() == this->realDimension())
-        mNet = net;
+    if(cl->dimension() == this->realDimension())
+        mClassifier = cl;
     else 
-        std::cerr << "Error : the input dimension of the network (" 
-         << net->dimension() << ") and the output dimension of the pipeline ("
+        std::cerr << "Error : the input dimension of the classifier (" 
+         << cl->dimension() << ") and the output dimension of the pipeline ("
          << this->realDimension() << ") differ." << std::endl;
 }
 

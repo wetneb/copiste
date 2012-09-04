@@ -32,7 +32,7 @@
 
 using namespace boost::numeric;
 
-double DEFAULT_PATTERN_COMPARE_THRESHOLD = 0.05;
+const double DEFAULT_PATTERN_COMPARE_THRESHOLD = 0.05;
 
 //! Compares the values of a feature to a set of known patterns
 class FingerprintCompare : public AbstractClassifier
@@ -50,7 +50,10 @@ class FingerprintCompare : public AbstractClassifier
 
         //! Compute the differences. We assume that the data is between 0 and 255 !
         void transform(vector<double> data);
-       
+
+        //! Number of input features
+        unsigned int dimension() { return mPatterns.size2(); }
+
     private:
         ublas::matrix<int> mPatterns;
         std::vector<int> mTargetClass;

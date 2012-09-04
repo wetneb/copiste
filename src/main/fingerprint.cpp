@@ -89,8 +89,8 @@ int main(int argc, char **argv)
 
                 if(vm.count("vector") == 0)
                 {
-                    ublas::matrix_column<ublas::matrix<int> > mr(mat, i);
-                    mr = fgp;
+                    ublas::matrix_column<ublas::matrix<int> > mi(mat, i);
+                    mi = fgp;
                 }
                 else
                 {

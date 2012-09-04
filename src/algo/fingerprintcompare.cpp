@@ -15,7 +15,7 @@
  *  along with Copiste.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "algo/compare.h"
+#include "algo/fingerprintcompare.h"
 
 FingerprintCompare::FingerprintCompare() 
 {

@@ -34,6 +34,9 @@ class AbstractClassifier
 
         //! Predict the class of an input vector. The last classification may not be used for the computation.
         virtual int classify(std::vector<double> input, int lastClass) = 0;
+
+        //! Returns the number of input features
+        virtual unsigned int dimension() = 0;
 };
 
 #endif

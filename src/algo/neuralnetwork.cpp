@@ -203,7 +203,7 @@ double NeuralNetwork::predict(std::vector<double> input)
 
 int NeuralNetwork::classify(std::vector<double> input, int lastClass)
 {
-    return 0;
+    return round(predict(input));
 }
 
 //! Get the output of the network on a given set of inputs

@@ -22,6 +22,7 @@
 
 #include "core/liveplayer.h"
 #include "algo/neuralnetwork.h"
+#include "algo/fingerprintcompare.h"
 
 namespace po = boost::program_options;
 
@@ -37,7 +38,10 @@ int main(int argc, char **argv)
     desc.add_options()
         ("input-file", "The URI of the stream (i.e. something like http://server.org/mystream.ogg, or file:///home/rick/hit.ogg)")
         ("pipeline,p", "The pipeline that should be used (it will be loaded from pipeline/$PIPELINE.xml)")
-        ("network,n", po::value<string>(), "A network used for classification (optionnal) (it will be loaded from networks/$NETWORK)")
+        ("network,n", po::value<string>(), "A network used for classification (optionnal) "
+                                           "(it will be loaded from networks/$NETWORK)")
+        ("fingerprint,f", po::value<string>(), "A fingerprint classifier (optionnal) "
+                                               "(it will be loaded from fingerprints/$FINGERPRINT)")
         ("help,h", "Display this message");
 
     po::positional_options_description p;
@@ -60,6 +64,7 @@ int main(int argc, char **argv)
     {
         LivePlayer lp;
         NeuralNetwork net;
+        FingerprintCompare fpc;
         
         string pipeline = "pipeline/" + (vm["pipeline"].as< string >())+ ".xml";
         if(lp.setupPipeline(pipeline))
@@ -68,11 +73,20 @@ int main(int argc, char **argv)
 
             if(vm.count("network"))
             {
+                if(vm.count("fingerprint"))
+                    cout << "Warning : Networks and fingerprints aren't compatible, using only the neural network." << endl;
+
                 string network = "networks/" + (vm["network"].as< string >());
                 if(net.fromFile(network))
-                    lp.setNetwork(&net);
+                    lp.setClassifier(&net);
                 else
                     cout << "Warning : Unable to load the network, disabling classification." << endl;
+            }
+            else if(vm.count("fingerprint"))
+            {
+                string fingerprint = "fingerprints/" + (vm["fingerprint"].as< string >());
+                if(fpc.fromFile(fingerprint))
+                    lp.setClassifier(&fpc);
             }
 
             lp.show();

@@ -28,7 +28,7 @@
 #include <QTime> // delete me \todo
 
 #include "core/soundanalyser.h"
-#include "algo/neuralnetwork.h"
+#include "algo/abstractclassifier.h"
 
 const int FEATURE_DRAWER_DEFAULT_WIDTH = 1600;
 const int FEATURE_DRAWER_DEFAULT_HEIGHT = 600;
@@ -46,11 +46,11 @@ class FeatureDrawer : public SoundAnalyser
         //! Destructor
         ~FeatureDrawer();
 
-        //! Set if the spectrum should be drawn
+        //! Set whether the spectrum should be drawn or not
         void drawSpectrum(bool draw = true);
 
         //! Set a network that can be used to classify the samples
-        virtual void setNetwork(NeuralNetwork *net);
+        virtual void setClassifier(AbstractClassifier *net);
 
         //! Changes the size of the output. Redraws if needed.
         void setImageSize(int width, int height);
@@ -68,7 +68,7 @@ class FeatureDrawer : public SoundAnalyser
         QImage mOut;
         QImage mCaption;
         bool mDrawn;
-        NeuralNetwork *mNet;
+        AbstractClassifier *mClassifier;
         bool mDrawSpectrum;
 
         double* mMin;

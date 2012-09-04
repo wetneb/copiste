@@ -28,7 +28,7 @@ namespace po = boost::program_options;
 #include <string>
 
 #include "core/featuredrawer.h"
-
+#include "algo/neuralnetwork.h"
 
 using namespace std;
 
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
         {
             string network = "networks/" + (vm["network"].as< string >()) + ".xml";
             if(net.fromFile(network))
-                fd.setNetwork(&net);
+                fd.setClassifier(&net);
             else
                 cout << "Warning : Unable to load the network, disabling classification." << endl;
         }
