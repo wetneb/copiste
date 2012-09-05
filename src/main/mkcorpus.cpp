@@ -58,6 +58,7 @@ int main(int argc, char **argv)
         ("output-file,o", po::value<string>()->default_value("corpus/output.xml"), "The file where the XML corpus will be written.")
         ("element-length,l", po::value<int>()->default_value(0), "The length (in seconds) of each element which will be written in the corpus (0 : the whole file)")
         ("computing-offset", po::value<int>()->default_value(0), "The time (in seconds) that should be considered as the starting point of the computation (to remove the first values). The same offset is applied at the end of the file.")
+        ("fp-mode,f", "Turn on fingerprint mode : just keep the last feature vector and store the values as integers")
         ("help,h", "Display this message");
 
     po::positional_options_description p;
@@ -79,6 +80,7 @@ int main(int argc, char **argv)
     CorpusBuilder cb;
     cb.setElementLength(vm["element-length"].as< int >());
     cb.setComputingOffset(vm["computing-offset"].as< int >());
+    cb.setFingerprintMode(vm.count("fp-mode") > 0);
 
     if(vm.count("input-file"))
     {

@@ -38,9 +38,10 @@ class CorpusBuilder : private SoundAnalyser
 
         //! Set what length (in seconds) should be used as training element length (0 : use the whole files)
         void setElementLength(int sec) { mElemLength = sec; }
-
         //! Set computing offset (the time at the beginning of each file we should forget)
         void setComputingOffset(int sec) { mCompOffset = sec; }
+        //! Set whether the output has to be a fingerprint or an average of the features
+        void setFingerprintMode(bool fpMode) { mFpMode = fpMode; }
 
         //! Set up from an XML file
         bool setup(string fileName);
@@ -67,6 +68,7 @@ class CorpusBuilder : private SoundAnalyser
         bool mVerbose;
         int mElemLength;
         int mCompOffset;
+        bool mFpMode;
 };
 
 #endif

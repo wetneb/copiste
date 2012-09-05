@@ -23,7 +23,8 @@ CorpusBuilder::CorpusBuilder() : mBasePath("."),
                                 mCurrentFile(-1),
                                 mVerbose(false),
                                 mElemLength(0),
-                                mCompOffset(0)
+                                mCompOffset(0),
+                                mFpMode(false)
 {
     ;
 }
@@ -150,49 +151,75 @@ void CorpusBuilder::compute()
             ((SoundAnalyser*)this)->compute(mFiles[mCurrentFile]);
             waitComputed();
 
+
+            /** \todo
+             * Redesign this part !
+             * Clearly the temporal average over all features could be done in filter-space, as fingerprinting is done
+             * Should I rather put the fingerprinting code here ?
+             */
+
             // Save the features
-            const int startingPoint = mCompOffset * samplingFrequency() / chunkSize();
-            const int length = ((mElemLength == 0) ?
-                                     (nbSamples() - startingPoint - 1)
-                                   : (mElemLength * samplingFrequency() / chunkSize()));
 
-            double *mCurrentResults = 0;
-            for(unsigned int k = startingPoint; k < nbSamples() - startingPoint; k++) // Loop through samples
+            if(mFpMode) // just save the last feature vector
             {
-                if(((k - startingPoint) % length) == 0 // If we reached the end of a sequence
-                                    || k == nbSamples() - 1) // or if we reached the end of the file
-                {
-                    // Save the old one (if any)
-                    if(mCurrentResults != 0)
-                    {
-                        // Just compute the average of the features
-                        for(unsigned int i = 0; i < realDimension(); ++i)
-                            mCurrentResults[i] /= length;
-                    }
-
-                    // Create a new one (if any)
-                    if(nbSamples() - k >= (unsigned int)length) // new segment
-                    {
-                        mNbElems[mCurrentFile]++;
-
-                        // Create a new array to store the features
-                        mCurrentResults = new double[realDimension()];
-                        mResults.push_back(mCurrentResults);
-
-                        // Init the array
-                        for(unsigned int i = 0; i < realDimension(); ++i)
-                            mCurrentResults[i] = 0;
-                    }
-                }
-
+                double* fpvec = new double[realDimension()];
                 int saved = 0;
-                for(unsigned int i = 0; i < nbFeatures(); i++) // Loop through features
+                for(unsigned int i = 0; i < nbFeatures(); i++)
                 {
                     if(isUsed(i))
                     {
-                        for(unsigned int j = 0; j < nbElems(i); j++) // Loop through the elements of the feature
-                            mCurrentResults[saved + j] += features(k)[i][j];
+                        for(unsigned int j = 0; j < nbElems(i); j++)
+                            fpvec[saved + j] = round(features(nbSamples() - 1)[i][j]);
                         saved += nbElems(i);
+                    }
+                }
+                mResults.push_back(fpvec);
+            }
+            else // regular mode
+            {
+                const int startingPoint = mCompOffset * samplingFrequency() / chunkSize();
+                const int length = ((mElemLength == 0) ?
+                                         (nbSamples() - startingPoint - 1)
+                                       : (mElemLength * samplingFrequency() / chunkSize()));
+
+                double *mCurrentResults = 0;
+                for(unsigned int k = startingPoint; k < nbSamples() - startingPoint; k++) // Loop through samples
+                {
+                    if(((k - startingPoint) % length) == 0 // If we reached the end of a sequence
+                                        || k == nbSamples() - 1) // or if we reached the end of the file
+                    {
+                        // Save the old one (if any)
+                        if(mCurrentResults != 0)
+                        {
+                            // Just compute the average of the features
+                            for(unsigned int i = 0; i < realDimension(); ++i)
+                                mCurrentResults[i] /= length;
+                        }
+
+                        // Create a new one (if any)
+                        if(nbSamples() - k >= (unsigned int)length) // new segment
+                        {
+                            mNbElems[mCurrentFile]++;
+
+                            // Create a new array to store the features
+                            mCurrentResults = new double[realDimension()];
+                            mResults.push_back(mCurrentResults);
+
+                            // Init the array
+                            for(unsigned int i = 0; i < realDimension(); ++i)
+                                mCurrentResults[i] = 0;
+                        }
+                    }
+
+                    int saved = 0;
+                    for(unsigned int i = 0; i < nbFeatures(); i++) // Loop through features
+                    {
+                        if(isUsed(i))
+                        {
+                            for(unsigned int j = 0; j < nbElems(i); j++) // Loop through the elements of the feature
+                                mCurrentResults[saved + j] += features(k)[i][j];
+                            saved += nbElems(i);
+                        }
                     }
                 }
             }
