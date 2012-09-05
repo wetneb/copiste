@@ -30,13 +30,7 @@ namespace po = boost::program_options;
 #include <iostream>
 
 #include "core/fingerprinter.h"
-
-/*
- * TODO :
- * - add the ability to specify only a directory, as in mkcorpus. Maybe with the help of a 'target.xml'-like ?
- * - add the ability to give names to the outputs (right now it only depends on the order of computation…)
- *   it may require to add a "name(i)" field in FeatureExtractor (and so, to delete them from SoundAnalyser)
- */
+#include "algo/fingerprintcompare.h"
 
 /**
  * \brief Main function for fingerprinting an audio file
@@ -68,10 +62,10 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    Fingerprinter cl(vm.count("verbose"));
-
     if(vm.count("input-files") && vm.count("pipeline"))
     {
+        Fingerprinter cl(vm.count("verbose"));
+
         std::string pipeline = "pipeline/" + (vm["pipeline"].as< std::string >()) + ".xml";
 
         if(cl.setupPipeline(pipeline))

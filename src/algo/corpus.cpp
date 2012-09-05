@@ -20,15 +20,12 @@
 
 Corpus::Corpus(std::string file)
 {
-    mPool = 0;
-    mDimension = 0;
-    mSize = 0;
-    mPoolSize = 0;
-
     if(file.size())
         load(file);
 }
 
+//! \todo remove this dead code
+/*
 Corpus::Corpus(const Corpus &c, unsigned int keepOnly)
 {
     mDimension = std::min(c.dimension(), keepOnly);
@@ -39,16 +36,14 @@ Corpus::Corpus(const Corpus &c, unsigned int keepOnly)
     {
         mPool[i] = new double[mDimension+1];
         for(int j = 0; j < mDimension+1; j++)
-            mPool[i][j] = c.elem(i)[j];
+            mSamples(i, j] = c.elem(i)[j);
     }
 }
+*/
 
 Corpus::Corpus(int dim)
 {
-    mPool = 0;
-    mDimension = dim;
-    mSize = 0;
-    mPoolSize = 0;
+    mSamples.resize(dim, 0);
 }
 
 Corpus::~Corpus()
@@ -77,36 +72,34 @@ bool Corpus::load(std::string filename, bool verbose)
     // Read the contents
     QDomNode node = doc.documentElement();
 
-    if(node.toElement().tagName() == "corpus")
+    if(node.toElement().tagName() == "corpus" && node.toElement().attribute("version", "1") == "1")
     {
-        mDimension = node.toElement().attribute("dimension", "1").toInt();
-        mSize = node.childNodes().size();
+        int dimension = node.toElement().attribute("dimension", "1").toInt();
+        int size = node.childNodes().size();
 
-        mPool = new double*[mSize]; // deleted in erase()
-        mNames.resize(mSize);
-        mPoolSize = mSize;
-
+        mSamples.resize(dimension, size);
+        mTargetClass.resize(size);
+        mNames.resize(size);
+        
         node = node.firstChild();
-        while(!node.isNull() && nbPointsSet < mSize)
+        while(!node.isNull())
         {
             QDomElement elem = node.toElement();
-
             if(elem.tagName() == "point")
             {
-                mPool[nbPointsSet] = new double[mDimension+1]; // deleted in erase()
-                mPool[nbPointsSet][0] = node.toElement().attribute("goal", "1").toFloat();
-
+                int tgcl = node.toElement().attribute("goal", "1").toInt();
                 // in an earlier version, the negative samples were labelled with -1 instead of 0
-                if(mPool[nbPointsSet][0] < 0)
-                    mPool[nbPointsSet][0] = 0;
+                if(tgcl < 0)
+                    tgcl = 0;
+                mTargetClass[nbPointsSet] = tgcl;
 
                 mNames[nbPointsSet] = node.toElement().attribute("name", "").toStdString();
 
                 nbCoordsSet = 0;
                 QDomNode pointNode = node.firstChild();
-                while(!pointNode.isNull() && nbCoordsSet < mDimension && pointNode.toElement().tagName() == "coord")
+                while(!pointNode.isNull() && nbCoordsSet < dimension && pointNode.toElement().tagName() == "coord")
                 {
-                    mPool[nbPointsSet][nbCoordsSet+1] = pointNode.toElement().attribute("value", "1").toFloat();
+                    mSamples(nbCoordsSet, nbPointsSet) = pointNode.toElement().attribute("value", "1").toFloat();
 
                     nbCoordsSet++;
                     pointNode = pointNode.nextSibling();
@@ -118,91 +111,114 @@ bool Corpus::load(std::string filename, bool verbose)
             node = node.nextSibling();
         }
 
-        mSize = nbPointsSet;
+        // resize down to the actual number of points set
+        mSamples.resize(dimension, nbPointsSet);
+        mTargetClass.resize(nbPointsSet);
+        mNames.resize(nbPointsSet);
 
         if(verbose)
-            std::cout <<"Loaded "<<mSize<< " points." << std::endl;
+            std::cout <<"Loaded "<<nbPointsSet<< " points." << std::endl;
+    }
+    else if(node.toElement().tagName() == "corpus" && node.toElement().attribute("version", "1") == "2")
+    {
+        QDomElement rootElem = node.toElement();
+
+        int size = rootElem.childNodes().length();
+        int dimension = rootElem.attribute("features", "0").toInt();
+        mSamples.resize(size, dimension);
+        mTargetClass.resize(size);
+        mNames.resize(size);
+
+        QDomNode currNode = rootElem.firstChild();
+      
+        int nbPointsSet = 0;
+        while(!currNode.isNull())
+        {
+            QDomElement elem = currNode.toElement();
+            if(elem.tagName() != "point")
+            {
+                std::cerr << filename << " : Ignored markup <"
+                    << elem.tagName().toStdString() << ">." << std::endl;
+            }
+            else
+            {
+                mTargetClass[nbPointsSet] = elem.attribute("class", "0").toInt();
+                mNames[nbPointsSet] = node.toElement().attribute("name", "").toStdString();
+                std::istringstream stream(elem.text().toStdString());
+                try
+                {
+                    ublas::vector<double> fp;
+                    boost::archive::text_iarchive ar(stream);
+                    ar & fp;
+                    ublas::matrix_column<ublas::matrix<double> > mc(mSamples, nbPointsSet);
+                    mc = fp;
+                }
+                catch(boost::archive::archive_exception ex)
+                {
+                    std::cerr << filename << " : Error, invalid fingerprint : " << ex.what() << std::endl;
+                    return false;
+                }
+
+                nbPointsSet++;
+            }
+        }
+
+        // Reduce the size of the arrays (some fingerprints may be invalid)
+        mSamples.resize(nbPointsSet, dimension);
+        mTargetClass.resize(nbPointsSet);
     }
     else
     {
-        std::cout << "Invalid document : expecting <corpus> markup." << std::endl;
+        std::cerr << filename << " : Invalid document : expecting <corpus> markup." << std::endl;
         return false;
     }
 
     return true;
 }
 
-void Corpus::write(std::string fileName)
+void Corpus::write(std::string filename)
 {
-    if(fileName == "")
-        return;
-
-    // Open the file
-    QFile file(fileName.c_str());
+    QFile file(filename.c_str());
     if(!file.open(QFile::WriteOnly))
-        return;
+        std::cerr << filename << " : Unable to open the file." << std::endl;
 
-    // Create the document
     QDomDocument doc;
+    
     QDomElement rootNode = doc.createElement("corpus");
-    rootNode.setAttribute("dimension", mDimension);
-    //rootNode.appendChild(attr);
+    rootNode.setAttribute("dimension", dimension());
 
-    for(int iPoint = 0; iPoint < mSize; ++iPoint)
+    for(unsigned int i = 0; i < size(); i++)
     {
-        QDomElement pointNode = doc.createElement("point");
+        QDomElement fpNode = doc.createElement("point");
 
-        pointNode.setAttribute("goal", mPool[iPoint][0]);
-        pointNode.setAttribute("name", mNames[iPoint].c_str());
-
-        for(int iCoord = 0; iCoord < mDimension; ++iCoord)
-        {
-            QDomElement coordNode = doc.createElement("coord");
-
-            coordNode.setAttribute("value", mPool[iPoint][iCoord+1]);
-
-            pointNode.appendChild(coordNode);
-        }
-
-        rootNode.appendChild(pointNode);
+        fpNode.setAttribute("class", mTargetClass[i]);
+        fpNode.setAttribute("name", mNames[i].c_str());
+        ublas::vector<double> vec = point(i);
+        std::ostringstream stream;
+        boost::archive::text_oarchive ar(stream);
+        ar & vec;        
+        fpNode.appendChild(doc.createTextNode(stream.str().c_str()));
+        
+        rootNode.appendChild(fpNode);
     }
+
     doc.appendChild(rootNode);
 
-    // Write the file
+    // 4 is the indentation
     file.write(doc.toString(4).toAscii());
     file.close();
 }
 
-//! \todo remove this, unused
-/*
-int* randomPermutation(int n)
-{
-    int* result = new int[n];
-    for(int i = 0; i < n; ++i)
-        result[i] = -1;
-
-    int remaining = n, currentIndex = 0;
-    while(remaining)
-    {
-        currentIndex = rand() % n;
-        while(result[currentIndex] != -1)
-            currentIndex = (currentIndex+1) % n;
-
-        result[currentIndex] = --remaining;
-    }
-    return result;
-}
-*/
-
 void Corpus::display() const
 {
-    for(int i = 0; i != mSize; ++i)
+    for(unsigned int i = 0; i != size(); ++i)
     {
-        std::cout << "[" << i << "] : ";
+        std::cout << "[" << i << "] : |";
+        std::cout << mTargetClass[i] << "| ";
 
-        for(int j = 0; j < mDimension+1; ++j)
+        for(unsigned int j = 0; j < dimension(); ++j)
         {
-            std::cout << mPool[i][j] << "  ";
+            std::cout << mSamples(j, i) << "  ";
         }
         std::cout << std::endl;
     }
@@ -210,15 +226,15 @@ void Corpus::display() const
 
 std::vector<double> Corpus::bounds() const
 {
-    std::vector<double> result(mDimension*2,0);
+    std::vector<double> result(dimension()*2,0);
 
-    for(int i = 0; i != mSize; ++i)
-        for(int j = 0; j != mDimension; ++j)
+    for(unsigned int i = 0; i != dimension(); ++i)
+        for(unsigned int j = 0; j != size(); ++j)
         {
-            if(i == 0 || mPool[i][j+1] < result[2*j])
-                result[2*j] = mPool[i][j+1];
-            if(i == 0 || mPool[i][j+1] > result[2*j +1])
-                result[2*j +1] = mPool[i][j+1];
+            if(i == 0 || mSamples(i, j) < result[2*i])
+                result[2*i] = mSamples(i, j);
+            if(i == 0 || mSamples(i, j) > result[2*i +1])
+                result[2*i +1] = mSamples(i, j);
         }
 
     return result;
@@ -226,52 +242,66 @@ std::vector<double> Corpus::bounds() const
 
 void Corpus::erase(int dimension)
 {
-    if(mPool)
-    {
-        for(int i = 0; i != mSize; ++i)
-            delete [] mPool[i];
-        delete [] mPool;
-        mPool = 0;
-        mPoolSize = 0;
-    }
-    mSize = 0;
-    mDimension = dimension;
+    mSamples.resize(dimension, 0);
+    mTargetClass.clear();
+    mNames.clear();
 }
 
 unsigned int Corpus::size() const
 {
-    return mSize;
+    return mSamples.size2();
 }
 
 unsigned int Corpus::dimension() const
 {
-    return mDimension;
+    return mSamples.size1();
 }
 
+// DEPRECATED
 void Corpus::addElem(double* elem, std::string name)
 {
-    if(mSize >= mPoolSize)
-    {
-        if(mPoolSize > 0)
-        {
-            mPoolSize *= 2;
-            double** newPool = new double*[mPoolSize];
-            for(int i = 0; i < mPoolSize/2; ++i)
-                newPool[i] = mPool[i];
-            delete [] mPool;
-            mPool = newPool;
-        }
-        else
-        {
-            mPoolSize = 1;
-            mPool = new double*[mPoolSize];
-        }
-    }
-
-    if((int)mNames.size() <= mSize)
-        mNames.push_back(name);
-    else mNames[mSize] = name; // should not occur
-
-    mPool[mSize] = elem;
-    mSize++;
+    ublas::vector<double> vec(dimension());
+    for(unsigned int i = 0; i < dimension(); i++)
+        vec[i] = elem[i+1];
+    addSample(vec, vec[0], name);
 }
+
+void Corpus::addSample(ublas::vector<double> elem, int targetClass, std::string name)
+{
+    mSamples.resize(dimension(), size() + 1);
+    ublas::matrix_column<ublas::matrix<double> > mc(mSamples, size()-1);
+    mc = elem;
+    mTargetClass.push_back(targetClass);
+    mNames.push_back(name);
+}
+
+ublas::matrix<int> Corpus::asFingerprints() 
+{
+    ublas::matrix<int> res(mSamples.size1(), mSamples.size2());
+    ublas::matrix<double>::iterator1 iterSource = mSamples.begin1();
+    ublas::matrix<int>::iterator1 iterDest = res.begin1();
+    while(iterSource != mSamples.end1())
+    {
+        (*iterSource) = *iterDest;
+        iterSource++;
+        iterDest++;
+    }
+    return res;    
+}
+
+ublas::vector<double> Corpus::point(unsigned int idx)
+{
+    ublas::matrix_column< ublas::matrix<double> > mc(mSamples, idx);
+    return mc;
+}
+
+ublas::matrix<double> Corpus::asDataset()
+{
+    return mSamples;
+}
+
+int Corpus::getClass(unsigned int index)
+{
+    return mTargetClass[index];
+}
+

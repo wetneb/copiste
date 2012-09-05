@@ -23,11 +23,10 @@
 
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/vector.hpp>
+#include <boost/numeric/ublas/vector.hpp>
 
 #include <fstream>
+#include <sstream>
 #include <QtXml>
 
 using namespace boost::numeric;
@@ -41,28 +40,31 @@ class FingerprintCompare : public AbstractClassifier
         FingerprintCompare();
 
         //! Load a profile of patterns
-        bool fromFile(string filename);
+        bool fromFile(std::string filename);
         //! Save to a file
-        bool toFile(string filename);
+        bool toFile(std::string filename);
 
         //! Predict the class of a sample
         int classify(std::vector<double> input, int lastClass);
+        //! Add a new fingerprint
+        void addFingerprint(ublas::vector<int> vec, int targetClass);
 
         //! Compute the differences. We assume that the data is between 0 and 255 !
-        void transform(vector<double> data);
+        void transform(std::vector<double> data);
 
         //! Number of input features
         unsigned int dimension() { return mPatterns.size2(); }
 
     private:
+        //! Energy is \sum_{f feature} f^2
+        static int computeEnergy(ublas::vector<int> vec);
+
         ublas::matrix<int> mPatterns;
         std::vector<int> mTargetClass;
         double mThreshold;
 
-        vector<int> mEnergy;
-        vector<double> mResult;        
-
-        string mFilename;
+        std::vector<int> mEnergy;
+        std::vector<double> mResult;        
 };
 
 #endif

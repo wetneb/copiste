@@ -132,7 +132,7 @@ double NeuralNetwork::train(Corpus &c, double rate, double regularization, int n
 	    return 0;
     }
 
-    ublas::matrix<double> dataset = createDataset(c);
+    ublas::matrix<double> dataset = c.asDataset();
     ublas::vector<double> targetVec = createTargetVector(c);
 
     std::vector<ublas::matrix<double> > grad;
@@ -221,7 +221,7 @@ ublas::matrix<double> NeuralNetwork::classifyMat(ublas::matrix<double> input)
 
 double NeuralNetwork::accuracy(Corpus &c)
 {
-    ublas::matrix<double> ds = createDataset(c);
+    ublas::matrix<double> ds = c.asDataset();
     ublas::matrix<double> response = classifyMat(ds);
     ublas::vector<double> tv = createTargetVector(c);
     int nbCorrect = 0;
@@ -232,25 +232,12 @@ double NeuralNetwork::accuracy(Corpus &c)
     return ((double)nbCorrect)/c.size();
 }
 
-ublas::matrix<double> NeuralNetwork::createDataset(Corpus &c)
-{
-    ublas::matrix<double> ds(c.dimension(), c.size());
-
-    for(unsigned int i = 0; i < c.size(); i++)
-    {
-        for(unsigned int j = 0; j < c.dimension(); j++)
-            ds(j,i) = c.elem(i)[j+1];
-    }
-
-    return ds;
-}
-
 ublas::vector<double> NeuralNetwork::createTargetVector(Corpus &c)
 {
     ublas::vector<double> tv(c.size());
 
     for(unsigned int i = 0; i < c.size(); i++)
-        tv[i] = c.elem(i)[0];
+        tv[i] = c.point(i)[0];
 
     return tv;
 }

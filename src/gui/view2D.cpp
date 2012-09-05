@@ -171,11 +171,11 @@ void View2D::paintEvent(QPaintEvent *event)
         for(unsigned int index = 0; index != mCorpus->size(); ++index)
         {
             QPixmap *img = &mPoint0;
-            if(mCorpus->elem(index)[0] == 1)
+            if(mCorpus->getClass(index) == 1)
                 img = &mPoint1;
 
-            painter.drawPixmap((mCorpus->elem(index)[1] - mViewport.x)/mViewport.scaleX - 5,
-                               (mCorpus->elem(index)[2] - mViewport.y)/mViewport.scaleY - 5, *img);
+            painter.drawPixmap((mCorpus->point(index)[0] - mViewport.x)/mViewport.scaleX - 5,
+                               (mCorpus->point(index)[1] - mViewport.y)/mViewport.scaleY - 5, *img);
         }
     }
 

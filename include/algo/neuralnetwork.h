@@ -98,9 +98,6 @@ class NeuralNetwork : public AbstractClassifier
 
        /// Corpus management
 
-       //! Create a ublas::matrix from an array
-       static ublas::matrix<double> createDataset(Corpus &c);
-
        //! Create a ublas::vector from an array
        static ublas::vector<double> createTargetVector(Corpus &c);
 

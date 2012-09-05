@@ -62,8 +62,8 @@ std::list<int> QuadTree::separate(std::list<int> l, QuadTree::rect view)
     {
         if(*i < (int)mCorpus->size())
         {
-            double px = mCorpus->elem(*i)[1];
-            double py = mCorpus->elem(*i)[2];
+            double px = mCorpus->point(*i)[0];
+            double py = mCorpus->point(*i)[1];
 
             if(px >= view.x && px <= view.x + view.w &&
                py >= view.y && py <= view.y + view.h)
@@ -139,7 +139,7 @@ int QuadTree::nodeSearch(QuadNode *node, QuadTree::rect view, double x, double y
     int result = -1;
     if(node != 0)
     {
-        if(node->elem != -1 && isInRect(mCorpus->elem(node->elem)[1], mCorpus->elem(node->elem)[2], view))
+        if(node->elem != -1 && isInRect(mCorpus->point(node->elem)[0], mCorpus->point(node->elem)[1], view))
             result = node->elem;
         else
         {

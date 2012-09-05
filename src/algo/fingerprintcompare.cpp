@@ -22,71 +22,29 @@ FingerprintCompare::FingerprintCompare()
     ;
 }
 
-bool FingerprintCompare::fromFile(string filename)
+bool FingerprintCompare::fromFile(std::string filename)
 {
-    QDomDocument doc;
-
-    QFile file(filename.c_str());
-    if(!file.open(QIODevice::ReadOnly))
-    {
-        std::cerr << "Unable to open the file " << filename << std::endl;
-        return false; 
-    }
-    
-    QDomElement rootElem = doc.documentElement();
-
-    if(rootElem.tagName() != "profile")
-    {
-        std::cerr << filename << " : Invalid markup : expected <profile>." << std::endl;
-        return false; 
-    }
-
-    int nFingerprints = rootElem.childNodes().length();
-    int nFeatures = rootElem.attribute("features", "0").toInt();
-    mPatterns.resize(nFingerprints, nFeatures);
-    mTargetClass.resize(nFingerprints);
-
-    QDomNode currNode = rootElem.firstChild();
-  
-    int nValidFps = 0;
-    while(!currNode.isNull())
-    {
-        QDomElement elem = currNode.toElement();
-        if(elem.tagName() != "fingerprint")
-        {
-            std::cerr << filename << " : Ignored markup <"
-                << elem.tagName().toStdString() << ">." << std::endl;
-        }
-        else
-        {
-            mTargetClass[nValidFps] = elem.attribute("class", "0").toInt();
-            std::istringstream stream(elem.text().toStdString());
-            try
-            {
-                ublas::vector<double> fp;
-                boost::archive::text_iarchive ar(stream);
-                ar & fp;
-                ublas::matrix_column<ublas::matrix<int> > mc(mPatterns, nValidFps);
-                mc = fp;
-            }
-            catch(boost::archive::archive_exception ex)
-            {
-                std::cerr << filename << " : Error, invalid fingerprint : " << ex.what() << std::endl;
-                return false;
-            }
-
-            nValidFps++;
-        }
-    }
-
-    mPatterns.resize(nValidFps, nFeatures);
-
+    Corpus c(filename);
+    mPatterns = c.asFingerprints();
+    // \todo
+    //
     return true;
 }
 
-bool FingerprintCompare::toFile(string filename)
+bool FingerprintCompare::toFile(std::string filename)
 {
+    // \todo
     return true;
+}
+
+void FingerprintCompare::addFingerprint(ublas::vector<int> vec, int targetClass)
+{
+    mPatterns.resize(mPatterns.size1()+1, mPatterns.size2());
+    ublas::matrix_column<ublas::matrix<int> > mc(mPatterns, mPatterns.size1()-1);
+    mc = vec;
+    mTargetClass.push_back(targetClass);
+    mResult.resize(mPatterns.size1(), 0);
+    mEnergy[mPatterns.size1()-1] = computeEnergy(vec);
 }
 
 int FingerprintCompare::classify(std::vector<double> input, int lastClass)
@@ -108,7 +66,7 @@ int FingerprintCompare::classify(std::vector<double> input, int lastClass)
         return lastClass;
 }
 
-void FingerprintCompare::transform(vector<double> data)
+void FingerprintCompare::transform(std::vector<double> data)
 {
     if(data.size() != mPatterns.size2())
         std::cerr << "Warning, profile and stream sizes don't match : "
@@ -129,4 +87,11 @@ void FingerprintCompare::transform(vector<double> data)
     }
 }
 
+int FingerprintCompare::computeEnergy(ublas::vector<int> vec)
+{
+    int sum = 0;
+    for(unsigned int i = 0; i < vec.size(); i++)
+        sum += vec[i] * vec[i];
+    return sum;
+}
 

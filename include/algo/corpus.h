@@ -23,10 +23,19 @@
 #include <string>
 #include <vector>
 #include <cmath>
+
 #include <QFile>
 #include <QDomDocument>
 
-using namespace std;
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
+
+
+using namespace boost::numeric;
 
 class Corpus;
 
@@ -37,11 +46,11 @@ class Corpus
         /// Construction, destruction
 
         //! Default constructor. Loads a file if specified.
-        Corpus(string file = "");
+        Corpus(std::string file = "");
         //! Constructor, creating an empty corpus of dimension dim
         Corpus(int dim);
         //! Copy constructor
-        Corpus(const Corpus &c, unsigned int keepOnly = -1);
+        // Corpus(const Corpus &c, unsigned int keepOnly = -1);
         //! Frees the memory
         ~Corpus();
         //! Erases the corpus and start a new one with the given dimension
@@ -50,9 +59,9 @@ class Corpus
         /// Input, output
 
         //! Loads the corpus from an XML file
-        bool load(string file, bool verbose = false);
+        bool load(std::string file, bool verbose = false);
         //! Write the corpus to a file
-        void write(string file);
+        void write(std::string file);
         //! Writes to the standard output the set of elements
         void display() const;
 
@@ -63,21 +72,27 @@ class Corpus
         //! Returns the number of inputs of each training example (i.e. the number of coordinates of each vector)
         unsigned int dimension() const;
 
-        //! Returns the elem pointed by the given index
-        double* elem(unsigned int index) const { return mPool[index]; }
+        //! Returns the features vector for the given index
+        ublas::vector<double> point(unsigned int index);
+        //! Returns the class of the point
+        int getClass(unsigned int index);
         //! Returns the name of the elem pointed by the given index
         std::string name(unsigned int index) const { return mNames[index]; }
         //! Add a sample to the corpus
+        void addSample(ublas::vector<double> vec, int targetClass, std::string name = "");
+        //! Add a sample to the corpus \deprecated
         void addElem(double* elem, std::string name = "");
         //! Retuns the bounds of the corpus (the vector is : min_1 max_1 min_2 max_2 ... min_n max_n)
         std::vector<double> bounds() const;
 
-    private:
-        double** mPool;
-        int mSize; // Stores the number of elements stored in the pool
-        int mDimension;
+        //! Return elements as fingerprints : conversion to int
+        ublas::matrix<int> asFingerprints();
+        //! Return the samples matrix
+        ublas::matrix<double> asDataset();
 
-        int mPoolSize; // Stores the actual capacity of the pool
+    private:
+        ublas::matrix<double> mSamples;
+        std::vector<int> mTargetClass;
 
         std::vector<std::string> mNames; // Stores the names of the samples
 };
