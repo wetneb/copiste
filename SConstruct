@@ -114,7 +114,7 @@ Default(featdrawProg)
 Default(specdrawProg)
 Default(classifyProg)
 Default(liveProg)
-Default(fingerprintProg)
+# Default(fingerprintProg)
 
 otherInstallFiles = Dir('pipeline')
 

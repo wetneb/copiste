@@ -34,7 +34,7 @@
 #include "features/spectrum.h"
 
 const int DEFAULT_AUDIO_CHUNK_SIZE = 1024; 
-const int VLC_DEFAULT_VOLUME = 80;
+const int VLC_DEFAULT_VOLUME = 0;
 
 using namespace std;
 
@@ -103,6 +103,7 @@ class StreamPlayer
 
         // Handling functions
 
+        // TODO : maybe we just have to do a cast ??
         /**
          * \brief Converts an array of uint8_t to another array of uint16_t (assuming the values are coded on two bytes)
          * The returned pointer has to be deleted by the user.

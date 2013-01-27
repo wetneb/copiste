@@ -1,4 +1,4 @@
 
 all:
-	scons
+	scons -j 4
 

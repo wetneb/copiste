@@ -18,40 +18,20 @@
 
 #include "core/fingerprinter.h"
 
+class FingerprintConsumer;
+
 //! Constructor
-Fingerprinter::Fingerprinter(bool verbose) : SoundAnalyser(), mVerbose(verbose)
+Fingerprinter::Fingerprinter(bool verbose) : StreamPlayer(), mVerbose(verbose),
+                                             mConsumer(0)
 {
-    setNormalization(0, 255);
+    ;
 }
 
-//! Create the fingerprint
-ublas::vector<int> Fingerprinter::getFingerprint()
+//! Sets the consumer to call when a fingerprint is produced
+void Fingerprinter::setConsumer(FingerprintConsumer* consumer)
 {
-    waitComputed();
-
-    // Create the fingerprint vector
-    ublas::vector<int> fp(realDimension());
-    int wrote = 0;
-    for(unsigned int i = 0; i < nbFeatures(); i++)
-    {
-        if(isUsed(i))
-        {
-            for(unsigned int j = 0; j < nbElems(i); j++)
-            {
-                // Compute the average
-                fp(wrote) = features(nbSamples()-1)[i][j];
-                wrote++;
-
-                if(mVerbose)
-                    cout << fp[fp.size() - 1] << "\t";
-            }
-        }
-    }
-    if(mVerbose)
-        cout << endl;
-
-    // Send the input vector to the network
-
-    return fp;
+    mConsumer = consumer;
 }
+
+
 

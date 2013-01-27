@@ -21,22 +21,23 @@
 
 #include "core/soundanalyser.h"
 
-#include <boost/numeric/ublas/vector.hpp>
+class FingerprintConsumer;
 
 using namespace boost::numeric;
 
-//! A class reading a file and classifying its content
-class Fingerprinter : public SoundAnalyser
+//! A class reading a file and producing fingerprints
+class Fingerprinter : public StreamPlayer
 {
     public:
         //! Constructor
         Fingerprinter(bool verbose = true);
 
-        //! Get the output
-        ublas::vector<int> getFingerprint();
+        //! Sets the consumer to call when a fingerprint is produced
+        void setConsumer(FingerprintConsumer* consumer);
 
     private:
         bool mVerbose;
+        FingerprintConsumer *mConsumer;
 };
 
 #endif
