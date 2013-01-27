@@ -23,25 +23,8 @@ Corpus::Corpus(std::string file)
     if(file.size())
         load(file);
 }
-
-//! \todo remove this dead code
-/*
-Corpus::Corpus(const Corpus &c, unsigned int keepOnly)
-{
-    mDimension = std::min(c.dimension(), keepOnly);
-    mSize = c.size();
-    mPoolSize = c.mPoolSize;
-    mPool = new double*[mPoolSize];
-    for(int i = 0; i < mSize; i++)
-    {
-        mPool[i] = new double[mDimension+1];
-        for(int j = 0; j < mDimension+1; j++)
-            mSamples(i, j] = c.elem(i)[j);
-    }
-}
-*/
-
-Corpus::Corpus(int dim)
+    
+Corpus::Corpus(unsigned int dim)
 {
     mSamples.resize(dim, 0);
 }
@@ -72,6 +55,7 @@ bool Corpus::load(std::string filename, bool verbose)
     // Read the contents
     QDomNode node = doc.documentElement();
 
+    // Old version of the loading code, kept for compatibility
     if(node.toElement().tagName() == "corpus" && node.toElement().attribute("version", "1") == "1")
     {
         int dimension = node.toElement().attribute("dimension", "1").toInt();
@@ -119,6 +103,7 @@ bool Corpus::load(std::string filename, bool verbose)
         if(verbose)
             std::cout <<"Loaded "<<nbPointsSet<< " points." << std::endl;
     }
+    // Current version of the loading code
     else if(node.toElement().tagName() == "corpus" && node.toElement().attribute("version", "1") == "2")
     {
         QDomElement rootElem = node.toElement();
@@ -291,8 +276,13 @@ ublas::matrix<int> Corpus::asFingerprints()
 
 ublas::vector<double> Corpus::point(unsigned int idx)
 {
-    ublas::matrix_column< ublas::matrix<double> > mc(mSamples, idx);
-    return mc;
+    if(idx < size())
+    {
+        ublas::matrix_column< ublas::matrix<double> > mc(mSamples, idx);
+        return mc;
+    }
+    std::cerr << "Corpus::point(index) : index out of bounds." << std::endl;
+    return ublas::vector<double>(dimension());
 }
 
 ublas::matrix<double> Corpus::asDataset()
@@ -302,6 +292,9 @@ ublas::matrix<double> Corpus::asDataset()
 
 int Corpus::getClass(unsigned int index)
 {
-    return mTargetClass[index];
+    if(index < mTargetClass.size())
+        return mTargetClass[index];
+    std::cerr << "Corpus::getClass(index) : index out of bounds." << std::endl;
+    return 0;
 }
 

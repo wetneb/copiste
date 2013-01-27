@@ -48,7 +48,7 @@ class Corpus
         //! Default constructor. Loads a file if specified.
         Corpus(std::string file = "");
         //! Constructor, creating an empty corpus of dimension dim
-        Corpus(int dim);
+        Corpus(unsigned int dim);
         //! Copy constructor
         // Corpus(const Corpus &c, unsigned int keepOnly = -1);
         //! Frees the memory

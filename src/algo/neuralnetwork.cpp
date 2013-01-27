@@ -167,7 +167,7 @@ double genRandom(double /*input*/)
 }
 
 //! Return the input dimension of the network
-unsigned int NeuralNetwork::dimension()
+unsigned int NeuralNetwork::dimension() const
 {
     if(mLayers.size())
         return (mLayers[0].size2() - 1);
@@ -178,7 +178,8 @@ unsigned int NeuralNetwork::dimension()
 //! Randomize the weights of the network
 void NeuralNetwork::randomize()
 {
-    srand(time(NULL));
+    srand(time(NULL)); // Here it's not a problem that this command may be called many times
+    // because randomization is usually made once only, before training
     for(unsigned int i = 0; i < nbLayers(); i++)
         mLayers[i] = elementWise(mLayers[i], genRandom);
 }
@@ -197,7 +198,7 @@ double NeuralNetwork::predict(std::vector<double> input)
         result = activation(0,0);
     }
     else
-	    std::cerr << "Warning, trying to classify a sample with a wrong dimension." << std::endl;
+	    std::cerr << "Error : trying to classify a sample with a wrong dimension." << std::endl;
     return result;
 }
 
@@ -231,6 +232,8 @@ double NeuralNetwork::accuracy(Corpus &c)
 
     return ((double)nbCorrect)/c.size();
 }
+
+// RELECTURE ARRÊTÉE ICI
 
 ublas::vector<double> NeuralNetwork::createTargetVector(Corpus &c)
 {

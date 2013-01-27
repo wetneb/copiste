@@ -53,7 +53,7 @@ class FingerprintCompare : public AbstractClassifier
         void transform(std::vector<double> data);
 
         //! Number of input features
-        unsigned int dimension() { return mPatterns.size2(); }
+        unsigned int dimension() const;
 
     private:
         //! Energy is \sum_{f feature} f^2

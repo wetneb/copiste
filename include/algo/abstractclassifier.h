@@ -36,7 +36,7 @@ class AbstractClassifier
         virtual int classify(std::vector<double> input, int lastClass) = 0;
 
         //! Returns the number of input features
-        virtual unsigned int dimension() = 0;
+        virtual unsigned int dimension() const = 0;
 };
 
 #endif

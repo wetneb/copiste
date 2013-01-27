@@ -77,7 +77,7 @@ class NeuralNetwork : public AbstractClassifier
        unsigned int nbLayers() { return mLayers.size(); }
 
        //! Input dimension of the network (size of the input layer)
-       unsigned int dimension();
+       unsigned int dimension() const;
 
    private:
        std::vector< ublas::matrix<double> > mLayers;

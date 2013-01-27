@@ -69,8 +69,11 @@ int FingerprintCompare::classify(std::vector<double> input, int lastClass)
 void FingerprintCompare::transform(std::vector<double> data)
 {
     if(data.size() != mPatterns.size2())
+    {
         std::cerr << "Warning, profile and stream sizes don't match : "
          << mPatterns.size2() << " vs " << data.size() << " (FingerprintCompare)" << std::endl;
+        return;
+    }
     
     mResult.resize(mPatterns.size1());
     
@@ -93,5 +96,10 @@ int FingerprintCompare::computeEnergy(ublas::vector<int> vec)
     for(unsigned int i = 0; i < vec.size(); i++)
         sum += vec[i] * vec[i];
     return sum;
+}
+
+unsigned int FingerprintCompare::dimension() const
+{
+    return mPatterns.size2();
 }
 
