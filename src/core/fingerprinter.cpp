@@ -64,7 +64,7 @@ void Fingerprinter::useBuffer()
         mStarted = true;
     }
 
-    uint16_t* buf = new uint16_t[chunkSize()];
+    int16_t* buf = new int16_t[chunkSize()];
     for(int i = 0; i < chunkSize(); i++)
         buf[i] = mBuffer[i];
 
