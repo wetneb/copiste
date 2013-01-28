@@ -44,7 +44,7 @@ class Fingerprinter : public StreamPlayer
         FingerprintConsumer *mConsumer;
         ChromaprintContext *mCtxt;
         int mFpRead;
-        bool mStarted;
+        int mChunksFed;
 };
 
 #endif
