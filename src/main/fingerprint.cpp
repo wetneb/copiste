@@ -45,7 +45,7 @@ int main(int argc, char **argv)
         ("help,h", "Display this message");
 
     po::positional_options_description p;
-    p.add("pipeline", 1).add("input-files", -1);
+    p.add("input-files", -1);
 
         po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).
@@ -70,6 +70,8 @@ int main(int argc, char **argv)
         {
             cl.setUrl(inputFiles[i]);
             cl.play();
+            int di;
+            std::cin >> di;
         }
     }
     else

@@ -38,11 +38,13 @@ class Fingerprinter : public StreamPlayer
 
         //! Reimplement the callback defined in StreamPlayer
         void useBuffer();
-
+        void sequenceEnds();
     private:
         bool mVerbose;
         FingerprintConsumer *mConsumer;
         ChromaprintContext *mCtxt;
+        int mFpRead;
+        bool mStarted;
 };
 
 #endif

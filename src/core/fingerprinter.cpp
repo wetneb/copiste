@@ -22,7 +22,7 @@ class FingerprintConsumer;
 
 //! Constructor
 Fingerprinter::Fingerprinter(bool verbose) : StreamPlayer(), mVerbose(verbose),
-                                             mConsumer(0)
+                                             mConsumer(0), mFpRead(0), mStarted(false)
 {
     mCtxt = chromaprint_new(CHROMAPRINT_ALGORITHM_DEFAULT);
 }
@@ -38,14 +38,39 @@ void Fingerprinter::setConsumer(FingerprintConsumer* consumer)
     mConsumer = consumer;
 }
 
+void Fingerprinter::sequenceEnds()
+{
+    char *fp;
+    chromaprint_finish(mCtxt);
+    chromaprint_get_fingerprint(mCtxt, &fp);
+    int new_size = strlen(fp);
+    if(new_size > 0)
+    {
+        std::cout << "got size "<<new_size<< std::endl;
+        for(int i = mFpRead; i < new_size; i++)
+            std::cout << fp[i];
+    }
+    chromaprint_dealloc(fp);
+
+}
+
 //! Computes the fingerprint
 void Fingerprinter::useBuffer()
 {
+    if(!mStarted)
+    {
+        cout << "freq : "<<mFrequency<<std::endl;
+        chromaprint_start(mCtxt, mFrequency, 1);
+        mStarted = true;
+    }
+
     uint16_t* buf = new uint16_t[chunkSize()];
     for(int i = 0; i < chunkSize(); i++)
         buf[i] = mBuffer[i];
 
     chromaprint_feed(mCtxt, buf, chunkSize());
+    delete buf;
+
 }
 
 
