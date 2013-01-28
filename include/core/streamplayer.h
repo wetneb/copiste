@@ -125,16 +125,16 @@ class StreamPlayer
         void watch();
 
         //! Buffer acces (for the user)
-        inline uint16_t buffer(int i);
+        inline int16_t buffer(int i);
         //! Current buffer size (internal)
         inline int bufferSize();
         //! Fill buffer with a new value (internal)
-        inline void fillBuffer(uint16_t value);
+        inline void fillBuffer(int16_t value);
         //! Flush buffer (just keep the overlapping part)
         inline void flushBuffer();
 
         //! Feature extraction : those variables need to be public (I know, I can write accessors...)
-        std::deque<uint16_t> mBuffer;
+        std::deque<int16_t> mBuffer;
         QMutex mLock;
 
         // Prerender callback

@@ -29,6 +29,8 @@ class HZCRRExtr;
 const float DEFAULT_ZCR_BOUND = 2.0;
 const int DEFAULT_HZCRR_CHUNKS_NUMBER = (44100 / DEFAULT_AUDIO_CHUNK_SIZE);
 
+// TODO : remove this code ? replace it by ZCR + HighLowRatio 
+
 /**
  * \class HZCRRExtr
  * \brief Extracts the High ZCR Ratio (ZCR stands for Zero Crossing Rate)
@@ -49,7 +51,7 @@ class HZCRRExtr : public FeatureExtractor
         ZCRExtr* setZCRExtractor(ZCRExtr* extr);
 
         //! Run the algorithm and store the results
-        bool extract(std::deque<uint16_t> data, int size);
+        bool extract(std::deque<int16_t> data, int size);
 
         //! Retrieve the results (from the index). The values are usually between -1 and 1
         float value(int index = 0) { return mHZCRR; };

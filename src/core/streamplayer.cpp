@@ -143,14 +143,14 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
     // TODO: dynamicly check that this is the case and that we're not mishandling the data
     // TODO: stereo support
     // TODO: allocate temp only once and send the address to convert8to16
-    uint16_t* temp = StreamPlayer::convert8to16(p_pcm_buffer, size);
+    int16_t* temp = (int16_t*)p_pcm_buffer;
     size /= 2;
 
     // We implemented a mechanism that takes the data sent by libVLC and cut it into chunks
     // of the same size (a power of two) so that the algorithms can handle it in the right way
     while(remaining < size)
     {
-        // \todo Faudrait-il plutôt utiliser memcpy & co ? J'y connais rien à ces trucs-là…
+        // TODO Faudrait-il plutôt utiliser memcpy & co ? J'y connais rien à ces trucs-là…
         // Filling buffer
         while(sp->bufferSize() < sp->chunkSize() && remaining < size)
         {
@@ -167,7 +167,6 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
             sp->flushBuffer();
         }
     }
-    delete [] temp;
 
     // Update the frequency if needed
     if(rate != sp->mFrequency)
@@ -226,7 +225,7 @@ void StreamPlayer::addOffset(uint16_t* source, uint16_t* dest, int size, int off
     }
 }
 
-uint16_t StreamPlayer::buffer(int i)
+int16_t StreamPlayer::buffer(int i)
 {
     return mBuffer.at(i);
 }
@@ -236,7 +235,7 @@ int StreamPlayer::bufferSize()
     return mBuffer.size();
 }
 
-void StreamPlayer::fillBuffer(uint16_t value)
+void StreamPlayer::fillBuffer(int16_t value)
 {
     mBuffer.push_back(value);
 }

@@ -39,7 +39,7 @@ class FeatureExtractor
         virtual ~FeatureExtractor() { ; }
 
         //! Run the algorithm and store the results
-        virtual bool extract(std::deque<uint16_t> data, int size) = 0;
+        virtual bool extract(std::deque<int16_t> data, int size) = 0;
         //! Idem, but the buffer starts at index start instead (circular buffer)
         bool extract(std::deque<uint16_t> data, int size, size_t start); 
 

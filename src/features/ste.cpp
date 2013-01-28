@@ -19,18 +19,15 @@
 #include "features/ste.h"
 
 //! Run the algorithm and store the results
-bool STEExtr::extract(std::deque<uint16_t> data, int size)
+bool STEExtr::extract(std::deque<int16_t> data, int size)
 {
     if(size)
     {
         mSTE = 0;
-        uint16_t zero = (-1);
-        zero >>= 1;
-
         if(mSquare)
         {
             for(int i = 0; i < size; i++)
-                mSTE += ((int)data.at(i) - zero) * ((int)data.at(i) - zero) / size;
+                mSTE += ((int)data.at(i)) * ((int)data.at(i)) / size;
         }
         else
         {

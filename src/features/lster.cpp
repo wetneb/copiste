@@ -32,7 +32,7 @@ LSTERExtr::LSTERExtr(int chunkSize)
 }
 
 //! Run the algorithm and store the results
-bool LSTERExtr::extract(std::deque<uint16_t> data, int size)
+bool LSTERExtr::extract(std::deque<int16_t> data, int size)
 {
     if(mSteExtr == 0)
         mSteExtr = new STEExtr();

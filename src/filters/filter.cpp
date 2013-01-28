@@ -27,13 +27,13 @@ FeatureExtractor* Filter::bind(FeatureExtractor* extr)
 }
 
 //! Extract data
-bool Filter::extract(std::deque<uint16_t> dat, int size)
+bool Filter::extract(std::deque<int16_t> dat, int size)
 {
     if(mExtr)
     {
         vector<float> data;
         data.resize(mExtr->size());
-        // todo, this is ugly
+        // TODO, this is ugly
         for(unsigned int i = 0; i < data.size(); i++)
             data[i] = mExtr->value(i);
         transform(data);
