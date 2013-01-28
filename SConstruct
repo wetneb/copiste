@@ -27,6 +27,7 @@ libs = ['vlc',
         'boost_system',
         'boost_thread',
         'boost_serialization',
+        'chromaprint',
 ]
 
 flags = ['-Wall']
@@ -114,7 +115,7 @@ Default(featdrawProg)
 Default(specdrawProg)
 Default(classifyProg)
 Default(liveProg)
-# Default(fingerprintProg)
+Default(fingerprintProg)
 
 otherInstallFiles = Dir('pipeline')
 

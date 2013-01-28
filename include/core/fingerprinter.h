@@ -20,10 +20,9 @@
 #define INCLUDED_FINGERPRINTERH
 
 #include "core/soundanalyser.h"
+#include <chromaprint.h>
 
 class FingerprintConsumer;
-
-using namespace boost::numeric;
 
 //! A class reading a file and producing fingerprints
 class Fingerprinter : public StreamPlayer
@@ -32,12 +31,18 @@ class Fingerprinter : public StreamPlayer
         //! Constructor
         Fingerprinter(bool verbose = true);
 
+        ~Fingerprinter();
+
         //! Sets the consumer to call when a fingerprint is produced
         void setConsumer(FingerprintConsumer* consumer);
+
+        //! Reimplement the callback defined in StreamPlayer
+        void useBuffer();
 
     private:
         bool mVerbose;
         FingerprintConsumer *mConsumer;
+        ChromaprintContext *mCtxt;
 };
 
 #endif

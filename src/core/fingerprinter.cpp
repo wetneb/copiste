@@ -24,7 +24,12 @@ class FingerprintConsumer;
 Fingerprinter::Fingerprinter(bool verbose) : StreamPlayer(), mVerbose(verbose),
                                              mConsumer(0)
 {
-    ;
+    mCtxt = chromaprint_new(CHROMAPRINT_ALGORITHM_DEFAULT);
+}
+
+Fingerprinter::~Fingerprinter()
+{
+    chromaprint_free(mCtxt);
 }
 
 //! Sets the consumer to call when a fingerprint is produced
@@ -33,5 +38,14 @@ void Fingerprinter::setConsumer(FingerprintConsumer* consumer)
     mConsumer = consumer;
 }
 
+//! Computes the fingerprint
+void Fingerprinter::useBuffer()
+{
+    uint16_t* buf = new uint16_t[chunkSize()];
+    for(int i = 0; i < chunkSize(); i++)
+        buf[i] = mBuffer[i];
+
+    chromaprint_feed(mCtxt, buf, chunkSize());
+}
 
 

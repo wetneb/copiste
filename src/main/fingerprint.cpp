@@ -41,8 +41,6 @@ int main(int argc, char **argv)
     po::options_description desc("Usage");
     desc.add_options()
         ("input-files", po::value< std::vector<std::string> >(), "The input files.")
-        ("pipeline,p", po::value< std::string >(), "The pipeline that should be used (it will be loaded from pipeline/$PIPELINE.xml)")
-        ("vector", "Save the fingerprint as a vector rather than as a matrix.")
         ("verbose", "Be verbose.")
         ("help,h", "Display this message");
 
@@ -62,46 +60,21 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    if(vm.count("input-files") && vm.count("pipeline"))
+    if(vm.count("input-files"))
     {
         Fingerprinter cl(vm.count("verbose"));
 
-        std::string pipeline = "pipeline/" + (vm["pipeline"].as< std::string >()) + ".xml";
+        std::vector< std::string > inputFiles = vm["input-files"].as< std::vector<std::string> >();
 
-        if(cl.setupPipeline(pipeline))
+        for(unsigned int i = 0; i < inputFiles.size(); i++)
         {
-            std::vector< std::string > inputFiles = vm["input-files"].as< std::vector<std::string> >();
-
-            ublas::matrix<int> mat(cl.realDimension(), inputFiles.size());
-            boost::archive::text_oarchive ar(std::cout);
-
-            for(unsigned int i = 0; i < inputFiles.size(); i++)
-            {
-                cl.compute(inputFiles[i]);
-
-                ublas::vector<int> fgp = cl.getFingerprint();
-
-                if(vm.count("vector") == 0)
-                {
-                    ublas::matrix_column<ublas::matrix<int> > mi(mat, i);
-                    mi = fgp;
-                }
-                else
-                {
-                    ar & fgp;
-                    std::cout << std::endl;
-                }
-            }
-
-            mat = ublas::trans(mat);
-            ar & mat;
+            cl.setUrl(inputFiles[i]);
+            cl.play();
         }
-        else
-            cout << "Failed to load the pipeline." << endl;
     }
     else
     {
-        cout << "No input file or no pipeline has been set. Use --help for more info."<<endl;
+        cout << "No input file has been set. Use --help for more info."<<endl;
     }
 
     return 0;
