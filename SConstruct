@@ -107,7 +107,7 @@ specdraw_files = audio_analysis_files + [ 'src/core/spectrumRecorder.cpp',
 live_files = neurones_files + audio_analysis_files + ['src/main/live.cpp',
   'src/core/liveplayer.cpp', 'src/core/featuredrawer.cpp' ]
 
-fingerprint_files = audio_analysis_files + ['src/core/fingerprinter.cpp', 'src/main/fingerprint.cpp']
+fingerprint_files = audio_analysis_files + fp_files + ['src/main/fingerprint.cpp']
 
 env.Moc('include/gui/view2D.h')
 env.Moc('include/gui/editor.h')

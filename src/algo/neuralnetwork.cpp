@@ -81,7 +81,8 @@ bool NeuralNetwork::fromFile(std::string file)
 	    }
 	    catch(boost::archive::archive_exception ex)
 	    {	
-	        std::cerr << "Error while loading the neural network from the file " << file << " : " << ex.what() << std::endl;
+	        std::cerr << "Error while loading the neural network from the file \""
+                << file << "\" : " << ex.what() << std::endl;
 	    }
     }
     return status;

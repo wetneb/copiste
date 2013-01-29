@@ -60,7 +60,8 @@ class NeuralNetwork : public AbstractClassifier
        bool toFile(std::string file);
 
        //! Train the network on a corpus
-       double train(Corpus &c, double rate, double regularization, int nbIter, bool debug = false);
+       double train(Corpus &c, double rate, double regularization,
+               int nbIter, bool debug = false);
 
        //! Get the output of the network on a given input. 
        double predict(std::vector<double> input);
@@ -82,19 +83,25 @@ class NeuralNetwork : public AbstractClassifier
    private:
        std::vector< ublas::matrix<double> > mLayers;
 
-       double gradientDescent(ublas::matrix<double> &ds, ublas::vector<double> &tv, double rate, unsigned int steps);
+       double gradientDescent(ublas::matrix<double> &ds,
+               ublas::vector<double> &tv, double rate, unsigned int steps);
 
        //! Get the output of the network on a given set of inputs
        ublas::matrix<double> classifyMat(ublas::matrix<double> input);
 
         //! Gradient of the cost function
-       std::vector< ublas::matrix<double> > gradient(ublas::matrix<double> &ds, ublas::vector<double> &tv, double regularization = 0);
+       std::vector< ublas::matrix<double> > gradient
+           (ublas::matrix<double> &ds, ublas::vector<double> &tv,
+            double regularization = 0);
 
        //! Gradient checking
-       std::vector< ublas::matrix<double> > gradientChecking(ublas::matrix<double> &ds, ublas::vector<double> &tv, double regularization = 0, double epsilon = 0.0001);
+       std::vector< ublas::matrix<double> > gradientChecking
+           (ublas::matrix<double> &ds, ublas::vector<double> &tv,
+            double regularization = 0, double epsilon = 0.0001);
 
        //! Cost function computation
-       double costFunction(ublas::matrix<double> &ds, ublas::vector<double> &tv, double regularization = 0);
+       double costFunction(ublas::matrix<double> &ds, ublas::vector<double> &tv,
+               double regularization = 0);
 
        /// Corpus management
 
@@ -110,16 +117,20 @@ class NeuralNetwork : public AbstractClassifier
        static ublas::matrix<double> addOne(ublas::matrix<double> v);
 
        //! Remove 1s at the bottom of a matrix
-       static ublas::matrix_range<ublas::matrix<double> > removeOnes(ublas::matrix<double> m);
+       static ublas::matrix_range<ublas::matrix<double> >
+           removeOnes(ublas::matrix<double> m);
 
        //! Get the j-th column of a matrix as a matrix
-       static ublas::matrix_range<ublas::matrix<double> > jthCol(ublas::matrix<double> m, size_t j);
+       static ublas::matrix_range<ublas::matrix<double> >
+           jthCol(ublas::matrix<double> m, size_t j);
 
        //! Apply a function element-wise to a vector
-       static ublas::vector<double> elementWise(ublas::vector<double> v, double (*f)(double));
+       static ublas::vector<double> elementWise
+           (ublas::vector<double> v, double (*f)(double));
 
        //! Apply a function element-wise to a matrix
-       static ublas::matrix<double> elementWise(ublas::matrix<double> v, double (*f)(double));
+       static ublas::matrix<double> elementWise
+           (ublas::matrix<double> v, double (*f)(double));
 
        //! Create a matrix from a vector
        static ublas::matrix<double> vecToMat(ublas::vector<double> v);
@@ -128,7 +139,8 @@ class NeuralNetwork : public AbstractClassifier
        static ublas::vector<double> unroll(ublas::matrix<double> m);
 
         //! Create a vector from a matrix (unroll it)
-       static ublas::matrix<double> roll(ublas::vector<double> m, unsigned int r, unsigned int c);
+       static ublas::matrix<double> roll
+           (ublas::vector<double> m, unsigned int r, unsigned int c);
 
        //! Internal usage : for load and save
        friend class boost::serialization::access;
