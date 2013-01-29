@@ -4,7 +4,8 @@
         used="no" />
 	<filter name="Mel scale"
 		type="Mel"
-		draw="colors"
+        draw="colors"
+        used="no"
 		>
 		<ref name="_spectrum" />
 	</filter>
