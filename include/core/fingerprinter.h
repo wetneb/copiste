@@ -24,6 +24,9 @@
 
 class FingerprintConsumer;
 
+//! Type of a fingerprint
+typedef int fingerp;
+
 //! A class reading a file and producing fingerprints
 class Fingerprinter : public StreamPlayer
 {
@@ -48,3 +51,4 @@ class Fingerprinter : public StreamPlayer
 };
 
 #endif
+

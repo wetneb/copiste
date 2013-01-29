@@ -26,6 +26,8 @@
 
 namespace po = boost::program_options;
 
+// TODO : change std::cout and cout to stderr
+
 /**
  * \brief Main function for live stream playing
  * Nothing interesting here : parses arguments.
@@ -64,7 +66,6 @@ int main(int argc, char **argv)
     {
         LivePlayer lp;
         NeuralNetwork net;
-        FingerprintCompare fpc;
         
         string pipeline = "pipeline/" + (vm["pipeline"].as< string >())+ ".xml";
         if(lp.setupPipeline(pipeline))
@@ -84,9 +85,13 @@ int main(int argc, char **argv)
             }
             else if(vm.count("fingerprint"))
             {
+                // TODO
+                cout << "Fingerprints not supported." << endl;
+                /*
                 string fingerprint = "fingerprints/" + (vm["fingerprint"].as< string >());
                 if(fpc.fromFile(fingerprint))
                     lp.setClassifier(&fpc);
+                */
             }
 
             lp.show();

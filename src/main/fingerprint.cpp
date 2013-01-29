@@ -29,8 +29,8 @@ namespace po = boost::program_options;
 
 #include <iostream>
 
-#include "core/fingerprinter.h"
 #include "algo/fingerprintcompare.h"
+#include "store/database.h"
 
 /**
  * \brief Main function for fingerprinting an audio file
