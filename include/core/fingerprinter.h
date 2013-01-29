@@ -22,10 +22,10 @@
 #include "core/soundanalyser.h"
 #include <chromaprint.h>
 
-class FingerprintConsumer;
-
 //! Type of a fingerprint
 typedef int fingerp;
+
+class FingerprintConsumer;
 
 //! A class reading a file and producing fingerprints
 class Fingerprinter : public StreamPlayer

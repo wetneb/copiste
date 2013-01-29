@@ -28,9 +28,6 @@ using namespace std;
 template<class T> class Database
 {
     public:
-        // Create a fresh database
-        Database();
-
         //! Load the database from a file (the whole database may not fit in memory…)
         virtual bool load(string filename) = 0;
 

@@ -19,16 +19,14 @@
 #ifndef INCLUDED_FINGERPRINTCONSUMERH
 #define INCLUDED_FINGERPRINTCONSURERH
 
-class FingerprintConsumer;
-
 #include "core/fingerprinter.h"
 
 //! An abstract class for a process reading fingerprints from a Fingerprinter
-class FingerpritConsumer
+class FingerprintConsumer
 {
     private:
         //! Called by Fingerprinter each time a fingerprint is consumed
-        virtual void consumeFingerprint(int fp) = 0;
+        virtual void consumeFingerprint(fingerp fp) = 0;
 
         friend void Fingerprinter::useBuffer();
 };

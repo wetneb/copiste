@@ -15,8 +15,8 @@
 *  along with Copiste.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDEDDATABASEH
-#define INCLUDEDDATABASEH
+#ifndef INCLUDEDMAPDBH
+#define INCLUDEDMAPDBH
 
 #include "store/database.h"
 
@@ -74,7 +74,8 @@ void serialize(Archive & ar, std::map<fingerp,T> & obj, unsigned int version)
 } // namespace serialization
 } // namespace boost
 
-template<class T, class Archive>
+template<class T>
+template<class Archive>
 void MapDb<T>::serialize(Archive & ar, const unsigned int version)
 {
     ar & mMap;
@@ -111,7 +112,7 @@ bool MapDb<T>::load(string filename)
 template<class T>
 bool MapDb<T>::save(string filename)
 {
-    std::ofstream ofs(file.c_str());
+    std::ofstream ofs(filename.c_str());
     bool success = false;
 
     if(!ofs.is_open())
@@ -123,9 +124,9 @@ bool MapDb<T>::save(string filename)
         {
             boost::archive::text_oarchive ar(ofs);
             ar & *this;
-            status = true;
+            success = true;
         }
-        catch(bosst::archive::archive_exception ex)
+        catch(boost::archive::archive_exception ex)
         {
             std::cerr << "Error while writing the database to the file \""
                 << filename << "\" : " << ex.what() << std::endl;
@@ -145,14 +146,14 @@ void MapDb<T>::erase(int nbStates)
 template<class T>
 T MapDb<T>::get(fingerp fp)
 {
-
+    return *((T*)0);
 }
 
 //! Set the binding of a fingerprint
 template<class T>
 void MapDb<T>::set(fingerp fp, T data)
 {
-
+    ;
 }
 
 #endif

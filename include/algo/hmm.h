@@ -19,7 +19,6 @@
 #define INCLUDEDHMMH
 
 #include "core/fingerprintconsumer.h"
-#include "store/database.h"
 #include "store/mapdb.h" // TODO : delete me (factory ?)
 
 #include <string>
