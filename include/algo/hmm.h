@@ -49,6 +49,9 @@ class HMM : public FingerprintConsumer
     private:
         //! Callback reimplemented from FingerprintConsumer
         void consumeFingerprint(fingerp fp);
+        //! Increments the mCurrentState field of the vector
+        vector<int> incrementCurrent(vector<int> orig);
+        vector<int> mNullVector;
 
         //! Training or classifying
         bool mTraining;

@@ -37,20 +37,42 @@ HMM::~HMM()
 void HMM::erase(int n)
 {
     mNbStates = n;
+    mNullVector.resize(n);
     mMatrix = new int*[n];
     for(int i = 0; i < n; i++)
+    {
+        mNullVector[i] = 0;
         mMatrix[i] = new int[n];
+    }
     mNbFpSeen = 0;
 }
 
 bool HMM::load(string filename)
 {
-
+    
     return true;
 }
 
 bool HMM::save(string filename)
 {
+    std::cout << "Transition matrix :\n";
+    for(int i = 0; i < mNbStates; i++)
+    {
+        for(int j = 0; j < mNbStates; j++)
+            std::cout << mMatrix[i][j] << " ";
+        std::cout << std::endl;
+    }
+    std::cout << "Emission probabilities :\n";
+    
+    std::map<fingerp,vector<int> >::const_iterator it = mEmit.d_begin();
+    for(; it != mEmit.d_end(); it++)
+    {
+        std::cout << it->first << " : ";
+        vector<int> v = it->second;
+        for(unsigned int i = 0; i < v.size(); i++)
+            std::cout << v[i] << " ";
+        std::cout << std::endl;
+    }
 
     return true;
 }
@@ -67,6 +89,14 @@ void HMM::setState(int state)
 
 void HMM::consumeFingerprint(fingerp fp)
 {
-    ;
+    vector<int> emProb = mEmit.get(fp,mNullVector);
+    mEmit.set(fp, incrementCurrent(emProb));
+    mNbFpSeen++;
+}
+
+vector<int> HMM::incrementCurrent(vector<int> v)
+{
+    v[mCurrentState]++;
+    return v;
 }
 

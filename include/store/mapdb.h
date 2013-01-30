@@ -43,12 +43,22 @@ template<class T> class MapDb : public Database<T>
         //! Create a fresh database
         void erase(int nbStates);
 
-        //! Retrieve the binding of a fingerprint (returns 0 if unbound)
+        //! Retrieve the binding of a fingerprint (without bounds checking)
         T get(fingerp fp);
+
+        //! Retrieve the binding of a fingerprint (returns a default element if unbound)
+        T get(fingerp fp, T &default_val);
+
+        //! Check if a fingerprint is bound
+        bool exists(fingerp p);
 
         //! Set the binding of a fingerprint
         void set(fingerp fp, T data);
 
+
+        // Debug, delete me
+        typename std::map<fingerp, T>::const_iterator d_begin();
+        typename std::map<fingerp, T>::const_iterator d_end();
     private:
         std::map<fingerp, T> mMap;
         
@@ -130,21 +140,50 @@ bool MapDb<T>::save(string filename)
 template<class T>
 void MapDb<T>::erase(int nbStates)
 {
-
+    mMap.clear();
 }
 
-//! Retrieve the binding of a fingerprint (returns 0 if unbound)
+//! Retrieve the binding of a fingerprint (without bounds checking)
 template<class T>
 T MapDb<T>::get(fingerp fp)
 {
-    return *((T*)0);
+    return mMap.find(fp)->second;
+}
+
+//! Retrieve the binding of a fingerprint (returns a default value if unbound)
+template<class T>
+T MapDb<T>::get(fingerp fp, T &default_val)
+{
+    typename std::map<fingerp, T>::iterator it = mMap.find(fp);
+    if(it != mMap.end())
+        return it->second;
+    return default_val;
+}
+
+//! Check if a fingerprint is bound
+template<class T>
+bool MapDb<T>::exists(fingerp fp)
+{
+    return mMap.find(fp) != mMap.end();
 }
 
 //! Set the binding of a fingerprint
 template<class T>
 void MapDb<T>::set(fingerp fp, T data)
 {
-    ;
+    mMap[fp] = data;
+}
+
+template<class T>
+typename std::map<fingerp, T>::const_iterator MapDb<T>::d_begin()
+{
+   return mMap.begin();
+}
+
+template<class T>
+typename std::map<fingerp, T>::const_iterator MapDb<T>::d_end()
+{
+    return mMap.end();
 }
 
 #endif
