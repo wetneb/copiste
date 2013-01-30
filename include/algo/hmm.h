@@ -23,6 +23,7 @@
 
 #include <string>
 #include <deque>
+#include <vector>
 
 using namespace std;
 
@@ -55,7 +56,7 @@ class HMM : public FingerprintConsumer
         // Model parameters
         int mNbStates;
         int** mMatrix;
-        MapDb<int*> mEmit;
+        MapDb<vector<int> > mEmit;
         int mNbFpSeen;
 
         // State inference

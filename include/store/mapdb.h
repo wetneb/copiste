@@ -19,6 +19,7 @@
 #define INCLUDEDMAPDBH
 
 #include "store/database.h"
+#include <boost/serialization/map.hpp>
 
 #include <string>
 #include <map>
@@ -63,16 +64,6 @@ MapDb<T>::MapDb()
 {
     ;
 }
-
-namespace boost {
-namespace serialization {
-template<class Archive, class T>
-void serialize(Archive & ar, std::map<fingerp,T> & obj, unsigned int version)
-{
-    ;    
-}
-} // namespace serialization
-} // namespace boost
 
 template<class T>
 template<class Archive>
