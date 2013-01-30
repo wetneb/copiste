@@ -19,13 +19,13 @@
 #ifndef INCLUDED_FINGERPRINTERH
 #define INCLUDED_FINGERPRINTERH
 
-#include "core/soundanalyser.h"
+#include "core/streamplayer.h"
 #include <chromaprint.h>
 
 //! Type of a fingerprint
 typedef int fingerp;
 
-class FingerprintConsumer;
+#include "core/fingerprintconsumer.h"
 
 //! A class reading a file and producing fingerprints
 class Fingerprinter : public StreamPlayer
@@ -43,6 +43,9 @@ class Fingerprinter : public StreamPlayer
         void useBuffer();
         void sequenceEnds();
     private:
+        //! Send a fingerprint to the consumer (if any)
+        void sendFp(fingerp fp);
+
         bool mVerbose;
         FingerprintConsumer *mConsumer;
         ChromaprintContext *mCtxt;

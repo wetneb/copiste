@@ -30,7 +30,7 @@ namespace po = boost::program_options;
 #include <iostream>
 
 #include "algo/fingerprintcompare.h"
-#include "store/database.h"
+#include "algo/hmm.h"
 #include "core/fingerprinter.h"
 
 /**
@@ -61,9 +61,13 @@ int main(int argc, char **argv)
         return 0;
     }
 
+    HMM model(true);
+    model.erase(2);
+
     if(vm.count("input-files"))
     {
         Fingerprinter cl(vm.count("verbose"));
+        cl.setConsumer(&model);
 
         std::vector< std::string > inputFiles = vm["input-files"].as< std::vector<std::string> >();
 
@@ -73,6 +77,7 @@ int main(int argc, char **argv)
             cl.play();
             int di;
             std::cin >> di;
+            model.save("TODO");
         }
     }
     else

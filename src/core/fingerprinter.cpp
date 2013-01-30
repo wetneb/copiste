@@ -43,6 +43,13 @@ void Fingerprinter::sequenceEnds()
     ;
 }
 
+//! Sends a fingerprint to a consumer (if any)
+void Fingerprinter::sendFp(fingerp fp)
+{
+    if(mConsumer)
+        mConsumer->consumeFingerprint(fp);
+}
+
 //! Computes the fingerprint
 void Fingerprinter::useBuffer()
 {
@@ -67,7 +74,10 @@ void Fingerprinter::useBuffer()
         int size;
         chromaprint_get_raw_fingerprint(mCtxt, (void**)&fp, &size);
         for(int i = 0; i < size; i++)
-            cout << fp[i];
+        {
+            cout << fp[i] << " ";
+            sendFp(fp[i]);
+        }
         cout << endl;
         chromaprint_dealloc(fp);
     }

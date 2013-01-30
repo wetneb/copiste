@@ -43,6 +43,8 @@ void HMM::erase(int n)
     {
         mNullVector[i] = 0;
         mMatrix[i] = new int[n];
+        for(int j = 0; j < n; j++)
+            mMatrix[i][j] = 0;
     }
     mNbFpSeen = 0;
 }
@@ -89,9 +91,13 @@ void HMM::setState(int state)
 
 void HMM::consumeFingerprint(fingerp fp)
 {
-    vector<int> emProb = mEmit.get(fp,mNullVector);
-    mEmit.set(fp, incrementCurrent(emProb));
-    mNbFpSeen++;
+    if(mNbStates)
+    {
+        vector<int> emProb = mEmit.get(fp,mNullVector);
+        mEmit.set(fp, incrementCurrent(emProb));
+        mMatrix[mCurrentState][mCurrentState]++;
+        mNbFpSeen++;
+    }
 }
 
 vector<int> HMM::incrementCurrent(vector<int> v)
