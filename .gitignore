@@ -21,6 +21,7 @@ Kolmo
 .sconsign.dblite
 out.eps
 
+include/gui/moc_*
 
 live
 classify
