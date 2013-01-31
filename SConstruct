@@ -77,6 +77,8 @@ filters_files = [
 
 fp_files = [
     'src/core/fingerprinter.cpp',
+    'src/gui/frontend.cpp',
+    'include/gui/moc_frontend.cc',
     'src/algo/hmm.cpp',
     ]
 

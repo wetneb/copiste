@@ -27,6 +27,14 @@
 
 using namespace std;
 
+//! An observer for the state of the Hidden Markov Model
+class HMMStateObserver
+{
+    public:
+        //! Method called after every state change
+        virtual void notify() = 0;
+};
+
 //! A Hidden Markov Model classifier
 class HMM : public FingerprintConsumer
 {
@@ -36,15 +44,21 @@ class HMM : public FingerprintConsumer
 
         //! Create a fresh model with n states
         void erase(int n);
-
         //! Load a model from a file (return false if an error occured)
         bool load(string filename);
-
         //! Save a model to a file (return false if an error occured)
         bool save(string filename);
 
         //! Manually change the state of the model
         void setState(int state);
+        //! Get the current state (inferred or set if in training mode)
+        int state();
+
+        //! Set the observer for this model
+        void setObserver(HMMStateObserver *obs);
+        //! Unregister the observer (only if the current one is the one passed
+        // in argument)
+        void unregisterObserver(HMMStateObserver *obs);
 
     private:
         //! Callback reimplemented from FingerprintConsumer
@@ -65,6 +79,9 @@ class HMM : public FingerprintConsumer
         // State inference
         int mCurrentState;
         deque<fingerp> mObs;
+
+        // Notification
+        HMMStateObserver *mObserver;
 };
 
 #endif

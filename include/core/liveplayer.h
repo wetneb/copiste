@@ -29,7 +29,6 @@
 const int LIVE_PLAYER_HEIGHT = 600;
 const int LIVE_PLAYER_WIDTH = 800;
 
-
 //! Main class for live stream classification and visualisation
 class LivePlayer : public QWidget, public FeatureDrawer
 {

@@ -18,7 +18,7 @@
 #include "algo/hmm.h"
 
 HMM::HMM(bool training) : mTraining(training), mNbStates(0),
-            mMatrix(0), mNbFpSeen(0), mCurrentState(0)
+            mMatrix(0), mNbFpSeen(0), mCurrentState(0), mObserver(0)
 {
     ;
 }
@@ -81,12 +81,21 @@ bool HMM::save(string filename)
 
 void HMM::setState(int state)
 {
+    std::cout << "Switching to " << state << std::endl;
     if(mTraining && mNbFpSeen > 0)
     {
         mMatrix[mCurrentState][state]++;
         mMatrix[mCurrentState][mCurrentState]--;
     }
     mCurrentState = state;
+
+    if(mObserver)
+        mObserver->notify();
+}
+
+int HMM::state()
+{
+    return mCurrentState;
 }
 
 void HMM::consumeFingerprint(fingerp fp)
@@ -104,5 +113,16 @@ vector<int> HMM::incrementCurrent(vector<int> v)
 {
     v[mCurrentState]++;
     return v;
+}
+
+void HMM::setObserver(HMMStateObserver* obs)
+{
+    mObserver = obs;
+}
+
+void HMM::unregisterObserver(HMMStateObserver* obs)
+{
+    if(mObserver == obs)
+        mObserver = 0;
 }
 

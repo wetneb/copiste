@@ -21,7 +21,7 @@
 class FingerprintConsumer;
 
 //! Constructor
-Fingerprinter::Fingerprinter(bool verbose) : StreamPlayer(), mVerbose(verbose),
+Fingerprinter::Fingerprinter(bool verbose) : StreamPlayer(true), mVerbose(verbose),
                                              mConsumer(0), mFpRead(0), mChunksFed(0)
 {
     mCtxt = chromaprint_new(CHROMAPRINT_ALGORITHM_DEFAULT);

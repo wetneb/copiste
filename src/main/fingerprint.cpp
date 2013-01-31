@@ -32,6 +32,9 @@ namespace po = boost::program_options;
 #include "algo/fingerprintcompare.h"
 #include "algo/hmm.h"
 #include "core/fingerprinter.h"
+#include "gui/frontend.h"
+
+#include <QApplication>
 
 /**
  * \brief Main function for fingerprinting an audio file
@@ -64,6 +67,11 @@ int main(int argc, char **argv)
     HMM model(true);
     model.erase(2);
 
+    QApplication app(argc, argv);
+    HMMFrontend frontend;
+    model.setObserver(&frontend);
+    frontend.setModel(&model);
+
     if(vm.count("input-files"))
     {
         Fingerprinter cl(vm.count("verbose"));
@@ -74,7 +82,10 @@ int main(int argc, char **argv)
         for(unsigned int i = 0; i < inputFiles.size(); i++)
         {
             cl.setUrl(inputFiles[i]);
+
             cl.play();
+            frontend.show();
+            app.exec();
             int di;
             std::cin >> di;
             model.save("TODO");
