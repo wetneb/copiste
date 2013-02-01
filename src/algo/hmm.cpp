@@ -17,6 +17,8 @@
 
 #include "algo/hmm.h"
 
+using namespace boost::numeric;
+
 HMM::HMM(bool training) : mTraining(training), mNbStates(0),
             mMatrix(0), mNbFpSeen(0), mCurrentState(0), mObserver(0)
 {
@@ -51,7 +53,79 @@ void HMM::erase(int n)
 
 bool HMM::load(string filename)
 {
-    
+    QDomDocument doc;
+
+    QFile file(filename.c_str());
+    if(!file.open(QIODevice::ReadOnly))
+    {
+        std::cerr << "Unable to open the file : \""
+         << filename << std::endl;
+        return false;
+    }   
+    doc.setContent(&file);
+    file.close();
+
+    QDomNode node = doc.documentElement();
+
+    if(node.toElement().tagName() == "model")
+    {
+        QDomElement rootElem = node.toElement();
+        int nbstates = rootElem.attribute("states", "0").toInt();
+        if(nbstates <= 0)
+        {
+            std::cerr << filename <<
+             " : Invalid model : must have a postive number of states."
+             << std::endl;
+        }
+
+        erase(nbstates);
+
+        node = node.firstChild();
+        while(!node.isNull())
+        {
+            QDomElement elem = node.toElement();
+            if(elem.tagName() == "emit")
+            {
+                if(not elem.hasAttribute("file"))
+                {
+                    std::cerr << filename <<
+                    " : Invalid emission database : no file specified."
+                    << std::endl;
+                }
+                if(!mEmit.load(elem.attribute("file","undef").toStdString()))
+                {
+                    std::cerr << filename <<
+                    " : Unable to load the emit database." << std::endl;
+                }
+            }
+            else if(elem.tagName() == "transition")
+            {
+                std::istringstream stream(elem.text().toStdString());
+                try
+                {
+                    ublas::matrix<float> table;
+                    boost::archive::text_iarchive ar(stream);
+                    ar & table;
+                    for(int i = 0; i < mNbStates; i++)
+                        for(int j = 0; j < mNbStates; j++)
+                            mMatrix[i][j] = table(i,j);
+                }
+                catch(boost::archive::archive_exception ex)
+                {
+                    std::cerr << filename <<
+                    " : Invalid transition table : " << ex.what() <<
+                    std::endl;
+                }
+            }
+        }
+    }
+    else
+    {
+        std::cerr << filename <<
+            " : Invalid document : expected <model> markup." << std::endl;
+        return false;
+    }
+
     return true;
 }
 

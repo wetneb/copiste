@@ -154,7 +154,7 @@ bool Corpus::load(std::string filename, bool verbose)
     }
     else
     {
-        std::cerr << filename << " : Invalid document : expecting <corpus> markup." << std::endl;
+        std::cerr << filename << " : Invalid document : expected <corpus> markup." << std::endl;
         return false;
     }
 

@@ -25,6 +25,21 @@
 #include <deque>
 #include <vector>
 
+#include <QDomDocument>
+#include <QDomNode>
+#include <QDomElement>
+#include <QFile>
+
+// Matrix and vector management
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
+#include <boost/numeric/ublas/io.hpp>
+
+// Serialization
+#include <fstream>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 using namespace std;
 
 //! An observer for the state of the Hidden Markov Model
