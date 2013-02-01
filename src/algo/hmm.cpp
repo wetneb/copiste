@@ -105,8 +105,46 @@ void HMM::consumeFingerprint(fingerp fp)
         vector<int> emProb = mEmit.get(fp,mNullVector);
         mEmit.set(fp, incrementCurrent(emProb));
         mMatrix[mCurrentState][mCurrentState]++;
-        mNbFpSeen++;
+        if(mTraining)
+            mNbFpSeen++;
+
+        if(not mTraining)
+        {
+            mObs.push_back(fp);
+            infer();
+        }
     }
+}
+
+void HMM::infer()
+{
+    while(not mObs.empty())
+    {
+        fingerp fp = mObs.front();
+        mObs.pop_front();
+        vector<int> emitProb = mEmit.get(fp, mNullVector);
+        vector<float> curProbas(mNbStates, 0);
+        for(int s = 0; s < mNbStates; s++)
+        {
+            float maxp = 0;
+            for(int s0 = 0; s0 < mNbStates; s0++)
+            {
+                maxp = std::max(maxp, mProbas[mProbas.size()-1][s0]*
+                        ((float)mMatrix[s0][s]) / mNbFpSeen);
+            }
+            curProbas[s] = (((float)emitProb[s]) / (mNbFpSeen)) * maxp;
+        }
+        mProbas.push_back(curProbas);
+    }
+
+    vector<float> latestProb = mProbas[mProbas.size()-1];
+    int bestS = -1;
+    for(int s = 0; s < mNbStates; s++)
+    {
+        if(bestS == -1 || latestProb[bestS] < latestProb[s])
+            bestS = latestProb[s];
+    }
+    setState(bestS);
 }
 
 vector<int> HMM::incrementCurrent(vector<int> v)

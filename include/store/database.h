@@ -37,8 +37,12 @@ template<class T> class Database
         //! Create a fresh database
         virtual void erase(int nbStates) = 0;
 
-        //! Retrieve the binding of a fingerprint (returns 0 if unbound)
+        //! Retrieve the binding of a fingerprint (without bounds checking)
         virtual T get(fingerp fp) = 0;
+
+        //! Retrieve the binding of a fingerprint
+        // (or the default value if unbound)
+        virtual T get(fingerp fp, T &default_val) = 0;
 
         //! Set the binding of a fingerprint
         virtual void set(fingerp fp, T data) = 0;

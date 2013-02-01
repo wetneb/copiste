@@ -66,6 +66,8 @@ class HMM : public FingerprintConsumer
         //! Increments the mCurrentState field of the vector
         vector<int> incrementCurrent(vector<int> orig);
         vector<int> mNullVector;
+        //! Infers the current state (Viterbi algorithm)
+        void infer();
 
         //! Training or classifying
         bool mTraining;
@@ -79,6 +81,7 @@ class HMM : public FingerprintConsumer
         // State inference
         int mCurrentState;
         deque<fingerp> mObs;
+        vector<vector<float> > mProbas;
 
         // Notification
         HMMStateObserver *mObserver;
