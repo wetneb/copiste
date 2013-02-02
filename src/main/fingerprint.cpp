@@ -44,8 +44,13 @@ int main(int argc, char **argv)
 {
     po::options_description desc("Usage");
     desc.add_options()
-        ("input-files", po::value< std::vector<std::string> >(), "The input files.")
-        ("verbose", "Be verbose.")
+        ("input-files", po::value< std::vector<std::string> >(),
+         "The input files.")
+        ("train,t", po::value< std::string >(),
+         "Train an HMM and save it to the file.")
+        ("classify,c", po::value< std::string >(), "Load an HMM from the "
+         "file and classify the stream.")
+        ("verbose,v", "Be verbose.")
         ("help,h", "Display this message");
 
     po::positional_options_description p;
@@ -58,42 +63,70 @@ int main(int argc, char **argv)
     
     if(vm.count("help"))
     {
-        std::cout << "Fingerprint extractor.\n\nExample:" << std::endl;
-        std::cout << "Extract a fingerprint :\n   fingerprint hzcrr-lster rickroll.ogg\n" << std::endl;
+        std::cout <<
+            "Fingerprint HMM trainer and evaluator.\n"
+            "\n"
+            "Example:\n"
+            "Train an HMM on rickroll.ogg and save it to hmm.xml :\n"
+            "   fingerprint -t hmm.xml rickroll.ogg\n"
+            "Load an HMM from hmm.xml and run it on rickroll.ogg :\n"
+            "   fingerprint -c hmm.xml rickroll.ogg\n" << std::endl;
         std::cout << desc << std::endl;
         return 0;
     }
 
-    HMM model(true);
-    model.erase(2);
-
-    QApplication app(argc, argv);
-    HMMFrontend frontend;
-    model.setObserver(&frontend);
-    frontend.setModel(&model);
-
     if(vm.count("input-files"))
     {
-        Fingerprinter cl(vm.count("verbose"));
-        cl.setConsumer(&model);
-
-        std::vector< std::string > inputFiles = vm["input-files"].as< std::vector<std::string> >();
-
-        for(unsigned int i = 0; i < inputFiles.size(); i++)
+        if(vm.count("train") && vm.count("classify") == 0)
         {
-            cl.setUrl(inputFiles[i]);
+            HMM model(true);
+            model.erase(2);
 
-            cl.play();
-            frontend.show();
-            app.exec();
-            int di;
-            std::cin >> di;
-            model.save("pub.xml");
+            QApplication app(argc, argv);
+            HMMFrontend frontend;
+            model.setObserver(&frontend);
+            frontend.setModel(&model);
+
+            Fingerprinter cl(vm.count("verbose"), true);
+            cl.setConsumer(&model);
+
+            std::vector< std::string > inputFiles = vm["input-files"].as< std::vector<std::string> >();
+
+            for(unsigned int i = 0; i < inputFiles.size(); i++)
+            {
+                cl.setUrl(inputFiles[i]);
+
+                cl.play();
+                frontend.show();
+                app.exec();
+                model.save(vm["train"].as< std::string >());
+            }
+        }
+        else if(vm.count("classify") && vm.count("train") == 0)
+        {
+            HMM model(false);
+            model.load(vm["classify"].as< std::string >());
+
+            Fingerprinter cl(vm.count("verbose"), false);
+            cl.setConsumer(&model);
+
+            std::vector< std::string > inputFiles = vm["input-files"].as< std::vector<std::string> >();
+            for(unsigned int i = 0; i < inputFiles.size(); i++)
+            {
+                cl.setUrl(inputFiles[i]);
+                cl.play();
+            }
+            int i;
+            cin >> i;
+        }
+        else
+        {
+            std::cerr << "Either -c or -t has to be specified." << std::endl;
         }
     }
     else
     {
-        cout << "No input file has been set. Use --help for more info."<<endl;
+        cerr << "No input file has been set. Use --help for more info."<<endl;
     }
 
     return 0;

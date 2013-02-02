@@ -83,6 +83,9 @@ class HMM : public FingerprintConsumer
         vector<int> mNullVector;
         //! Infers the current state (Viterbi algorithm)
         void infer();
+        //! Debug purposes only
+        // TODO : delete me
+        void print();
 
         //! Training or classifying
         bool mTraining;

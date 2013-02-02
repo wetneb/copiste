@@ -21,8 +21,9 @@
 class FingerprintConsumer;
 
 //! Constructor
-Fingerprinter::Fingerprinter(bool verbose) : StreamPlayer(true), mVerbose(verbose),
-                                             mConsumer(0), mFpRead(0), mChunksFed(0)
+Fingerprinter::Fingerprinter(bool verbose, bool live) :
+   StreamPlayer(live), mVerbose(verbose),
+   mConsumer(0), mFpRead(0), mChunksFed(0)
 {
     mCtxt = chromaprint_new(CHROMAPRINT_ALGORITHM_DEFAULT);
 }
@@ -73,12 +74,15 @@ void Fingerprinter::useBuffer()
         int32_t *fp;
         int size;
         chromaprint_get_raw_fingerprint(mCtxt, (void**)&fp, &size);
-        for(int i = 0; i < size; i++)
+        if(mVerbose)
         {
-            cout << fp[i] << " ";
-            sendFp(fp[i]);
+            for(int i = 0; i < size; i++)
+            {
+                cout << fp[i] << " ";
+                sendFp(fp[i]);
+            }
+            cout << endl;
         }
-        cout << endl;
         chromaprint_dealloc(fp);
     }
 }

@@ -71,10 +71,16 @@ bool HMM::load(string filename)
     {
         QDomElement rootElem = node.toElement();
         int nbstates = rootElem.attribute("states", "0").toInt();
-        if(nbstates <= 0)
+        if(!rootElem.hasAttribute("states"))
         {
             std::cerr << filename <<
-             " : Invalid model : must have a postive number of states."
+            " : Number of states not specified."
+            << std::endl;
+        }
+        else if(nbstates <= 0)
+        {
+            std::cerr << filename <<
+             " : Invalid model : must have a positive number of states."
              << std::endl;
         }
 
@@ -117,6 +123,7 @@ bool HMM::load(string filename)
                     std::endl;
                 }
             }
+            node = node.nextSibling();
         }
     }
     else
@@ -126,6 +133,7 @@ bool HMM::load(string filename)
         return false;
     }
 
+    print();
     return true;
 }
 
@@ -138,6 +146,7 @@ bool HMM::save(string filename)
     QDomDocument doc;
 
     QDomElement rootNode = doc.createElement("model");
+    rootNode.setAttribute("states", mNbStates);
     
     string dbFile = "fp.db";
 
@@ -164,7 +173,13 @@ bool HMM::save(string filename)
     // 4 is the indentation
     file.write(doc.toString(4).toAscii());
     file.close();
-/*
+    
+    return true;
+}
+
+// Provided for debug purposes only
+void HMM::print()
+{
     std::cout << "Transition matrix :\n";
     for(int i = 0; i < mNbStates; i++)
     {
@@ -183,8 +198,6 @@ bool HMM::save(string filename)
             std::cout << v[i] << " ";
         std::cout << std::endl;
     }
-*/
-    return true;
 }
 
 void HMM::setState(int state)
@@ -193,6 +206,10 @@ void HMM::setState(int state)
     {
         mMatrix[mCurrentState][state]++;
         mMatrix[mCurrentState][mCurrentState]--;
+    }
+    else
+    {
+        std::cout << "State : " << state << std::endl;
     }
     mCurrentState = state;
 
@@ -225,9 +242,11 @@ void HMM::consumeFingerprint(fingerp fp)
 
 void HMM::infer()
 {
+    cout << "Infer :" << endl;
     while(not mObs.empty())
     {
         fingerp fp = mObs.front();
+        cout << "for "<< fp << endl;
         mObs.pop_front();
         vector<int> emitProb = mEmit.get(fp, mNullVector);
         vector<float> curProbas(mNbStates, 0);
@@ -236,8 +255,12 @@ void HMM::infer()
             float maxp = 0;
             for(int s0 = 0; s0 < mNbStates; s0++)
             {
-                maxp = std::max(maxp, mProbas[mProbas.size()-1][s0]*
+                float p = 
+                  (mProbas.empty() ?
+                    1 :
+                    mProbas[mProbas.size()-1][s0]*
                         ((float)mMatrix[s0][s]) / mNbFpSeen);
+                maxp = std::max(maxp, p);
             }
             curProbas[s] = (((float)emitProb[s]) / (mNbFpSeen)) * maxp;
         }
@@ -249,7 +272,7 @@ void HMM::infer()
     for(int s = 0; s < mNbStates; s++)
     {
         if(bestS == -1 || latestProb[bestS] < latestProb[s])
-            bestS = latestProb[s];
+            bestS = s;
     }
     setState(bestS);
 }

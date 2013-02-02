@@ -32,7 +32,7 @@ class Fingerprinter : public StreamPlayer
 {
     public:
         //! Constructor
-        Fingerprinter(bool verbose = true);
+        Fingerprinter(bool verbose = true, bool live = false);
 
         ~Fingerprinter();
 
