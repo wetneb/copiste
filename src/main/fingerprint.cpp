@@ -88,7 +88,7 @@ int main(int argc, char **argv)
             app.exec();
             int di;
             std::cin >> di;
-            model.save("TODO");
+            model.save("pub.xml");
         }
     }
     else

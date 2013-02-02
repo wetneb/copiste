@@ -131,6 +131,40 @@ bool HMM::load(string filename)
 
 bool HMM::save(string filename)
 {
+    QFile file(filename.c_str());
+    if(!file.open(QFile::WriteOnly))
+        std::cerr << filename << " : Unable to open the file." << std::endl;
+
+    QDomDocument doc;
+
+    QDomElement rootNode = doc.createElement("model");
+    
+    string dbFile = "fp.db";
+
+    QDomElement emitElem = doc.createElement("emit");
+    emitElem.setAttribute("file", dbFile.c_str());
+    rootNode.appendChild(emitElem);
+
+    mEmit.save(dbFile);
+
+    QDomElement transNode = doc.createElement("transition");
+    ublas::matrix<float> table(mNbStates, mNbStates);
+    for(int i = 0; i < mNbStates; i++)
+        for(int j = 0; j < mNbStates; j++)
+           table(i,j) = mMatrix[i][j];
+    std::ostringstream stream;
+    boost::archive::text_oarchive ar(stream);
+    ar & table;
+    QDomText textNode = doc.createTextNode(stream.str().c_str());
+    transNode.appendChild(textNode);
+    rootNode.appendChild(transNode);
+    
+    doc.appendChild(rootNode);
+
+    // 4 is the indentation
+    file.write(doc.toString(4).toAscii());
+    file.close();
+/*
     std::cout << "Transition matrix :\n";
     for(int i = 0; i < mNbStates; i++)
     {
@@ -149,13 +183,12 @@ bool HMM::save(string filename)
             std::cout << v[i] << " ";
         std::cout << std::endl;
     }
-
+*/
     return true;
 }
 
 void HMM::setState(int state)
 {
-    std::cout << "Switching to " << state << std::endl;
     if(mTraining && mNbFpSeen > 0)
     {
         mMatrix[mCurrentState][state]++;
