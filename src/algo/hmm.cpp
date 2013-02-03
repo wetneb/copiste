@@ -133,6 +133,11 @@ bool HMM::load(string filename)
         return false;
     }
 
+    // Compute mNbFpSeen;
+    mNbFpSeen = 0;
+    for(int i = 0; i < mNbStates; i++)
+        mNbFpSeen += mMatrix[0][i];
+
     print();
     return true;
 }
@@ -209,7 +214,7 @@ void HMM::setState(int state)
     }
     else
     {
-        std::cout << "State : " << state << std::endl;
+        std::cout << "State : " << state << std::endl;
     }
     mCurrentState = state;
 
@@ -226,11 +231,13 @@ void HMM::consumeFingerprint(fingerp fp)
 {
     if(mNbStates)
     {
-        vector<int> emProb = mEmit.get(fp,mNullVector);
-        mEmit.set(fp, incrementCurrent(emProb));
-        mMatrix[mCurrentState][mCurrentState]++;
         if(mTraining)
+        {
+            vector<int> emProb = mEmit.get(fp,mNullVector);
+            mEmit.set(fp, incrementCurrent(emProb));
+            mMatrix[mCurrentState][mCurrentState]++;
             mNbFpSeen++;
+        }
 
         if(not mTraining)
         {
@@ -242,11 +249,9 @@ void HMM::consumeFingerprint(fingerp fp)
 
 void HMM::infer()
 {
-    cout << "Infer :" << endl;
     while(not mObs.empty())
     {
         fingerp fp = mObs.front();
-        cout << "for "<< fp << endl;
         mObs.pop_front();
         vector<int> emitProb = mEmit.get(fp, mNullVector);
         vector<float> curProbas(mNbStates, 0);
