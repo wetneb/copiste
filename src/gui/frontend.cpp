@@ -17,18 +17,22 @@
 
 #include "gui/frontend.h"
 
-HMMFrontend::HMMFrontend(QWidget* parent) : QWidget(parent), mModel(0)
+HMMFrontend::HMMFrontend(QWidget* parent) : QWidget(parent), mModel(0),
+    mPlayer(0)
 {
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addWidget(&mLabel);
-    layout->addWidget(&mButton);
+    layout->addWidget(&mToggle);
+    layout->addWidget(&mPlay);
     
     mLabel.setText("State : default");
-    mButton.setText("Toggle");
+    mToggle.setText("Toggle state");
+    mPlay.setText("Play");
 
     setLayout(layout);
 
-    connect(&mButton, SIGNAL(pressed()), this, SLOT(toggleState()));
+    connect(&mToggle, SIGNAL(pressed()), this, SLOT(toggleState()));
+    connect(&mPlay, SIGNAL(pressed()), this, SLOT(playPause()));
 }
 
 HMMFrontend::~HMMFrontend()
@@ -54,4 +58,22 @@ void HMMFrontend::toggleState()
     if(mModel)
         mModel->setState(1 - mModel->state());
 }
+
+void HMMFrontend::setPlayer(StreamPlayer* player)
+{
+    mPlayer = player;
+}
+
+void HMMFrontend::playPause()
+{
+    if(mPlayer)
+    {
+        mPlayer->togglePauseResume();
+        if(mPlayer->isPaused())
+            mPlay.setText("Play");
+        else
+            mPlay.setText("Pause");
+    }
+}
+
 

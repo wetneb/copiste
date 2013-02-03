@@ -28,7 +28,8 @@ using namespace std;
 template<class T> class Database
 {
     public:
-        //! Load the database from a file (the whole database may not fit in memory…)
+        //! Load the database from a file
+        // (the whole database may not fit in memory…)
         virtual bool load(string filename) = 0;
 
         //! Write to a file
@@ -43,6 +44,9 @@ template<class T> class Database
         //! Retrieve the binding of a fingerprint
         // (or the default value if unbound)
         virtual T get(fingerp fp, T &default_val) = 0;
+
+        //! Check if a fingerprint is bound
+        virtual bool exists(fingerp p) = 0;
 
         //! Set the binding of a fingerprint
         virtual void set(fingerp fp, T data) = 0;

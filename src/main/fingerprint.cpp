@@ -89,6 +89,7 @@ int main(int argc, char **argv)
 
             Fingerprinter cl(vm.count("verbose"), true);
             cl.setConsumer(&model);
+            frontend.setPlayer(&cl);
 
             std::vector< std::string > inputFiles = vm["input-files"].as< std::vector<std::string> >();
 
@@ -97,6 +98,7 @@ int main(int argc, char **argv)
                 cl.setUrl(inputFiles[i]);
 
                 cl.play();
+                cl.togglePauseResume();
                 frontend.show();
                 app.exec();
                 model.save(vm["train"].as< std::string >());

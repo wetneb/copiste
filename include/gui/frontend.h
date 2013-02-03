@@ -23,6 +23,7 @@
 #include <QHBoxLayout>
 
 #include "algo/hmm.h"
+#include "core/streamplayer.h"
 
 //! A GUI frontend for an HMM classifier
 class HMMFrontend : public QWidget, public HMMStateObserver
@@ -33,6 +34,9 @@ class HMMFrontend : public QWidget, public HMMStateObserver
         
         ~HMMFrontend();
 
+        //! Attach to a stream player (to support play/pause)
+        void setPlayer(StreamPlayer *player);
+
         //! Bind the frontend to a model (set to 0 to unbind)
         void setModel(HMM* model);
 
@@ -41,11 +45,15 @@ class HMMFrontend : public QWidget, public HMMStateObserver
 
     public slots:
         void toggleState();
+        void playPause();
 
     private:
         HMM* mModel;
-        QPushButton mButton;
+        QPushButton mToggle;
+        QPushButton mPlay;
         QLabel mLabel;
+
+        StreamPlayer* mPlayer;
 };
 
 #endif

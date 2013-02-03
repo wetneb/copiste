@@ -24,12 +24,9 @@ using namespace std;
 
 // This class is just a small hack, everything is hardcoded
 
-StreamPlayer::StreamPlayer(bool live, bool verbose) : mVerbose(verbose),
-                                                      mOverlapping(0),
-                                                      mChunkSize(DEFAULT_AUDIO_CHUNK_SIZE),
-                                                      mFramesOverlap(0),
-                                                      mMp(0),
-                                                      mMedia(0)
+StreamPlayer::StreamPlayer(bool live, bool verbose) : 
+    mVerbose(verbose), mOverlapping(0), mChunkSize(DEFAULT_AUDIO_CHUNK_SIZE),
+    mFramesOverlap(0), mMp(0), mMedia(0), mPaused(false)
 {
     // Set up VLC
     mLive = live;
@@ -94,6 +91,19 @@ void StreamPlayer::play()
     mPlaying = true;
     boost::thread watchThread(boost::bind(&StreamPlayer::watch, this));
     watchThread.detach();
+}
+
+// Pause or resume the stream
+void StreamPlayer::togglePauseResume()
+{
+    mPaused = !mPaused;
+    libvlc_media_player_set_pause(mMp, mPaused);
+}
+
+//! Is the stream paused ?
+bool StreamPlayer::isPaused()
+{
+    return mPaused;
 }
 
 // Time we've been playing this file, in ms (useful to evaluate how far we computed)
@@ -197,6 +207,7 @@ void StreamPlayer::watch()
     sequenceEnds();
 }
 
+// TODO : remove this dead code
 // Rewrite data. The returned array has to be deleted by the user
 uint16_t* StreamPlayer::convert8to16(const uint8_t* source, int size)
 {

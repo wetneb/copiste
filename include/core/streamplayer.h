@@ -79,6 +79,10 @@ class StreamPlayer
 
         //! Plays the media
         void play();
+        //! Pause the playing
+        void togglePauseResume();
+        //! Is the stream paused ?
+        bool isPaused(); 
         //! Returns the playing time
         libvlc_time_t playingTime();
         //! Returns the total time (played + to be played)
@@ -96,7 +100,8 @@ class StreamPlayer
 
         //! Callback called when we start playing a file
         virtual void sequenceStarts() { ; }
-        //! Callback called when the data is ready in the buffer (miam). The user don't have to manage the memory.
+        //! Callback called when the data is ready in the buffer (miam).
+        // The user don't have to manage the memory.
         virtual void useBuffer() { ; }
         //! Callback called when the file ended
         virtual void sequenceEnds() { ; }
@@ -105,7 +110,8 @@ class StreamPlayer
 
         // TODO : maybe we just have to do a cast ??
         /**
-         * \brief Converts an array of uint8_t to another array of uint16_t (assuming the values are coded on two bytes)
+         * \brief Converts an array of uint8_t to another array of uint16_t
+         * (assuming the values are coded on two bytes)
          * The returned pointer has to be deleted by the user.
          */
         static uint16_t* convert8to16(const uint8_t* source, int size);
@@ -113,11 +119,14 @@ class StreamPlayer
          * \brief Computes the average value of the stream, on a given frequency
          * The returned pointer has to be deleted by the user.
          */
-        static uint16_t* average(uint16_t* source, int size, int passes, int scale= 1);
+        static uint16_t* average(uint16_t* source, int size,
+                int passes, int scale= 1);
         //! Reduces the stream, keeping only the extreme values
-        static void reduce(uint16_t* source, uint16_t* dest, int size, int passes, int scale=1);
+        static void reduce(uint16_t* source, uint16_t* dest, int size,
+                int passes, int scale=1);
         //! Adds an offset to each value of the array
-        static void addOffset(uint16_t* source, uint16_t* dest, int size, int offset);
+        static void addOffset(uint16_t* source, uint16_t* dest,
+                int size, int offset);
         //! Get 2^n
         static int pow2(int n);
 
@@ -133,7 +142,8 @@ class StreamPlayer
         //! Flush buffer (just keep the overlapping part)
         inline void flushBuffer();
 
-        //! Feature extraction : those variables need to be public (I know, I can write accessors...)
+        //! Feature extraction : those variables need to be public
+        // (I know, I can write accessors...)
         std::deque<int16_t> mBuffer;
         QMutex mLock;
 
@@ -162,6 +172,7 @@ class StreamPlayer
 
         boost::thread mWatchThread;
         boost::mutex mPlayingLock;
+        bool mPaused;
 };
 
 /**
@@ -213,3 +224,4 @@ class StreamPlayer
  */
 
 #endif
+

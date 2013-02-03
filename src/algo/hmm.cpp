@@ -253,23 +253,26 @@ void HMM::infer()
     {
         fingerp fp = mObs.front();
         mObs.pop_front();
-        vector<int> emitProb = mEmit.get(fp, mNullVector);
-        vector<float> curProbas(mNbStates, 0);
-        for(int s = 0; s < mNbStates; s++)
+        if(mEmit.exists(fp))
         {
-            float maxp = 0;
-            for(int s0 = 0; s0 < mNbStates; s0++)
+            vector<int> emitProb = mEmit.get(fp);
+            vector<float> curProbas(mNbStates, 0);
+            for(int s = 0; s < mNbStates; s++)
             {
-                float p = 
-                  (mProbas.empty() ?
-                    1 :
-                    mProbas[mProbas.size()-1][s0]*
-                        ((float)mMatrix[s0][s]) / mNbFpSeen);
-                maxp = std::max(maxp, p);
+                float maxp = 0;
+                for(int s0 = 0; s0 < mNbStates; s0++)
+                {
+                    float p = 
+                      (mProbas.empty() ?
+                        1 :
+                        mProbas[mProbas.size()-1][s0]*
+                            ((float)mMatrix[s0][s]) / mNbFpSeen);
+                    maxp = std::max(maxp, p);
+                }
+                curProbas[s] = (((float)emitProb[s]) / (mNbFpSeen)) * maxp;
             }
-            curProbas[s] = (((float)emitProb[s]) / (mNbFpSeen)) * maxp;
+            mProbas.push_back(curProbas);
         }
-        mProbas.push_back(curProbas);
     }
 
     vector<float> latestProb = mProbas[mProbas.size()-1];
