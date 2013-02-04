@@ -152,7 +152,6 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
     // The data is sent to us as bytes, but encoded on 2 bytes
     // TODO: dynamicly check that this is the case and that we're not mishandling the data
     // TODO: stereo support
-    // TODO: allocate temp only once and send the address to convert8to16
     int16_t* temp = (int16_t*)p_pcm_buffer;
     size /= 2;
 
@@ -205,35 +204,6 @@ void StreamPlayer::watch()
     mPlayingLock.unlock();
 
     sequenceEnds();
-}
-
-// TODO : remove this dead code
-// Rewrite data. The returned array has to be deleted by the user
-uint16_t* StreamPlayer::convert8to16(const uint8_t* source, int size)
-{
-    uint16_t* dest = new uint16_t[size/2];
-    uint16_t buf, reference = (uint16_t)(-1);
-    reference /= 2;
-    for(int i = 0; i != size/2; i++)
-    {
-        buf = source[i*2+1];
-        buf = buf << 8;
-        buf = buf | source[i*2];
-        if(buf > reference)
-            buf -= reference;
-        else buf += reference;
-        dest[i] = buf;
-    }
-    return dest;
-}
-
-// Unused function that adds an offset to an array
-void StreamPlayer::addOffset(uint16_t* source, uint16_t* dest, int size, int offset)
-{
-    for(int i = 0; i != size; ++i)
-    {
-        dest[i] = source[i] + offset;
-    }
 }
 
 int16_t StreamPlayer::buffer(int i)

@@ -34,7 +34,7 @@
 #include "features/spectrum.h"
 
 const int DEFAULT_AUDIO_CHUNK_SIZE = 4096; 
-const int VLC_DEFAULT_VOLUME = 0;
+const int VLC_DEFAULT_VOLUME = 80;
 
 using namespace std;
 
@@ -108,25 +108,6 @@ class StreamPlayer
 
         // Handling functions
 
-        // TODO : maybe we just have to do a cast ??
-        /**
-         * \brief Converts an array of uint8_t to another array of uint16_t
-         * (assuming the values are coded on two bytes)
-         * The returned pointer has to be deleted by the user.
-         */
-        static uint16_t* convert8to16(const uint8_t* source, int size);
-        /**
-         * \brief Computes the average value of the stream, on a given frequency
-         * The returned pointer has to be deleted by the user.
-         */
-        static uint16_t* average(uint16_t* source, int size,
-                int passes, int scale= 1);
-        //! Reduces the stream, keeping only the extreme values
-        static void reduce(uint16_t* source, uint16_t* dest, int size,
-                int passes, int scale=1);
-        //! Adds an offset to each value of the array
-        static void addOffset(uint16_t* source, uint16_t* dest,
-                int size, int offset);
         //! Get 2^n
         static int pow2(int n);
 
