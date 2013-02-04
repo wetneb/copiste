@@ -56,15 +56,10 @@ void Fingerprinter::useBuffer()
 {
     if(mChunksFed == 0)
     {   
-        chromaprint_start(mCtxt, mFrequency, 1);
+        chromaprint_start(mCtxt, mFrequency, mChannels);
     }
 
-    int16_t* buf = new int16_t[chunkSize()];
-    for(int i = 0; i < chunkSize(); i++)
-        buf[i] = mBuffer[i];
-
-    chromaprint_feed(mCtxt, buf, chunkSize());
-    delete buf;
+    chromaprint_feed(mCtxt, mBuffer, mChannels*chunkSize());
     mChunksFed++;
 
     if(mChunksFed == 32)
