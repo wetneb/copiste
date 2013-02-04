@@ -167,7 +167,7 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
     // of the same size (a power of two) so that the algorithms can handle it in the right way
     while(copied < size)
     {
-        unsigned int to_copy = min((channels*sp->chunkSize()) - (channels*sp->mBufferSize), size - copied);
+        unsigned int to_copy = min(channels*(sp->chunkSize() - sp->mBufferSize), size - copied);
         // TODO : remove this comment
      /*   cout << "channels : " << channels << endl
             << "chunk size : " << sp->chunkSize() << endl
@@ -176,7 +176,7 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
             << "copied : " << copied << endl
             << "=> to_copy : " << to_copy << endl; */
         memcpy(sp->mBuffer + channels*sp->bufferSize(), temp + copied,
-                to_copy);
+                to_copy*sizeof(int16_t));
         copied += to_copy;
         sp->mBufferSize += to_copy / channels;
 
@@ -227,7 +227,8 @@ int StreamPlayer::bufferSize()
 
 void StreamPlayer::flushBuffer()
 {
-    memcpy(mBuffer + mChannels*(mChunkSize - mFramesOverlap), mBuffer, mChannels*mFramesOverlap*sizeof(int16_t));
+    memcpy(mBuffer, mBuffer + mChannels*(mChunkSize - mFramesOverlap),
+            mChannels*mFramesOverlap*sizeof(int16_t));
     mBufferSize = mFramesOverlap;
 }
 
