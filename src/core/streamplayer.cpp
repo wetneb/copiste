@@ -182,7 +182,6 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
 
         if(sp->bufferSize() >= sp->chunkSize())
         {
-            cout << "Using buffer" << endl;
             // The buffer is sent to the "user"
             sp->useBuffer();
 

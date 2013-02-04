@@ -33,8 +33,8 @@
 
 #include "features/spectrum.h"
 
-const int DEFAULT_AUDIO_CHUNK_SIZE = 4096; 
-const int VLC_DEFAULT_VOLUME = 80;
+#define DEFAULT_AUDIO_CHUNK_SIZE 4096
+#define VLC_DEFAULT_VOLUME 80
 
 using namespace std;
 

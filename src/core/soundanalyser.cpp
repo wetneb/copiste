@@ -20,14 +20,9 @@
 
 //! Sets up a new sound analyser
 SoundAnalyser::SoundAnalyser(bool live) : StreamPlayer(live),
-                                mDimension(0),
-                                mRealDimension(0),
-                                mUsedExtractors(0),
-                                mNormalize(false),
-                                mOverlapping(0),
-                                mMinFeature(0),
-                                mMaxFeature(0),
-                                mComputed(false)
+    mDimension(0), mRealDimension(0), mUsedExtractors(0),
+    mNormalize(false), mOverlapping(0), mMinFeature(0),
+    mMaxFeature(0), mComputed(false)
 {
     mLastUpdateTime = 0;
 }
@@ -55,7 +50,8 @@ bool SoundAnalyser::setupPipeline(string filename)
     {
         if(node.toElement().attribute("overlapping", "0").toFloat() != 0)
             setOverlapping(node.toElement().attribute("overlapping", "0").toFloat());
-        setChunkSize(node.toElement().attribute("chunk_size", "DEFAULT_AUDIO_CHUNK_SIZE").toInt());
+        setChunkSize(node.toElement().attribute("chunk_size",
+                    "DEFAULT_AUDIO_CHUNK_SIZE").toInt());
 
         node = node.firstChild();
 
@@ -108,12 +104,15 @@ bool SoundAnalyser::setupPipeline(string filename)
                     QDomElement child = node.firstChildElement();
                     if(!child.isNull() && child.tagName() == "ref")
                     {
-                        FeatureExtractor *parent = getExtractor(child.attribute("name", "_").toStdString());
+                        FeatureExtractor *parent = getExtractor(
+                                child.attribute("name", "_").toStdString());
                         if(parent != 0)
                             flt->bind(parent);
                         else
                         {
-                            cout << filename << " : Invalid reference : " << child.attribute("name", "_").toStdString() << endl;
+                            cout << filename << " : Invalid reference : "
+                             << child.attribute("name", "_").toStdString()
+                             << endl;
                             delete flt;
                             flt = 0;
                         }
