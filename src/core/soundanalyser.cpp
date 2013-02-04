@@ -272,7 +272,7 @@ void SoundAnalyser::useBuffer()
         {
             // Compute
             FeatureExtractor *extr = mExtr[i].second;
-            extr->extract(mBuffer, chunkSize());
+            extr->extract(mBuffer, chunkSize(), mChannels);
             if(mNormalize)
             {
                 for(int j = 0; j < extr->size(); j++)

@@ -24,7 +24,8 @@
 
 using namespace std;
 
-//! Abstract class standing for a feature filter (counts the high / low values, computes the average…)
+//! Abstract class standing for a feature filter
+// (counts the high / low values, computes the average…)
 class Filter : public FeatureExtractor
 {
     public:
@@ -34,30 +35,31 @@ class Filter : public FeatureExtractor
         //! Destructor (inherited from FeatureExtractor)
         virtual ~Filter() { ; }
 
-        //! Binds the filter to the output of an extractor (or another filter). Returns the old one.
+        //! Binds the filter to the output of an extractor (or another filter).
+        // Returns the old one.
         FeatureExtractor* bind(FeatureExtractor* extr);
 
         /** \brief Extract data
          * This method should not be reimplemented by the user.
-         * The given parameters are ignored : the data is drawn from the upstream extractor without
-         * taking care of the raw data.
+         * The given parameters are ignored : the data is drawn from the
+         * upstream extractor without taking care of the raw data.
          */
-        bool extract(std::deque<int16_t> data, int size = 0);
+        bool extract(int16_t* data, int size = 0, int channels = 1);
 
         //! Do the actual computation on the features
         virtual void transform(vector<float> data) = 0;
 
-	//! Default min is the min of the parent
-	virtual float min()
-	{
-		return (mExtr ? mExtr->min() : 0);
-	}
+        //! Default min is the min of the parent
+        virtual float min()
+        {
+            return (mExtr ? mExtr->min() : 0);
+        }
 
-	//! Default max is the max of the parent
-	virtual float max()
-	{
-		return (mExtr ? mExtr->max() : 1);
-	}
+        //! Default max is the max of the parent
+        virtual float max()
+        {
+            return (mExtr ? mExtr->max() : 1);
+        }
 
     protected:
         //! Callback called when the upstream extractor changes

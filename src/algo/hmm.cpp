@@ -40,10 +40,12 @@ void HMM::erase(int n)
 {
     mNbStates = n;
     mNullVector.resize(n);
+    mNbEmit.resize(n);
+    mRowSum.resize(n);
     mMatrix = new int*[n];
     for(int i = 0; i < n; i++)
     {
-        mNullVector[i] = 0;
+        mNullVector[i] = mNbEmit[i] = mRowSum[i] = 0;
         mMatrix[i] = new int[n];
         for(int j = 0; j < n; j++)
             mMatrix[i][j] = 0;
@@ -104,6 +106,25 @@ bool HMM::load(string filename)
                     " : Unable to load the emit database." << std::endl;
                 }
             }
+            else if(elem.tagName() == "emitcount")
+            {
+                std::istringstream stream(elem.text().toStdString());
+                try
+                {
+                    ublas::vector<float> table;
+                    boost::archive::text_iarchive ar(stream);
+                    ar & table;
+                    // TODO : check that table has right dimensions
+                    for(int i = 0; i < mNbStates; i++) 
+                        mNbEmit[i] = table(i);
+                }
+                catch(boost::archive::archive_exception ex)
+                {
+                    std::cerr << filename <<
+                    " : Invalid emission count : " << ex.what() <<
+                    std::endl;
+                }
+            }
             else if(elem.tagName() == "transition")
             {
                 std::istringstream stream(elem.text().toStdString());
@@ -112,6 +133,7 @@ bool HMM::load(string filename)
                     ublas::matrix<float> table;
                     boost::archive::text_iarchive ar(stream);
                     ar & table;
+                    // TODO : check that table has right dimensions
                     for(int i = 0; i < mNbStates; i++)
                         for(int j = 0; j < mNbStates; j++)
                             mMatrix[i][j] = table(i,j);
@@ -133,10 +155,20 @@ bool HMM::load(string filename)
         return false;
     }
 
+    // Compute sum on rows
+    for(int r = 0; r < mNbStates; r++)
+    {
+        int s;
+        for(int j = 0; j < mNbStates; j++)
+            s += mMatrix[r][j];
+        mRowSum[r] = s;
+    }
+
     // Compute mNbFpSeen;
     mNbFpSeen = 0;
     for(int i = 0; i < mNbStates; i++)
-        mNbFpSeen += mMatrix[0][i];
+        mNbFpSeen += mRowSum[i];
+
 
     print();
     return true;
@@ -160,6 +192,17 @@ bool HMM::save(string filename)
     rootNode.appendChild(emitElem);
 
     mEmit.save(dbFile);
+
+    QDomElement countNode = doc.createElement("emitcount");
+    ublas::vector<float> vec(mNbStates);
+    for(int i = 0; i < mNbStates; i++)
+        vec[i] = mNbEmit[i];
+    std::ostringstream str;
+    boost::archive::text_oarchive arc(str);
+    arc & vec;
+    QDomText textNode0 = doc.createTextNode(str.str().c_str());
+    countNode.appendChild(textNode0);
+    rootNode.appendChild(countNode);
 
     QDomElement transNode = doc.createElement("transition");
     ublas::matrix<float> table(mNbStates, mNbStates);
@@ -235,6 +278,7 @@ void HMM::consumeFingerprint(fingerp fp)
         {
             vector<int> emProb = mEmit.get(fp,mNullVector);
             mEmit.set(fp, incrementCurrent(emProb));
+            mNbEmit[mCurrentState]++;
             mMatrix[mCurrentState][mCurrentState]++;
             mNbFpSeen++;
         }
@@ -266,23 +310,26 @@ void HMM::infer()
                       (mProbas.empty() ?
                         1 :
                         mProbas[mProbas.size()-1][s0]*
-                            ((float)mMatrix[s0][s]) / mNbFpSeen);
+                            ((float)mMatrix[s0][s]) / mRowSum[s0]);
                     maxp = std::max(maxp, p);
                 }
-                curProbas[s] = (((float)emitProb[s]) / (mNbFpSeen)) * maxp;
+                curProbas[s] = (((float)emitProb[s]) / (mNbEmit[s])) * maxp;
             }
             mProbas.push_back(curProbas);
         }
     }
 
-    vector<float> latestProb = mProbas[mProbas.size()-1];
-    int bestS = -1;
-    for(int s = 0; s < mNbStates; s++)
+    if(mProbas.size())
     {
-        if(bestS == -1 || latestProb[bestS] < latestProb[s])
-            bestS = s;
+        vector<float> latestProb = mProbas[mProbas.size()-1];
+        int bestS = -1;
+        for(int s = 0; s < mNbStates; s++)
+        {
+            if(bestS == -1 || latestProb[bestS] < latestProb[s])
+                bestS = s;
+        }
+        setState(bestS);
     }
-    setState(bestS);
 }
 
 vector<int> HMM::incrementCurrent(vector<int> v)

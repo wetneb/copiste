@@ -36,7 +36,7 @@ class ZCRExtr : public FeatureExtractor
          * will be used. This is just a matter of optimisation and the collisions aren't
          * a problem since they won't change basicly the ZCR variations or the HZCRR.
          */
-        bool extract(std::deque<int16_t> data, int size);
+        bool extract(int16_t* data, int size, int channels);
 
         //! Retrive the results (from the index). The values are usually between -1 and 1
         float value(int index = 0) { return mZCR; };

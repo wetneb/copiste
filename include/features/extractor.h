@@ -39,9 +39,9 @@ class FeatureExtractor
         virtual ~FeatureExtractor() { ; }
 
         //! Run the algorithm and store the results
-        virtual bool extract(std::deque<int16_t> data, int size) = 0;
+        virtual bool extract(int16_t* data, int size, int channels) = 0;
         //! Idem, but the buffer starts at index start instead (circular buffer)
-        bool extract(std::deque<uint16_t> data, int size, size_t start); 
+        bool extract(int16_t* data, int size, int channels, size_t start); 
 
         //! Retrieve the results (from the index). Some values may be out of bounds.
         virtual float value(int index = 0) = 0;

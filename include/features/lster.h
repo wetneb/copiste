@@ -44,7 +44,7 @@ class LSTERExtr : public FeatureExtractor
         STEExtr* setSTEExtractor(STEExtr* extr);
 
         //! Run the algorithm and store the results
-        bool extract(std::deque<int16_t> data, int size);
+        bool extract(int16_t* data, int size, int channels);
 
         //! Retrieve the results (from the index).
         float value(int index = 0) { return mLSTER; };

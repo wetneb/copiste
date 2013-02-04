@@ -47,7 +47,7 @@ class SpectrumExtr : public FeatureExtractor
         // rates.
 
         //! Run the algorithm
-        bool extract(std::deque<int16_t> data, int size);
+        bool extract(int16_t* data, int size, int channels);
         //! Normalize the values (so that the values go from 0 to bound)
         void normalize(int bound);
 

@@ -32,14 +32,14 @@ LSTERExtr::LSTERExtr(int chunkSize)
 }
 
 //! Run the algorithm and store the results
-bool LSTERExtr::extract(std::deque<int16_t> data, int size)
+bool LSTERExtr::extract(int16_t* data, int size, int channels)
 {
     if(mSteExtr == 0)
         mSteExtr = new STEExtr();
 
     if(size)
     {
-        mSteExtr->extract(data, size);
+        mSteExtr->extract(data, size, channels);
         mHistory[mCurrentFrame] = mSteExtr->value();
 
         float average = 0;

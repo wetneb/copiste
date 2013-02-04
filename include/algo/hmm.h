@@ -94,6 +94,8 @@ class HMM : public FingerprintConsumer
         int mNbStates;
         int** mMatrix;
         MapDb<vector<int> > mEmit;
+        vector<int> mNbEmit;
+        vector<int> mRowSum;
         int mNbFpSeen;
 
         // State inference

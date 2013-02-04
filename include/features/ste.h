@@ -33,7 +33,7 @@ class STEExtr : public FeatureExtractor
         STEExtr(int chunkSize = 0) : mSquare(true) { mSTE = 0; }
 
         //! Run the algorithm and store the results
-        bool extract(std::deque<int16_t> data, int size);
+        bool extract(int16_t* data, int size, int channels);
 
         //! Retrive the results (from the index).
         float value(int index = 0) { return mSTE; };

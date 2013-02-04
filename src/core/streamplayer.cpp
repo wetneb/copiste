@@ -19,20 +19,23 @@
 #include "core/streamplayer.h"
 
 #include <iostream>
+#include <cstring> // for memcpy
 using namespace std;
 
 
 // This class is just a small hack, everything is hardcoded
 
 StreamPlayer::StreamPlayer(bool live, bool verbose) : 
-    mVerbose(verbose), mOverlapping(0), mChunkSize(DEFAULT_AUDIO_CHUNK_SIZE),
-    mFramesOverlap(0), mMp(0), mMedia(0), mPaused(false)
+    mBufferSize(0), mVerbose(verbose), mChannels(1), mOverlapping(0),
+    mChunkSize(DEFAULT_AUDIO_CHUNK_SIZE), mFramesOverlap(0), mMp(0),
+    mMedia(0), mPaused(false)
 {
     // Set up VLC
     mLive = live;
     char smemOptions[256];
     mAudioData = 0;
     mAudioDataSize = 0;
+    mBuffer = new int16_t[2*mChunkSize];
 
     if(live)
     {
@@ -137,7 +140,8 @@ void prepareRender( void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int s
 
     if(sp->mAudioDataSize < size)
     {
-        delete [] sp->mAudioData;
+        if(sp->mAudioData)
+            delete [] sp->mAudioData;
         sp->mAudioData = new char[size]; // Deleted in the destructor
     }
     *pp_pcm_buffer = (uint8_t*)(sp->mAudioData);
@@ -146,29 +150,39 @@ void prepareRender( void* p_audio_data, uint8_t** pp_pcm_buffer , unsigned int s
 void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channels, unsigned int rate,
                   unsigned int nb_samples, unsigned int bits_per_sample, unsigned int size, int64_t pts )
 {
-    unsigned int remaining = 0;
+    unsigned int copied = 0;
     StreamPlayer *sp = ((StreamPlayer*)p_audio_data);
+
+    // Update the frequency if needed
+    if(rate != sp->mFrequency)
+        sp->mFrequency = rate;
+    sp->mChannels = channels;
 
     // The data is sent to us as bytes, but encoded on 2 bytes
     // TODO: dynamicly check that this is the case and that we're not mishandling the data
-    // TODO: stereo support
     int16_t* temp = (int16_t*)p_pcm_buffer;
     size /= 2;
 
     // We implemented a mechanism that takes the data sent by libVLC and cut it into chunks
     // of the same size (a power of two) so that the algorithms can handle it in the right way
-    while(remaining < size)
+    while(copied < size)
     {
-        // TODO Faudrait-il plutôt utiliser memcpy & co ? J'y connais rien à ces trucs-là…
-        // Filling buffer
-        while(sp->bufferSize() < sp->chunkSize() && remaining < size)
-        {
-            sp->fillBuffer(temp[remaining]);
-            remaining += channels;
-        }
+        unsigned int to_copy = min((channels*sp->chunkSize()) - (channels*sp->mBufferSize), size - copied);
+        // TODO : remove this comment
+     /*   cout << "channels : " << channels << endl
+            << "chunk size : " << sp->chunkSize() << endl
+            << "buffer size : " << sp->mBufferSize << endl
+            << "size : " << size << endl
+            << "copied : " << copied << endl
+            << "=> to_copy : " << to_copy << endl; */
+        memcpy(sp->mBuffer + channels*sp->bufferSize(), temp + copied,
+                to_copy);
+        copied += to_copy;
+        sp->mBufferSize += to_copy / channels;
 
         if(sp->bufferSize() >= sp->chunkSize())
         {
+            cout << "Using buffer" << endl;
             // The buffer is sent to the "user"
             sp->useBuffer();
 
@@ -176,10 +190,6 @@ void handleStream(void* p_audio_data, uint8_t* p_pcm_buffer, unsigned int channe
             sp->flushBuffer();
         }
     }
-
-    // Update the frequency if needed
-    if(rate != sp->mFrequency)
-        sp->mFrequency = rate;
 
     sp->mLock.unlock();
 }
@@ -208,22 +218,18 @@ void StreamPlayer::watch()
 
 int16_t StreamPlayer::buffer(int i)
 {
-    return mBuffer.at(i);
+    return mBuffer[i];
 }
 
 int StreamPlayer::bufferSize()
 {
-    return mBuffer.size();
-}
-
-void StreamPlayer::fillBuffer(int16_t value)
-{
-    mBuffer.push_back(value);
+    return mBufferSize;
 }
 
 void StreamPlayer::flushBuffer()
 {
-    mBuffer.erase(mBuffer.begin(), mBuffer.begin() + (mChunkSize - mFramesOverlap));
+    memcpy(mBuffer + mChannels*(mChunkSize - mFramesOverlap), mBuffer, mChannels*mFramesOverlap*sizeof(int16_t));
+    mBufferSize = mFramesOverlap;
 }
 
 void StreamPlayer::setOverlapping(float factor)
@@ -242,8 +248,10 @@ void StreamPlayer::setChunkSize(int size)
 {
     if(size >= 1)
     {
-        mBuffer.clear();
+        if(mBuffer)
+            delete[] mBuffer;
         mChunkSize = size;
+        mBuffer = new int16_t[2*mChunkSize];
         mFramesOverlap = size * mOverlapping;
     }
 }

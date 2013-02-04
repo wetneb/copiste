@@ -125,16 +125,18 @@ class StreamPlayer
 
         //! Feature extraction : those variables need to be public
         // (I know, I can write accessors...)
-        std::deque<int16_t> mBuffer;
+        int16_t* mBuffer;
         QMutex mLock;
 
         // Prerender callback
         char* mAudioData;
         unsigned int mAudioDataSize;
+        unsigned int mBufferSize;
         unsigned int mFrequency; // detected from VLC
 
     protected:
         bool mVerbose;
+        int mChannels;
 
     private:
         // Parameters
@@ -154,6 +156,12 @@ class StreamPlayer
         boost::thread mWatchThread;
         boost::mutex mPlayingLock;
         bool mPaused;
+
+        friend
+        void handleStream(void*, uint8_t*, unsigned int, unsigned int,
+                  unsigned int, unsigned int, unsigned int, int64_t);
+        friend
+        void prepareRender(void*, uint8_t**, unsigned int);
 };
 
 /**
