@@ -62,10 +62,12 @@ template<class T> class MapDb : public Database<T>
         //! Set the binding of a fingerprint
         void set(fingerp fp, T data);
 
+        //! Delete a binding
+        void removeBinding(fingerp fp);
 
         // Debug, delete me
-        typename std::map<fingerp, T>::const_iterator d_begin();
-        typename std::map<fingerp, T>::const_iterator d_end();
+        typename std::map<fingerp, T>::iterator d_begin();
+        typename std::map<fingerp, T>::iterator d_end();
     private:
         std::map<fingerp, T> mMap;
         
@@ -182,15 +184,21 @@ void MapDb<T>::set(fingerp fp, T data)
 }
 
 template<class T>
-typename std::map<fingerp, T>::const_iterator MapDb<T>::d_begin()
+typename std::map<fingerp, T>::iterator MapDb<T>::d_begin()
 {
    return mMap.begin();
 }
 
 template<class T>
-typename std::map<fingerp, T>::const_iterator MapDb<T>::d_end()
+typename std::map<fingerp, T>::iterator MapDb<T>::d_end()
 {
     return mMap.end();
+}
+
+template<class T>
+void MapDb<T>::removeBinding(fingerp fp)
+{
+    mMap.erase(mMap.find(fp));
 }
 
 #endif

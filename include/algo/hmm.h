@@ -42,6 +42,9 @@
 
 using namespace std;
 
+const int TIME_BETWEEN_TWO_PRUNING = 8;
+const int PRUNING_LIMIT = 2;
+
 //! An observer for the state of the Hidden Markov Model
 class HMMStateObserver
 {
@@ -83,6 +86,8 @@ class HMM : public FingerprintConsumer
         vector<int> mNullVector;
         //! Infers the current state (Viterbi algorithm)
         void infer();
+        //! Prunes the database (remove rare and unuseful fingerprints)
+        void prune();
         //! Debug purposes only
         // TODO : delete me
         void print();
@@ -105,6 +110,9 @@ class HMM : public FingerprintConsumer
 
         // Notification
         HMMStateObserver *mObserver;
+
+        // Pruning
+        int mLastPruning;
 };
 
 #endif

@@ -20,7 +20,8 @@
 using namespace boost::numeric;
 
 HMM::HMM(bool training) : mTraining(training), mNbStates(0),
-            mMatrix(0), mNbFpSeen(0), mCurrentState(0), mObserver(0)
+            mMatrix(0), mNbFpSeen(0), mCurrentState(0), mObserver(0),
+            mLastPruning(0)
 {
     ;
 }
@@ -281,9 +282,13 @@ void HMM::consumeFingerprint(fingerp fp)
             mNbEmit[mCurrentState]++;
             mMatrix[mCurrentState][mCurrentState]++;
             mNbFpSeen++;
+        
+            mLastPruning++;
+        
+            if(mLastPruning >= TIME_BETWEEN_TWO_PRUNING)
+                prune();
         }
-
-        if(not mTraining)
+        else
         {
             mObs.push_back(fp);
             infer();
@@ -350,6 +355,28 @@ void HMM::infer()
         }
         cout << endl;
         setState(bestS);
+    }
+}
+
+void HMM::prune()
+{
+    mLastPruning = 0;
+
+    cout << "PRUNING" << endl;
+    std::map<fingerp,vector<int> >::iterator iter = mEmit.d_begin();
+    while(iter != mEmit.d_end())
+    {
+        vector<int> vec = iter->second;
+
+        bool notNullFound = false;
+        for(unsigned int i = 1; i < vec.size() && !notNullFound; i++)
+            notNullFound = (vec[i] != 0);
+
+        std::map<fingerp,vector<int> >::iterator nextIt = iter;
+        if(!notNullFound && vec[0] < PRUNING_LIMIT)
+            mEmit.removeBinding(iter->first);
+
+        nextIt = iter++;
     }
 }
 
