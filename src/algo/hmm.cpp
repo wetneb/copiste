@@ -158,7 +158,7 @@ bool HMM::load(string filename)
     // Compute sum on rows
     for(int r = 0; r < mNbStates; r++)
     {
-        int s;
+        int s = 0;
         for(int j = 0; j < mNbStates; j++)
             s += mMatrix[r][j];
         mRowSum[r] = s;
@@ -300,6 +300,15 @@ void HMM::infer()
         if(mEmit.exists(fp))
         {
             vector<int> emitProb = mEmit.get(fp);
+            int emitSum = 0;
+            for(unsigned int i = 0; i < emitProb.size(); i++)
+                emitSum += emitProb[i];
+            
+            float normalization = 0;
+            /*
+            cout << endl << "EmitProb : " << emitProb[0] << ", " <<
+                emitProb[1] << ", " << emitProb[2] << ", " << emitProb[3] << endl;
+                */
             vector<float> curProbas(mNbStates, 0);
             for(int s = 0; s < mNbStates; s++)
             {
@@ -308,13 +317,22 @@ void HMM::infer()
                 {
                     float p = 
                       (mProbas.empty() ?
-                        1 :
+                        (1.0/mNbStates) :
                         mProbas[mProbas.size()-1][s0]*
                             ((float)mMatrix[s0][s]) / mRowSum[s0]);
-                    maxp = std::max(maxp, p);
+             /*       if(s == 0 && !mProbas.empty())
+                        cout << "from s0="<<s0<<", proba : "<<mProbas[mProbas.size()-1][s0]<<"*"<<
+                            ((float)mMatrix[s0][s]) << "/"<<mRowSum[s0]<<" = "<<p<<endl;
+                            */
+                    maxp += p;
                 }
-                curProbas[s] = (((float)emitProb[s]) / (mNbEmit[s])) * maxp;
+                curProbas[s] = (((float)emitProb[s]) / emitSum) * maxp;
+                normalization += curProbas[s];
             }
+
+            for(int s = 0; s < mNbStates; s++)
+                curProbas[s] /= normalization;
+
             mProbas.push_back(curProbas);
         }
     }
@@ -323,11 +341,14 @@ void HMM::infer()
     {
         vector<float> latestProb = mProbas[mProbas.size()-1];
         int bestS = -1;
+        // cout << "FinalProb : ";
         for(int s = 0; s < mNbStates; s++)
         {
+            // cout << latestProb[s] << ", ";
             if(bestS == -1 || latestProb[bestS] < latestProb[s])
                 bestS = s;
         }
+        cout << endl;
         setState(bestS);
     }
 }
