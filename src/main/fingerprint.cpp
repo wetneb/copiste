@@ -80,7 +80,7 @@ int main(int argc, char **argv)
         if(vm.count("train") && vm.count("classify") == 0)
         {
             HMM model(true);
-            model.erase(2);
+            model.erase(4);
 
             QApplication app(argc, argv);
             HMMFrontend frontend;

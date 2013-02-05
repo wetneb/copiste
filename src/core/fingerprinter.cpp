@@ -62,7 +62,7 @@ void Fingerprinter::useBuffer()
     chromaprint_feed(mCtxt, mBuffer, mChannels*chunkSize());
     mChunksFed++;
 
-    if(mChunksFed == 32)
+    if(mChunksFed == 31)
     {
         mChunksFed = 0;
         chromaprint_finish(mCtxt);

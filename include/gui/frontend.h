@@ -21,9 +21,12 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QTimer>
 
 #include "algo/hmm.h"
 #include "core/streamplayer.h"
+
+const int HMM_TRANSITION_TIME = 4000; // in ms
 
 //! A GUI frontend for an HMM classifier
 class HMMFrontend : public QWidget, public HMMStateObserver
@@ -46,6 +49,9 @@ class HMMFrontend : public QWidget, public HMMStateObserver
     public slots:
         void toggleState();
         void playPause();
+
+    private slots:
+        void updateState();
 
     private:
         HMM* mModel;

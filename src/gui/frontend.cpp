@@ -25,7 +25,7 @@ HMMFrontend::HMMFrontend(QWidget* parent) : QWidget(parent), mModel(0),
     layout->addWidget(&mToggle);
     layout->addWidget(&mPlay);
     
-    mLabel.setText("State : default");
+    mLabel.setText("State : 0");
     mToggle.setText("Toggle state");
     mPlay.setText("Play");
 
@@ -56,7 +56,36 @@ void HMMFrontend::notify()
 void HMMFrontend::toggleState()
 {
     if(mModel)
-        mModel->setState(1 - mModel->state());
+    {
+        int next_state;
+        switch(mModel->state())
+        {
+            case 0:
+                next_state = 2;
+                break;
+            case 1:
+                next_state = 3;
+                break;
+            case 2:
+                next_state = 0;
+                break;
+            case 3:
+                next_state = 1;
+                break;
+            default:
+                next_state = 0;
+        }
+        mModel->setState(next_state);
+        QTimer::singleShot(HMM_TRANSITION_TIME, this, SLOT(updateState()));
+    }
+}
+
+void HMMFrontend::updateState()
+{
+    if(mModel->state() == 2)
+        mModel->setState(1);
+    else if(mModel->state() == 3)
+        mModel->setState(0);
 }
 
 void HMMFrontend::setPlayer(StreamPlayer* player)
