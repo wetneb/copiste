@@ -51,6 +51,8 @@ int main(int argc, char **argv)
         ("classify,c", po::value< std::string >(), "Load an HMM from the "
          "file and classify the stream.")
         ("verbose,v", "Be verbose.")
+        ("fast,f", "Go fast (classify mode)")
+        ("rate,r", po::value< float >(), "Playback rate (default : 1.0)")
         ("help,h", "Display this message");
 
     po::positional_options_description p;
@@ -88,7 +90,7 @@ int main(int argc, char **argv)
             frontend.setModel(&model);
 
             Fingerprinter cl(vm.count("verbose"), true);
-            cl.setConsumer(&model);
+            cl.addConsumer(&model);
             frontend.setPlayer(&cl);
 
             std::vector< std::string > inputFiles = vm["input-files"].as< std::vector<std::string> >();
@@ -109,14 +111,19 @@ int main(int argc, char **argv)
             HMM model(false);
             model.load(vm["classify"].as< std::string >());
 
-            Fingerprinter cl(vm.count("verbose"), false);
-            cl.setConsumer(&model);
+            Fingerprinter cl(vm.count("verbose"), vm.count("fast") == 0);
+            cl.addConsumer(&model);
+            float rate = 1.0;
+            if(vm.count("rate"))
+                rate = vm["rate"].as< float >();
+            cl.setRate(rate);
 
             std::vector< std::string > inputFiles = vm["input-files"].as< std::vector<std::string> >();
             for(unsigned int i = 0; i < inputFiles.size(); i++)
             {
                 cl.setUrl(inputFiles[i]);
                 cl.play();
+                cl.setRate(rate);
             }
             int i;
             cin >> i;

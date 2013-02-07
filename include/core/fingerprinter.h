@@ -22,6 +22,8 @@
 #include "core/streamplayer.h"
 #include <chromaprint.h>
 
+#include <vector>
+
 //! Type of a fingerprint
 typedef int fingerp;
 
@@ -36,8 +38,10 @@ class Fingerprinter : public StreamPlayer
 
         ~Fingerprinter();
 
-        //! Sets the consumer to call when a fingerprint is produced
-        void setConsumer(FingerprintConsumer* consumer);
+        //! Add a consumer to call when a fingerprint is produced
+        void addConsumer(FingerprintConsumer* consumer);
+        //! Unregister a consumer
+        void remConsumer(FingerprintConsumer* consumer);
 
         //! Reimplement the callback defined in StreamPlayer
         void useBuffer();
@@ -47,7 +51,7 @@ class Fingerprinter : public StreamPlayer
         void sendFp(fingerp fp);
 
         bool mVerbose;
-        FingerprintConsumer *mConsumer;
+        std::vector<FingerprintConsumer*> mConsumer;
         ChromaprintContext *mCtxt;
         int mFpRead;
         int mChunksFed;

@@ -34,9 +34,21 @@ Fingerprinter::~Fingerprinter()
 }
 
 //! Sets the consumer to call when a fingerprint is produced
-void Fingerprinter::setConsumer(FingerprintConsumer* consumer)
+void Fingerprinter::addConsumer(FingerprintConsumer* consumer)
 {
-    mConsumer = consumer;
+    mConsumer.push_back(consumer);
+}
+
+//! Unregister a consumer
+void Fingerprinter::remConsumer(FingerprintConsumer* consumer)
+{
+    for(std::vector<FingerprintConsumer*>::iterator iter = mConsumer.begin();
+            iter != mConsumer.end(); iter++)
+    {
+        if(*iter == consumer)
+            mConsumer.erase(iter);
+        iter = mConsumer.end();
+    }
 }
 
 void Fingerprinter::sequenceEnds()
@@ -47,8 +59,11 @@ void Fingerprinter::sequenceEnds()
 //! Sends a fingerprint to a consumer (if any)
 void Fingerprinter::sendFp(fingerp fp)
 {
-    if(mConsumer)
-        mConsumer->consumeFingerprint(fp);
+    for(std::vector<FingerprintConsumer*>::iterator iter = mConsumer.begin();
+            iter != mConsumer.end(); iter++)
+    {
+        (*iter)->consumeFingerprint(fp);
+    }
 }
 
 //! Computes the fingerprint
