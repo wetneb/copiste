@@ -88,7 +88,7 @@ void StreamPlayer::play()
 
     mFramesOverlap = mOverlapping * mChunkSize;
     libvlc_media_player_set_media (mMp, mMedia);
-
+    libvlc_media_player_set_rate(mMp, 1.5);
     libvlc_media_player_play (mMp);
 
     mPlaying = true;
@@ -261,6 +261,11 @@ void StreamPlayer::setVolume(int vol)
     if(vol % 20 == 0)
         std::cout << "\nVol set to " << vol << std::endl;
     libvlc_audio_set_volume (mMp,vol);
+}
+
+void StreamPlayer::setRate(float rate)
+{
+    libvlc_media_player_set_rate(mMp, rate);
 }
 
 int StreamPlayer::volume()

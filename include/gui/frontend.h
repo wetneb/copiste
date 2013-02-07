@@ -22,6 +22,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QTimer>
+#include <QFileDialog>
 
 #include "algo/hmm.h"
 #include "core/streamplayer.h"
@@ -52,11 +53,13 @@ class HMMFrontend : public QWidget, public HMMStateObserver
 
     private slots:
         void updateState();
+        void save();
 
     private:
         HMM* mModel;
         QPushButton mToggle;
         QPushButton mPlay;
+        QPushButton mSave;
         QLabel mLabel;
 
         StreamPlayer* mPlayer;

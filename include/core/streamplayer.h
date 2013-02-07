@@ -93,6 +93,8 @@ class StreamPlayer
         bool isLive() { return mLive; }
         //! Changes the volume (between 0 and 100)
         void setVolume(int vol);
+        //! Changes the playback rate (1.0 : normal)
+        void setRate(float rate);
         //! Gets the current volume
         int volume();
 

@@ -24,15 +24,18 @@ HMMFrontend::HMMFrontend(QWidget* parent) : QWidget(parent), mModel(0),
     layout->addWidget(&mLabel);
     layout->addWidget(&mToggle);
     layout->addWidget(&mPlay);
+    layout->addWidget(&mSave);
     
     mLabel.setText("State : 0");
     mToggle.setText("Toggle state");
-    mPlay.setText("Play");
+    mPlay.setText("Pause");
+    mSave.setText("Save");
 
     setLayout(layout);
 
     connect(&mToggle, SIGNAL(pressed()), this, SLOT(toggleState()));
     connect(&mPlay, SIGNAL(pressed()), this, SLOT(playPause()));
+    connect(&mSave, SIGNAL(pressed()), this, SLOT(save()));
 }
 
 HMMFrontend::~HMMFrontend()
@@ -102,6 +105,18 @@ void HMMFrontend::playPause()
             mPlay.setText("Play");
         else
             mPlay.setText("Pause");
+    }
+}
+
+void HMMFrontend::save()
+{
+    if(mModel)
+    {
+        string fname =
+         QFileDialog::getSaveFileName(this, "Save model",
+                 "model.xml", "Models (*.xml)").toStdString();
+        if(fname != "")
+            mModel->save(fname);
     }
 }
 
