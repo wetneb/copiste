@@ -26,6 +26,8 @@
 
 #include "algo/hmm.h"
 #include "core/streamplayer.h"
+#include "gui/fparea.h"
+#include "core/fingerprinter.h"
 
 const int HMM_TRANSITION_TIME = 4000; // in ms
 
@@ -38,11 +40,11 @@ class HMMFrontend : public QWidget, public HMMStateObserver
         
         ~HMMFrontend();
 
-        //! Attach to a stream player (to support play/pause)
-        void setPlayer(StreamPlayer *player);
-
         //! Bind the frontend to a model (set to 0 to unbind)
         void setModel(HMM* model);
+
+        //! Bind the frontend to a fingerprinter
+        void setFingerprinter(Fingerprinter* fper);
 
         //! Reimplemented from HMMStateObserver, called on state change
         void notify();
@@ -61,6 +63,7 @@ class HMMFrontend : public QWidget, public HMMStateObserver
         QPushButton mPlay;
         QPushButton mSave;
         QLabel mLabel;
+        FPArea mFpArea;
 
         StreamPlayer* mPlayer;
 };

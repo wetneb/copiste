@@ -77,22 +77,21 @@ void Fingerprinter::useBuffer()
     chromaprint_feed(mCtxt, mBuffer, mChannels*chunkSize());
     mChunksFed++;
 
-    if(mChunksFed == 31)
+    if(mChunksFed == 32)
     {
         mChunksFed = 0;
         chromaprint_finish(mCtxt);
         int32_t *fp;
         int size;
         chromaprint_get_raw_fingerprint(mCtxt, (void**)&fp, &size);
-        if(mVerbose)
+        for(int i = 0; i < size; i++)
         {
-            for(int i = 0; i < size; i++)
-            {
+            if(mVerbose)
                 cout << fp[i] << " ";
-                sendFp(fp[i]);
-            }
-            cout << endl;
+            sendFp(fp[i]);
         }
+        if(mVerbose)
+            cout << endl;
         chromaprint_dealloc(fp);
     }
 }

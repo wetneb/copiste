@@ -20,18 +20,22 @@
 HMMFrontend::HMMFrontend(QWidget* parent) : QWidget(parent), mModel(0),
     mPlayer(0)
 {
+    QVBoxLayout *vLayout = new QVBoxLayout;
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addWidget(&mLabel);
     layout->addWidget(&mToggle);
     layout->addWidget(&mPlay);
     layout->addWidget(&mSave);
+    vLayout->addLayout(layout);
     
     mLabel.setText("State : 0");
     mToggle.setText("Toggle state");
     mPlay.setText("Pause");
     mSave.setText("Save");
 
-    setLayout(layout);
+    vLayout->addWidget(&mFpArea);
+
+    setLayout(vLayout);
 
     connect(&mToggle, SIGNAL(pressed()), this, SLOT(toggleState()));
     connect(&mPlay, SIGNAL(pressed()), this, SLOT(playPause()));
@@ -49,6 +53,12 @@ void HMMFrontend::setModel(HMM* model)
     if(mModel)
         mModel->unregisterObserver(this);
     mModel = model;
+}
+
+void HMMFrontend::setFingerprinter(Fingerprinter* fper)
+{
+    fper->addConsumer(&mFpArea);
+    mPlayer = fper;
 }
 
 void HMMFrontend::notify()
@@ -89,11 +99,6 @@ void HMMFrontend::updateState()
         mModel->setState(1);
     else if(mModel->state() == 3)
         mModel->setState(0);
-}
-
-void HMMFrontend::setPlayer(StreamPlayer* player)
-{
-    mPlayer = player;
 }
 
 void HMMFrontend::playPause()

@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 
             Fingerprinter cl(vm.count("verbose"), true);
             cl.addConsumer(&model);
-            frontend.setPlayer(&cl);
+            frontend.setFingerprinter(&cl);
 
             std::vector< std::string > inputFiles = vm["input-files"].as< std::vector<std::string> >();
 

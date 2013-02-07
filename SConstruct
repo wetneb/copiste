@@ -33,7 +33,7 @@ libs = [
     'chromaprint',
     ]
 
-flags = ['-Wall']
+flags = ['-g','-Wall']
 
 # End of the configuration section
 
@@ -79,6 +79,7 @@ fp_files = [
     'src/core/fingerprinter.cpp',
     'src/gui/frontend.cpp',
     'include/gui/moc_frontend.cc',
+    'src/gui/fparea.cpp',
     'src/algo/hmm.cpp',
     ]
 

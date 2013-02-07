@@ -15,20 +15,33 @@
  *  along with Copiste.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef INCLUDED_FPAREAH
+#define INCLUDED_FPAREAH
 
-#ifndef INCLUDED_FINGERPRINTCONSUMERH
-#define INCLUDED_FINGERPRINTCONSUMERH
+#include <QWidget>
+#include <QImage>
+#include <QPainter>
 
-class FingerprintConsumer;
+#include "core/fingerprintconsumer.h"
 
-#include "core/fingerprinter.h"
+const int FPAREA_HEIGHT = 64;
+const int FPAREA_WIDTH = 256;
 
-//! An abstract class for a process reading fingerprints from a Fingerprinter
-class FingerprintConsumer
+//! Widget drawing fingerprints
+class FPArea : public QWidget, public FingerprintConsumer
 {
-    public: //! TODO : protected + friendship ?
-        //! Called by Fingerprinter each time a fingerprint is consumed
-        virtual void consumeFingerprint(fingerp fp) = 0;
+    public:
+        FPArea(QWidget *parent = 0);
+
+        //! Displays a new fingerprint
+        void consumeFingerprint(fingerp fp); 
+
+    protected:
+        //! Event handling function (redraws the scene)
+        void paintEvent(QPaintEvent *event);
+
+    private:
+        QImage mLastImage;
 };
 
 #endif
