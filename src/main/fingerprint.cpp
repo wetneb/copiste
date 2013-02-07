@@ -33,6 +33,7 @@ namespace po = boost::program_options;
 #include "algo/hmm.h"
 #include "core/fingerprinter.h"
 #include "gui/frontend.h"
+#include "gui/fparea.h"
 
 #include <QApplication>
 
@@ -118,15 +119,19 @@ int main(int argc, char **argv)
                 rate = vm["rate"].as< float >();
             cl.setRate(rate);
 
+            QApplication app(argc, argv);
+            FPArea fpdisp;
+            fpdisp.setWindowTitle("Fingerprint");
+            cl.addConsumer(&fpdisp);
+
             std::vector< std::string > inputFiles = vm["input-files"].as< std::vector<std::string> >();
             for(unsigned int i = 0; i < inputFiles.size(); i++)
             {
                 cl.setUrl(inputFiles[i]);
                 cl.play();
-                cl.setRate(rate);
             }
-            int i;
-            cin >> i;
+            fpdisp.show();
+            app.exec();
         }
         else
         {

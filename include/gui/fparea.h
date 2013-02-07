@@ -25,7 +25,7 @@
 #include "core/fingerprintconsumer.h"
 
 const int FPAREA_HEIGHT = 64;
-const int FPAREA_WIDTH = 256;
+const int FPAREA_WIDTH = 512;
 
 //! Widget drawing fingerprints
 class FPArea : public QWidget, public FingerprintConsumer
