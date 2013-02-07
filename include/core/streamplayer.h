@@ -146,6 +146,7 @@ class StreamPlayer
         bool mPlaying;
         bool mLive;
         float mOverlapping;
+        float mRate;
         
         int mChunkSize;
         int mFramesOverlap;

@@ -27,8 +27,8 @@ using namespace std;
 
 StreamPlayer::StreamPlayer(bool live, bool verbose) : 
     mBufferSize(0), mVerbose(verbose), mChannels(1), mOverlapping(0),
-    mChunkSize(DEFAULT_AUDIO_CHUNK_SIZE), mFramesOverlap(0), mMp(0),
-    mMedia(0), mPaused(false)
+    mRate(1.0), mChunkSize(DEFAULT_AUDIO_CHUNK_SIZE), mFramesOverlap(0),
+    mMp(0), mMedia(0), mPaused(false)
 {
     // Set up VLC
     mLive = live;
@@ -88,7 +88,7 @@ void StreamPlayer::play()
 
     mFramesOverlap = mOverlapping * mChunkSize;
     libvlc_media_player_set_media (mMp, mMedia);
-    libvlc_media_player_set_rate(mMp, 1.5);
+    libvlc_media_player_set_rate(mMp, mRate);
     libvlc_media_player_play (mMp);
 
     mPlaying = true;
@@ -266,6 +266,7 @@ void StreamPlayer::setVolume(int vol)
 void StreamPlayer::setRate(float rate)
 {
     libvlc_media_player_set_rate(mMp, rate);
+    mRate = rate;
 }
 
 int StreamPlayer::volume()
