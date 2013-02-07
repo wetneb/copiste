@@ -41,12 +41,14 @@ void HMM::erase(int n)
 {
     mNbStates = n;
     mNullVector.resize(n);
+    mOnesVector.resize(n);
     mNbEmit.resize(n);
     mRowSum.resize(n);
     mMatrix = new int*[n];
     for(int i = 0; i < n; i++)
     {
         mNullVector[i] = mNbEmit[i] = mRowSum[i] = 0;
+        mOnesVector[i] = 1;
         mMatrix[i] = new int[n];
         for(int j = 0; j < n; j++)
             mMatrix[i][j] = 0;
@@ -186,7 +188,7 @@ bool HMM::save(string filename)
     QDomElement rootNode = doc.createElement("model");
     rootNode.setAttribute("states", mNbStates);
     
-    string dbFile = "fp.db";
+    string dbFile = filename.substr(0, filename.size() - 4)+".db";
 
     QDomElement emitElem = doc.createElement("emit");
     emitElem.setAttribute("file", dbFile.c_str());
@@ -302,44 +304,42 @@ void HMM::infer()
     {
         fingerp fp = mObs.front();
         mObs.pop_front();
-        if(mEmit.exists(fp))
+
+        vector<int> emitProb = mEmit.get(fp);
+        int emitSum = 0;
+        for(unsigned int i = 0; i < emitProb.size(); i++)
+            emitSum += emitProb[i];
+        
+        float normalization = 0;
+        /*
+        cout << endl << "EmitProb : " << emitProb[0] << ", " <<
+            emitProb[1] << ", " << emitProb[2] << ", " << emitProb[3] << endl;
+            */
+        vector<float> curProbas(mNbStates, 0);
+        for(int s = 0; s < mNbStates; s++)
         {
-            vector<int> emitProb = mEmit.get(fp);
-            int emitSum = 0;
-            for(unsigned int i = 0; i < emitProb.size(); i++)
-                emitSum += emitProb[i];
-            
-            float normalization = 0;
-            /*
-            cout << endl << "EmitProb : " << emitProb[0] << ", " <<
-                emitProb[1] << ", " << emitProb[2] << ", " << emitProb[3] << endl;
-                */
-            vector<float> curProbas(mNbStates, 0);
-            for(int s = 0; s < mNbStates; s++)
+            float maxp = 0;
+            for(int s0 = 0; s0 < mNbStates; s0++)
             {
-                float maxp = 0;
-                for(int s0 = 0; s0 < mNbStates; s0++)
-                {
-                    float p = 
-                      (mProbas.empty() ?
-                        (1.0/mNbStates) :
-                        mProbas[mProbas.size()-1][s0]*
-                            ((float)mMatrix[s0][s]) / mRowSum[s0]);
-             /*       if(s == 0 && !mProbas.empty())
-                        cout << "from s0="<<s0<<", proba : "<<mProbas[mProbas.size()-1][s0]<<"*"<<
-                            ((float)mMatrix[s0][s]) << "/"<<mRowSum[s0]<<" = "<<p<<endl;
-                            */
-                    maxp += p;
-                }
-                curProbas[s] = (((float)emitProb[s]) / emitSum) * maxp;
-                normalization += curProbas[s];
+                float p = 
+                  (mProbas.empty() ?
+                    (1.0/mNbStates) :
+                    mProbas[mProbas.size()-1][s0]*
+                        ((float)mMatrix[s0][s]) / mRowSum[s0]);
+         /*       if(s == 0 && !mProbas.empty())
+                    cout << "from s0="<<s0<<", proba : "<<mProbas[mProbas.size()-1][s0]<<"*"<<
+                        ((float)mMatrix[s0][s]) << "/"<<mRowSum[s0]<<" = "<<p<<endl;
+                        */
+                maxp += p;
             }
-
-            for(int s = 0; s < mNbStates; s++)
-                curProbas[s] /= normalization;
-
-            mProbas.push_back(curProbas);
+            curProbas[s] = (((float)emitProb[s]) / emitSum) * maxp;
+            normalization += curProbas[s];
         }
+
+        for(int s = 0; s < mNbStates; s++)
+            curProbas[s] /= normalization;
+
+        mProbas.push_back(curProbas);
     }
 
     if(mProbas.size())
