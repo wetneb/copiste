@@ -51,7 +51,8 @@ using a neural network.
 
 `fingerprint` : Live stream classification with hidden Markov models
 ---------------------------------------------------------------------
-This program does the same thing as `live` but using HMM. It is
+This program does the same thing as `live` but using HMM. Fingerprints
+fed into the HMM are computed by libchromaprint. It is
 currently under development.
 
 See help pages of all these tools for specific usage instructions.
