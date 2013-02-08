@@ -213,6 +213,12 @@ class StreamPlayer
  * \subsection live live : Live stream classification
  * This program reads a live stream (e.g. a radio), and shows the
  * variations of the features and the classification of the stream.
+ *
+ * \subsection fingerprint fingerprint : Stream classification using fingerprints
+ * This program can either train or use an Hidden Markov Model
+ * to classify sounds using fingerprints (which are computed by libchromaprint).
+ * It is currently under development.
+ *
  */
 
 #endif

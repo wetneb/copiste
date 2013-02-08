@@ -109,8 +109,9 @@ bool Corpus::load(std::string filename, bool verbose)
         QDomElement rootElem = node.toElement();
 
         int size = rootElem.childNodes().length();
-        int dimension = rootElem.attribute("features", "0").toInt();
-        mSamples.resize(size, dimension);
+        int dimension = rootElem.attribute("dimension", "0").toInt();
+        std::cout << "DIMENSION : " << dimension << ", size : "<<size<< std::endl;
+        mSamples.resize(dimension, size);
         mTargetClass.resize(size);
         mNames.resize(size);
 
@@ -137,19 +138,21 @@ bool Corpus::load(std::string filename, bool verbose)
                     ar & fp;
                     ublas::matrix_column<ublas::matrix<double> > mc(mSamples, nbPointsSet);
                     mc = fp;
+
+                    nbPointsSet++;
                 }
                 catch(boost::archive::archive_exception ex)
                 {
                     std::cerr << filename << " : Error, invalid fingerprint : " << ex.what() << std::endl;
                     return false;
                 }
-
-                nbPointsSet++;
             }
+            currNode = currNode.nextSibling();
         }
+        std::cout << "LOADED" << std::endl;
 
         // Reduce the size of the arrays (some fingerprints may be invalid)
-        mSamples.resize(nbPointsSet, dimension);
+        mSamples.resize(dimension, size);
         mTargetClass.resize(nbPointsSet);
     }
     else
@@ -171,6 +174,7 @@ void Corpus::write(std::string filename)
     
     QDomElement rootNode = doc.createElement("corpus");
     rootNode.setAttribute("dimension", dimension());
+    rootNode.setAttribute("version", 2);
 
     for(unsigned int i = 0; i < size(); i++)
     {
@@ -216,9 +220,9 @@ std::vector<double> Corpus::bounds() const
     for(unsigned int i = 0; i != dimension(); ++i)
         for(unsigned int j = 0; j != size(); ++j)
         {
-            if(i == 0 || mSamples(i, j) < result[2*i])
+            if(j == 0 || mSamples(i, j) < result[2*i])
                 result[2*i] = mSamples(i, j);
-            if(i == 0 || mSamples(i, j) > result[2*i +1])
+            if(j == 0 || mSamples(i, j) > result[2*i +1])
                 result[2*i +1] = mSamples(i, j);
         }
 
@@ -248,7 +252,7 @@ void Corpus::addElem(double* elem, std::string name)
     ublas::vector<double> vec(dimension());
     for(unsigned int i = 0; i < dimension(); i++)
         vec[i] = elem[i+1];
-    addSample(vec, vec[0], name);
+    addSample(vec, elem[0], name);
 }
 
 void Corpus::addSample(ublas::vector<double> elem, int targetClass, std::string name)
