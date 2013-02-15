@@ -34,12 +34,45 @@
 
 using namespace std;
 
+class GrayComparator
+{
+    public:
+    bool operator()(const fingerp& a, const fingerp& b)
+    {
+        bool inverted = false;
+        int mask = 1 << 31;
+        while((mask & a) == (mask & b))
+        {
+            if(mask & a)
+                inverted = !inverted;
+            mask >>= 1;
+        }
+        return (inverted  ? (mask & b) > (mask & a) : (mask & a) < (mask & b));
+    }
+
+    static int editDistance(fingerp a, fingerp b)
+    {
+        int count = 0, mask = 1 << 31;
+        while(mask)
+        {
+            if((mask & a) != (mask & b))
+                count++;
+        }
+        return count;
+    }
+};
+
+
 //! Interface for a fingerprint storage class (map from int to T)
 template<class T> class MapDb : public Database<T>
 {
     public:
+        typedef typename std::map<fingerp, T, GrayComparator>::iterator iterator;
+
         // Create a fresh database
         MapDb();
+
+        ~MapDb();
 
         //! Load the database from a file
         bool load(string filename);
@@ -49,6 +82,9 @@ template<class T> class MapDb : public Database<T>
 
         //! Create a fresh database
         void erase();
+
+        //! Get the list of fingerprints below a given edit distance to the target
+        std::list<fingerp> neighbors(fingerp target, int distance);
 
         //! Retrieve the binding of a fingerprint (without bounds checking)
         T get(fingerp fp);
@@ -66,10 +102,10 @@ template<class T> class MapDb : public Database<T>
         void removeBinding(fingerp fp);
 
         // Debug, delete me
-        typename std::map<fingerp, T>::iterator d_begin();
-        typename std::map<fingerp, T>::iterator d_end();
+        typename MapDb<T>::iterator d_begin();
+        typename MapDb<T>::iterator d_end();
     private:
-        std::map<fingerp, T> mMap;
+        std::map<fingerp, T, GrayComparator> mMap;
         
         //! Internal usage : for load and save
         friend class boost::serialization::access;
@@ -152,6 +188,33 @@ void MapDb<T>::erase()
     mMap.clear();
 }
 
+template<class T>
+std::list<fingerp> MapDb<T>::neighbors(fingerp target, int distance)
+{
+    typename MapDb<T>::iterator it = mMap.find(target);
+    std::list<fingerp> result;
+
+    typename MapDb<T>::iterator itf = it;
+    itf++;
+    while(itf != mMap.end() &&
+         GrayComparator::editDistance(target, itf->first) <= distance)
+    {
+        result.push_front(itf->first);
+        itf++;
+    }
+    
+    typename MapDb<T>::iterator itb = it;
+    itb--;
+    while(itb != mMap.end() &&
+          GrayComparator::editDistance(target, itb->first) <= distance)
+    {
+        result.push_front(itb->first);
+        itb++;
+    }
+
+    return result;
+}
+
 //! Retrieve the binding of a fingerprint (without bounds checking)
 template<class T>
 T MapDb<T>::get(fingerp fp)
@@ -163,7 +226,7 @@ T MapDb<T>::get(fingerp fp)
 template<class T>
 T MapDb<T>::get(fingerp fp, T &default_val)
 {
-    typename std::map<fingerp, T>::iterator it = mMap.find(fp);
+    typename MapDb<T>::iterator it = mMap.find(fp);
     if(it != mMap.end())
         return it->second;
     return default_val;
@@ -184,13 +247,13 @@ void MapDb<T>::set(fingerp fp, T data)
 }
 
 template<class T>
-typename std::map<fingerp, T>::iterator MapDb<T>::d_begin()
+typename MapDb<T>::iterator MapDb<T>::d_begin()
 {
    return mMap.begin();
 }
 
 template<class T>
-typename std::map<fingerp, T>::iterator MapDb<T>::d_end()
+typename MapDb<T>::iterator MapDb<T>::d_end()
 {
     return mMap.end();
 }
@@ -199,6 +262,12 @@ template<class T>
 void MapDb<T>::removeBinding(fingerp fp)
 {
     mMap.erase(mMap.find(fp));
+}
+
+template<class T>
+MapDb<T>::~MapDb()
+{
+    erase();
 }
 
 #endif

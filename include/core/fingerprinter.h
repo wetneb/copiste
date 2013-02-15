@@ -25,7 +25,7 @@
 #include <vector>
 
 //! Type of a fingerprint
-typedef int fingerp;
+typedef int32_t fingerp;
 
 #include "core/fingerprintconsumer.h"
 
