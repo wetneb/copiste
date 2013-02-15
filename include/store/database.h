@@ -36,7 +36,7 @@ template<class T> class Database
         virtual bool save(string filename) = 0;
 
         //! Create a fresh database
-        virtual void erase(int nbStates) = 0;
+        virtual void erase() = 0;
 
         //! Retrieve the binding of a fingerprint (without bounds checking)
         virtual T get(fingerp fp) = 0;

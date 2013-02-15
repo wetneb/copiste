@@ -48,7 +48,7 @@ template<class T> class MapDb : public Database<T>
         bool save(string filename);
 
         //! Create a fresh database
-        void erase(int nbStates);
+        void erase();
 
         //! Retrieve the binding of a fingerprint (without bounds checking)
         T get(fingerp fp);
@@ -147,7 +147,7 @@ bool MapDb<T>::save(string filename)
 
 //! Create a fresh database
 template<class T>
-void MapDb<T>::erase(int nbStates)
+void MapDb<T>::erase()
 {
     mMap.clear();
 }

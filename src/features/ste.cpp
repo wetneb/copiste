@@ -32,7 +32,7 @@ bool STEExtr::extract(int16_t* data, int size, int channels)
         else
         {
             for(int i = 0; i < size; i++)
-                mSTE += fabs(data[channels*i]);
+                mSTE += fabs(data[channels*i]) / size;
         }
     }
     return (size != 0);
