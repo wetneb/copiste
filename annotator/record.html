@@ -10,6 +10,8 @@
             var pop = 0;
             var d = new Date();
             var start = d.getTime()/500;
+            var events = Array();
+            var classes = Array();
 
             // Check for the various File API support.
             if (!(window.File && window.FileReader && window.FileList && window.Blob))
@@ -25,8 +27,20 @@
                     secs = pop.roundTime();
                 }
 
-                document.outputForm.xmlOutput.value +=
-                    '<point time="'+ secs +'" class="'+cl+'" />\n';
+                events[events.length] = { time : secs, class : cl};
+                events.sort(function(a,b){return a.time - b.time});
+            }
+
+            
+            function generateFile()
+            {
+                xml = '<timeline>\n';
+                for(var i = 0; i < events.length; i++)
+                {
+                    xml += '    <point time="'+ events[i].time +'" class="'+events[i].class+'" />\n';
+                }
+                xml += '</timeline>\n';
+                document.outputForm.xmlOutput.value = xml;
             }
 
             function updateInterface(cl)
@@ -42,6 +56,7 @@
                 currentClass = cl;
 
                 onClassChange(cl);
+                fillCanvas();
             }
 
             function setClass(cl)
@@ -62,6 +77,31 @@
                  updateInterface(0);
                  pop = Popcorn('#audioPlayer');
             }
+
+            function fillCanvas()
+            {
+                var colors = Array();
+                colors[0] = "#880000";
+                colors[1] = "#008800";
+                colors[2] = "#000088";
+                var c = document.getElementById("timeline");
+                var ctx = c.getContext("2d");
+                var currentColor = colors[0];
+                var lastTime = 0;
+                for(var i = 0; i < events.length; i++)
+                {
+                    ctx.fillStyle = currentColor;
+                    ctx.fillRect(lastTime,0,events[i].time-lastTime,40);
+                    lastTime = events[i].time;
+                    currentColor = colors[events[i].class];
+                }
+
+                if(pop != 0 && pop.roundTime() > lastTime)
+                {
+                    ctx.fillStyle = currentColor;
+                    ctx.fillRect(0,40,lastTime,pop.roundTime());
+                }
+            }
             
         </script>
         <script type="text/javascript">
@@ -70,6 +110,8 @@
                  pop = Popcorn('#audioPlayer');
                  pop.playbackRate(130);
                  updateInterface(0);
+                 fillCanvas();
+                 pop.on("timeupdate", fillCanvas);
                     }, false);
          </script>
 
@@ -91,6 +133,8 @@
                   type="audio/ogg" />
             </audio>
         </div>
+        <canvas id="timeline" height="40px" width="800px">
+        </canvas>
          <div id="categories">
             <table>
                 <tbody>
@@ -110,7 +154,8 @@
         </div>
         <h4>Step 3 : Save the output to a file</h4>
         <form name="outputForm">
-        <textarea name="xmlOutput"></textarea>
+            <a href="javascript:generateFile()">Generate XML</a><br />
+        <textarea name="xmlOutput" width="400" height="600"></textarea>
         </form>
     </body>
 </html>
