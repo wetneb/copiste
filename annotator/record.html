@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Annotator</title>
+        <meta charset="UTF-8" />
+        <script src="libs/popcorn-complete.min.js"></script>
+        <script src="libs/prototype.js"></script>
+        <script type="text/javascript">
+            var currentClass = -1;
+            var pop = 0;
+            var d = new Date();
+            var start = d.getTime()/500;
+
+            // Check for the various File API support.
+            if (!(window.File && window.FileReader && window.FileList && window.Blob))
+            {
+                  alert('The File APIs are not fully supported in this browser.');
+            }
+
+            function onClassChange(cl)
+            {
+                var secs = 0;
+                if(pop != 0)
+                {
+                    secs = pop.roundTime();
+                }
+
+                document.outputForm.xmlOutput.value +=
+                    '<point time="'+ secs +'" class="'+cl+'" />\n';
+            }
+
+            function updateInterface(cl)
+            {
+                document.getElementById('class-'+cl).style.border
+                    = '2px solid black';
+                if(currentClass != cl && currentClass != -1)
+                {
+                    document.getElementById('class-'+currentClass).style.border
+                        = '2px solid white';
+                }
+                
+                currentClass = cl;
+
+                onClassChange(cl);
+            }
+
+            function setClass(cl)
+            {
+                if(currentClass != cl)
+                {
+                    updateInterface(cl);
+                    currentClass = cl;
+                }
+            }
+
+            function startAnnotator()
+            {
+                filename = document.getElementById('inputFile').value;
+                document.getElementById('audioPlayer').innerHTML =
+                    '<source src="'+ filename + '" type="audio/ogg" />';
+                 document.outputForm.xmlOutput.value="";
+                 updateInterface(0);
+                 pop = Popcorn('#audioPlayer');
+            }
+            
+        </script>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function ()
+                    {
+                 pop = Popcorn('#audioPlayer');
+                 pop.playbackRate(130);
+                 updateInterface(0);
+                    }, false);
+         </script>
+
+        <link rel="stylesheet" type="text/css" href="src/talk-slides.css" />
+    </head>
+    <body>
+        <h3>Audio annotator</h3>
+        <h4>Step 1 : Select the audio file you want to annotate</h4>
+        <div id="file-selection">
+            <form onsubmit="startAnnotator()">
+                <input type="text" id="inputFile" name="inputFile" />
+                <input type="submit" value="Start" />
+            </form>
+        </div>
+        <h4>Step 2 : Play the file and change the classes accordingly</h4>
+        <div>
+            <audio id="audioPlayer" controls>
+                <source src="bon_dump_mono.ogg"
+                  type="audio/ogg" />
+            </audio>
+        </div>
+         <div id="categories">
+            <table>
+                <tbody>
+                    <tr>
+                        <td id="class-0">
+                            <a href="javascript:setClass(0)">Music</a>
+                        </td>
+                        <td id="class-1">
+                            <a href="javascript:setClass(1)">Speech</a>
+                        </td>
+                        <td id="class-2">
+                            <a href="javascript:setClass(2)">Advert</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h4>Step 3 : Save the output to a file</h4>
+        <form name="outputForm">
+        <textarea name="xmlOutput"></textarea>
+        </form>
+    </body>
+</html>
