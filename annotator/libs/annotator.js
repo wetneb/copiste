@@ -25,7 +25,7 @@ function onClassChange(cl)
         secs = pop.roundTime();
     }
 
-    events[events.length] = { time : secs, class : cl};
+    events[events.length] = { time : secs, cl : cl};
     events.sort(function(a,b){return a.time - b.time});
 }
 
@@ -35,7 +35,7 @@ function generateFile()
     xml = '<timeline>\n';
     for(var i = 0; i < events.length; i++)
     {
-        xml += '    <point time="'+ events[i].time +'" class="'+events[i].class+'" />\n';
+        xml += '    <point time="'+ events[i].time +'" class="'+events[i].cl+'" />\n';
     }
     xml += '</timeline>\n';
     document.outputForm.xmlOutput.value = xml;
@@ -76,6 +76,12 @@ function startAnnotator()
      pop = Popcorn('#audioPlayer');
 }
 
+function resizeTimeline()
+{
+    document.getElementById('timeline').setAttribute("width",
+            pop.duration().toString());
+}
+
 function volumeUp()
 {
     pop.volume(pop.volume()+0.1);
@@ -105,7 +111,7 @@ function fillCanvas()
         ctx.fillStyle = currentColor;
         ctx.fillRect(lastTime,0,events[i].time-lastTime,40);
         lastTime = events[i].time;
-        currentColor = colors[events[i].class];
+        currentColor = colors[events[i].cl];
     }
 
     if(pop != 0 && pop.roundTime() > lastTime)
@@ -183,6 +189,42 @@ function findPos(obj) {
     }
     return undefined;
 }
+var parseXml;
+
+if (typeof window.DOMParser != "undefined") {
+        parseXml = function(xmlStr) {
+                    return ( new window.DOMParser() ).parseFromString(xmlStr, "text/xml");
+     };
+} else if (typeof window.ActiveXObject != "undefined" &&
+               new window.ActiveXObject("Microsoft.XMLDOM"))
+{
+       parseXml = function(xmlStr) {
+           var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
+           xmlDoc.async = "false";
+           xmlDoc.loadXML(xmlStr);
+           return xmlDoc;
+       };
+} else {
+       throw new Error("No XML parser found");
+}
+
+function loadTimeline()
+{
+    var xmldoc = parseXml(document.outputForm.xmlOutput.value);
+    var points = xmldoc.getElementsByTagName("point");
+
+    events = Array();
+    for(var i = 0; i < points.length; i++)
+    {
+        events[events.length] =
+          {
+            time : points[i].getAttribute("time"), 
+            cl : points[i].getAttribute("class")
+          };    
+    }
+    fillCanvas();
+}
+
 
 document.addEventListener('DOMContentLoaded', function ()
         {
@@ -190,8 +232,11 @@ document.addEventListener('DOMContentLoaded', function ()
      pop.playbackRate(130);
      updateInterface(0);
    /*  setInterval(function(){ alert(pop.roundTime()) }, 3000); */
-     document.getElementById('audioPlayer').addEventListener(
+     var player = document.getElementById('audioPlayer');
+     player.addEventListener(
      'timeupdate', function() { fillCanvas() }, false);
+     player.addEventListener(
+     'play', function() { resizeTimeline() }, false);
      var timeline = document.getElementById('timeline');
      timeline.addEventListener(
       'mousedown', onMouseDown, false);
@@ -199,6 +244,7 @@ document.addEventListener('DOMContentLoaded', function ()
       'mousemove', onMouseMove, false);
      timeline.addEventListener(
       'mouseup', onMouseUp, false);
+
      var pos = findPos(timeline);
      canvasX = pos.x;
      canvasY = pos.y;
