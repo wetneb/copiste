@@ -14,13 +14,25 @@
                 <tbody>
                     <tr>
                         <td id="class-0">
-                            <a href="javascript:setClass(0)">Music</a>
+                            <a href="javascript:setClass(0)">Music</a>&nbsp;
                         </td>
                         <td id="class-1">
-                            <a href="javascript:setClass(1)">Speech</a>
+                            <a href="javascript:setClass(1)">Speech</a>&nbsp;
                         </td>
                         <td id="class-2">
-                            <a href="javascript:setClass(2)">Advert</a>
+                            <a href="javascript:setClass(2)">Advert</a>&nbsp;
+                        </td>
+                        <td id="class-3">
+                            <a href="javascript:setClass(3)">Neutral jingle</a>&nbsp;
+                        </td>
+                        <td id="class-4">
+                            <a href="javascript:setClass(4)">Program jingle</a>&nbsp;
+                        </td>
+                        <td id="class-5">
+                            <a href="javascript:setClass(5)">Advert jingle</a>&nbsp;
+                        </td>
+                        <td id="class-6">
+                            <a href="javascript:setClass(6)">Call</a>&nbsp;
                         </td>
                     </tr>
                 </tbody>
@@ -33,7 +45,7 @@
         </canvas>
         <div>
             <audio id="audioPlayer" controls>
-                <source src="bon_dump_mono.ogg"
+                <source src="rtl.ogg"
                   type="audio/ogg" />
             </audio>
         </div>
@@ -41,7 +53,8 @@
             <p>Volume <a href="javascript:volumeUp()">up</a>&nbsp;<a href="javascript:volumeDown()">down</a></p>
         </div>
         <form name="outputForm">
-            <a href="javascript:generateFile()">Generate XML</a>&nbsp;<a href="javascript:loadTimeline()">Load from XML</a><br />
+            <a href="javascript:generateFile()">Generate XML</a>&nbsp;
+            <a href="javascript:loadTimeline()">Load from XML</a><br />
         <textarea name="xmlOutput" width="400" height="600"></textarea>
         </form>
     </body>

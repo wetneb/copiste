@@ -10,6 +10,7 @@ var moveEvt = -1;
 var seeking = false;
 var canvasX = 0;
 var canvasY = 0;
+var totalLength = 0;
 
 // Check for the various File API support.
 if (!(window.File && window.FileReader && window.FileList && window.Blob))
@@ -78,8 +79,9 @@ function startAnnotator()
 
 function resizeTimeline()
 {
+    totalLength = pop.duration();
     document.getElementById('timeline').setAttribute("width",
-            pop.duration().toString());
+            totalLength.toString());
 }
 
 function volumeUp()
@@ -98,13 +100,17 @@ function fillCanvas()
     colors[0] = "#880000";
     colors[1] = "#008800";
     colors[2] = "#000088";
+    colors[3] = "#008888";
+    colors[4] = "#888800";
+    colors[5] = "#880088";
+    colors[6] = "#888888";
     var c = document.getElementById("timeline");
     var ctx = c.getContext("2d");
     var currentColor = colors[0];
     var lastTime = 0;
 
     ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(0,0,800,40);
+    ctx.fillRect(0,0,totalLength,50);
 
     for(var i = 0; i < events.length; i++)
     {
