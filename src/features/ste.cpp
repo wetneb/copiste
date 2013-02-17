@@ -54,3 +54,7 @@ int STEExtr::getInt(string key)
     return ret;
 }
 
+float STEExtr::max()
+{
+    return ((float)((unsigned int)(-1)))/32; 
+}

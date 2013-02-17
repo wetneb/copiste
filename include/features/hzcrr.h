@@ -61,7 +61,7 @@ class HZCRRExtr : public FeatureExtractor
         //! Lower bound on outputted values
         float min() { return 0; }
         //! Upper bound on outputted values
-        float max() { return 1; }
+        float max() { return 0.5; }
 
         //! Set a float parameter (available : "bound")
         void setFloat(string key, float value);

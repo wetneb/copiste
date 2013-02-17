@@ -30,7 +30,7 @@ void FluxFilter::transform(vector<float> data)
             mResult.resize(data.size());
         for(unsigned int i = 0; i < data.size(); i++)
         {
-            mResult[i] = (log(data[i] + 1) - log(mLastVect[i] + 1) + FLUX_EPSILON);
+            mResult[i] = (log(data[i] + FLUX_EPSILON) - log(mLastVect[i] + FLUX_EPSILON));
             mResult[i] *= mResult[i];
         }
     }
@@ -58,8 +58,14 @@ float FluxFilter::value(int index)
     return result;
 }
 
-//! Bounds : \todo could be refined
+//! Bounds : TODO could be refined
 float FluxFilter::max()
 {
-    return (unsigned int)(-1);
+    return 64;
 }
+
+float FluxFilter::min()
+{
+    return 0;
+}
+

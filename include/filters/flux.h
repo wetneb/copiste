@@ -40,7 +40,7 @@ class FluxFilter : public Filter
         float value(int index = 0);
 
         //! Lower bound for outputted values : 0
-        float min() { return 0; }
+        float min();
         //! Higher bound for outputted values
         float max();
 

@@ -1,4 +1,4 @@
-<pipeline>
+<pipeline chunk_size="1024" overlapping="0.5">
 	<feature type="Spectrum"
 		 name="_spectrum"
 		 used="no" />
@@ -31,7 +31,7 @@
 		used="no" />
 	<filter name="Average HZCRR"
 		type="Average"
-		size="50">
+		size="10">
 		<ref name="HZCRR" />
 	</filter>
 	<filter name="Average LSTER"
@@ -39,5 +39,13 @@
 		size="50">
 		<ref name="LSTER" />
 	</filter>
-
+    <feature name="_ste"
+        type="STE"
+        used="no" />
+    <filter name="Average STE"
+        type="Average"
+        used="no"
+        size="50">
+        <ref name="_ste" />
+    </filter>
 </pipeline>

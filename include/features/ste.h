@@ -43,7 +43,7 @@ class STEExtr : public FeatureExtractor
         //! Lower bound on outputted values
         float min() { return 0; }
         //! Upper bound on outputted values (about 2^30)
-        float max() { return ((unsigned int)(-1))*((unsigned int)(-1))/4; }
+        float max();
 
         //! Set a int parameter (available : "square", which is 0 or 1)
         void setInt(string key, int value);

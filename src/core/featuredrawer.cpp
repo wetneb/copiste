@@ -127,7 +127,7 @@ void FeatureDrawer::draw(string filename, bool live)
         }
         else if(name(f) == "_spectrum" && mDrawSpectrum)
         {
-            int nbFrequenciesPerPixel = nbElems(f) / (3*chunk);
+            int nbFrequenciesPerPixel = nbElems(f) / (5*chunk);
             if(nbFrequenciesPerPixel == 0)
                  nbFrequenciesPerPixel = 1;
 
@@ -135,13 +135,13 @@ void FeatureDrawer::draw(string filename, bool live)
             for(int i = plotStart; i - plotStart < mOut.width() && i < (int)nbSamples(); ++i)
             {
                 float currentValue = 0;
-                for(unsigned int e = 0; e < nbElems(f)/3 && (e / nbFrequenciesPerPixel) < chunk; e++)
+                for(unsigned int e = 0; e < nbElems(f)/5 && (e / nbFrequenciesPerPixel) < chunk; e++)
                 {
                     currentValue += features(i)[f][e];
                     if((e+1) % nbFrequenciesPerPixel == 0)
                     {
                         currentValue /= nbFrequenciesPerPixel;
-                        currentValue *= 512;
+                        currentValue *= 768;
                         currentValue = ((currentValue >= 256) ? 255 : currentValue);
                         painter.setPen(QColor(currentValue, currentValue, currentValue));
                         painter.drawPoint(i - plotStart, orig - (e / nbFrequenciesPerPixel));

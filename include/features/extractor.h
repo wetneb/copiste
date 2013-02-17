@@ -50,7 +50,7 @@ class FeatureExtractor
         {  return std::min(max(), std::max(min(), value(index))); }
         //! Retrieve the results, with other bounds
         virtual float value(int index, float low, float high)
-        { return low + (high-low)*(value(index) - min())/(max() - min()); }
+        { return low + (high-low)*(safeValue(index) - min())/(max() - min()); }
 
         //! Get the number of available values
         virtual int size() = 0;

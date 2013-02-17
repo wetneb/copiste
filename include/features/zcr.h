@@ -43,6 +43,10 @@ class ZCRExtr : public FeatureExtractor
 
         //! Get the number of available values
         int size() { return 1; }
+        
+        //! Bounds
+        float min() { return 0; }
+        float max() { return 1; }
 
         //! Set a float parameter (available : none)
         void setFloat(string key, float value) { ; }

@@ -71,13 +71,9 @@ bool HZCRRExtr::extract(int16_t* data, int size, int channels)
         float bound = mBound*average;
 
         unsigned int crossings = 0;
-        //bool up = (mHistory[0] > bound);
         for(int i = 1; i < mChunksNumber; i++)
             if(mHistory[i] > bound)
-            {
                 crossings++;
-                //up = !up;
-            }
 
         mCurrentFrame = (mCurrentFrame + 1) % mChunksNumber;
 
