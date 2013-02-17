@@ -160,6 +160,8 @@ class SoundAnalyser : protected StreamPlayer
 
         //! Get the sampling frequency
         unsigned int samplingFrequency() { return mFrequency; }
+        //! Set the playback rate
+        void setRate(float rate) { StreamPlayer::setRate(rate); }
 
     private:
         vector<pair<string, FeatureExtractor* > > mExtr; // TODO : it could be an hashtable

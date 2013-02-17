@@ -44,6 +44,7 @@ int main(int argc, char **argv)
                                            "(it will be loaded from networks/$NETWORK)")
         ("fingerprint,f", po::value<string>(), "A fingerprint classifier (optionnal) "
                                                "(it will be loaded from fingerprints/$FINGERPRINT)")
+        ("rate,r", po::value< float >(), "Playback rate (default : 1.0)")
         ("help,h", "Display this message");
 
     po::positional_options_description p;
@@ -66,7 +67,11 @@ int main(int argc, char **argv)
     {
         LivePlayer lp;
         NeuralNetwork net;
-        
+        float rate = 1.0;
+        if(vm.count("rate"))
+            rate = vm["rate"].as< float >();
+        lp.setRate(rate);
+
         string pipeline = "pipeline/" + (vm["pipeline"].as< string >())+ ".xml";
         if(lp.setupPipeline(pipeline))
         {
