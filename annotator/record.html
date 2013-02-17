@@ -5,137 +5,11 @@
         <meta charset="UTF-8" />
         <script src="libs/popcorn-complete.min.js"></script>
         <script src="libs/prototype.js"></script>
-        <script type="text/javascript">
-            var currentClass = -1;
-            var pop = 0;
-            var d = new Date();
-            var start = d.getTime()/500;
-            var events = Array();
-            var classes = Array();
-
-            // Check for the various File API support.
-            if (!(window.File && window.FileReader && window.FileList && window.Blob))
-            {
-                  alert('The File APIs are not fully supported in this browser.');
-            }
-
-            function onClassChange(cl)
-            {
-                var secs = 0;
-                if(pop != 0)
-                {
-                    secs = pop.roundTime();
-                }
-
-                events[events.length] = { time : secs, class : cl};
-                events.sort(function(a,b){return a.time - b.time});
-            }
-
-            
-            function generateFile()
-            {
-                xml = '<timeline>\n';
-                for(var i = 0; i < events.length; i++)
-                {
-                    xml += '    <point time="'+ events[i].time +'" class="'+events[i].class+'" />\n';
-                }
-                xml += '</timeline>\n';
-                document.outputForm.xmlOutput.value = xml;
-            }
-
-            function updateInterface(cl)
-            {
-                document.getElementById('class-'+cl).style.border
-                    = '2px solid black';
-                if(currentClass != cl && currentClass != -1)
-                {
-                    document.getElementById('class-'+currentClass).style.border
-                        = '2px solid white';
-                }
-                
-                currentClass = cl;
-
-                onClassChange(cl);
-                fillCanvas();
-            }
-
-            function setClass(cl)
-            {
-                if(currentClass != cl)
-                {
-                    updateInterface(cl);
-                    currentClass = cl;
-                }
-            }
-
-            function startAnnotator()
-            {
-                filename = document.getElementById('inputFile').value;
-                document.getElementById('audioPlayer').innerHTML =
-                    '<source src="'+ filename + '" type="audio/ogg" />';
-                 document.outputForm.xmlOutput.value="";
-                 updateInterface(0);
-                 pop = Popcorn('#audioPlayer');
-            }
-
-            function fillCanvas()
-            {
-                var colors = Array();
-                colors[0] = "#880000";
-                colors[1] = "#008800";
-                colors[2] = "#000088";
-                var c = document.getElementById("timeline");
-                var ctx = c.getContext("2d");
-                var currentColor = colors[0];
-                var lastTime = 0;
-                for(var i = 0; i < events.length; i++)
-                {
-                    ctx.fillStyle = currentColor;
-                    ctx.fillRect(lastTime,0,events[i].time-lastTime,40);
-                    lastTime = events[i].time;
-                    currentColor = colors[events[i].class];
-                }
-
-                if(pop != 0 && pop.roundTime() > lastTime)
-                {
-                    ctx.fillStyle = currentColor;
-                    ctx.fillRect(0,40,lastTime,pop.roundTime());
-                }
-            }
-            
-        </script>
-        <script type="text/javascript">
-            document.addEventListener('DOMContentLoaded', function ()
-                    {
-                 pop = Popcorn('#audioPlayer');
-                 pop.playbackRate(130);
-                 updateInterface(0);
-                 fillCanvas();
-                 pop.on("timeupdate", fillCanvas);
-                    }, false);
-         </script>
-
-        <link rel="stylesheet" type="text/css" href="src/talk-slides.css" />
+        <script src="libs/annotator.js"></script>
     </head>
     <body>
         <h3>Audio annotator</h3>
-        <h4>Step 1 : Select the audio file you want to annotate</h4>
-        <div id="file-selection">
-            <form onsubmit="startAnnotator()">
-                <input type="text" id="inputFile" name="inputFile" />
-                <input type="submit" value="Start" />
-            </form>
-        </div>
-        <h4>Step 2 : Play the file and change the classes accordingly</h4>
-        <div>
-            <audio id="audioPlayer" controls>
-                <source src="bon_dump_mono.ogg"
-                  type="audio/ogg" />
-            </audio>
-        </div>
-        <canvas id="timeline" height="40px" width="800px">
-        </canvas>
-         <div id="categories">
+         <div id="categories" style="position: fixed; left: auto; top: 50px;">
             <table>
                 <tbody>
                     <tr>
@@ -152,7 +26,20 @@
                 </tbody>
             </table>
         </div>
-        <h4>Step 3 : Save the output to a file</h4>
+        <br />
+        <br />
+        <canvas id="timeline" height="60px" width="1600px">
+            Your browser does not support the Canvas element.
+        </canvas>
+        <div>
+            <audio id="audioPlayer" controls>
+                <source src="bon_dump_mono.ogg"
+                  type="audio/ogg" />
+            </audio>
+        </div>
+        <div>
+            <p>Volume <a href="javascript:volumeUp()">up</a>&nbsp;<a href="javascript:volumeDown()">down</a></p>
+        </div>
         <form name="outputForm">
             <a href="javascript:generateFile()">Generate XML</a><br />
         <textarea name="xmlOutput" width="400" height="600"></textarea>
