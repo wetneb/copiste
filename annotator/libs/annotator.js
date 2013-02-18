@@ -40,6 +40,18 @@ function generateFile()
     }
     xml += '</timeline>\n';
     document.outputForm.xmlOutput.value = xml;
+    generateRawFile();
+}
+
+function generateRawFile()
+{
+    raw = ''
+    for(var i = 0; i < events.length; i++)
+    {
+        raw += events[i].time +' '+events[i].cl+'\n';
+    }
+    raw += '';
+    document.outputForm.rawOutput.value = raw;
 }
 
 function updateInterface(cl)
